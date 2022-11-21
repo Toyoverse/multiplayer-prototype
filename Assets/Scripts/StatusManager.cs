@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
+using FishNet.Broadcast;
 
 public class StatusManager : NetworkBehaviour
 {
@@ -23,13 +24,14 @@ public class StatusManager : NetworkBehaviour
     [SerializeField] private float manaRegenValue;
     [SerializeField] private float manaRegenTime;
     
-    //events
+    #region Events
     public delegate void HealthChange();
     public HealthChange onChangeHealt;
     public delegate void ManaChange();
     public ManaChange onChangeMana;
-
-    //public methods
+    #endregion
+    
+    #region Public methods
     public void AddHealth(float value)
     {
         Health += value;
@@ -45,8 +47,9 @@ public class StatusManager : NetworkBehaviour
             Mana = maxMana;
         onChangeMana?.Invoke();
     }
-
-    //private methods
+    #endregion
+    
+    #region Private methods
     private void StartStatus()
     {
         //ResetStats();
@@ -65,7 +68,7 @@ public class StatusManager : NetworkBehaviour
     {
         if (refs == null)
             return;
-        if (refs.playerInput.buttonA && Mana >= manaCost)
+        if (refs.playerInput.spaceButton && Mana >= manaCost)
         {
             ChangeManaServer(this.gameObject, -manaCost);
             ChangeHealthServer(this.gameObject, -hpDamage);
@@ -90,8 +93,9 @@ public class StatusManager : NetworkBehaviour
     {
         Destroy(_uiManager.gameObject);
     }
+    #endregion
 
-    //network methods
+    #region Network methods
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -117,4 +121,5 @@ public class StatusManager : NetworkBehaviour
 
     [ServerRpc]
     public void ChangeHealthServer(GameObject gameObject, float value) => ChangeHealth(gameObject, value);
+    #endregion
 }
