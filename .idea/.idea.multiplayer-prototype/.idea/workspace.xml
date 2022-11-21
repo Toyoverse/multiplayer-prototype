@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="projectSettingsUpdater.xml" />
+    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="Enums and Structs classes;">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/NetClientCommunicate.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/NetClientCommunicate.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/NetServerCommunicate.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/NetServerCommunicate.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Tools.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/CustomPackages/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CustomPackages/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Managers.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Managers.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player_Manager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player_Manager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI_Canvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI_Canvas.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/CustomPackages/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Prefabs/Managers.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scenes/Prototype.unity" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Enums.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/NetClientCommunicate.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/NetServerCommunicate.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/PlayerInput.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/ScriptsReferences.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/ScriptsReferences.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ShowLogs.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/StatusManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/UserSettings/EditorUserSettings.asset" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -18,18 +50,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Discover.Launch.Via.Unity": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../../PersonalUP/MultiplayerTest/Builds/MultiTest_win\MultiplayerTest.exe" />
@@ -76,7 +109,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1668733941840</updated>
-      <workItem from="1668733954877" duration="298000" />
+      <workItem from="1668733954877" duration="666000" />
+      <workItem from="1668805246572" duration="9745000" />
+      <workItem from="1669036193296" duration="16573000" />
+      <workItem from="1669059314435" duration="8855000" />
     </task>
     <task id="LOCAL-00001" summary="First commit - WIP Multiplayer with dedicated server;">
       <created>1668734091475</created>
@@ -92,7 +128,35 @@
       <option name="project" value="LOCAL" />
       <updated>1668734225730</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Scene for tests in LAN;">
+      <created>1669068276919</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1669068276919</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Singleton and ShowLogs tools;">
+      <created>1669068346449</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1669068346449</updated>
+    </task>
+    <task id="LOCAL-00005" summary="StatusManager regions order;">
+      <created>1669068380621</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1669068380621</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Enums and Structs classes;">
+      <created>1669068464722</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1669068464722</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +181,11 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="First commit - WIP Multiplayer with dedicated server;" />
     <MESSAGE value="projectSettingsUpdater.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="projectSettingsUpdater.xml" />
+    <MESSAGE value="WIP - Dedicated server multiplayer;" />
+    <MESSAGE value="Scene for tests in LAN;" />
+    <MESSAGE value="Singleton and ShowLogs tools;" />
+    <MESSAGE value="StatusManager regions order;" />
+    <MESSAGE value="Enums and Structs classes;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Enums and Structs classes;" />
   </component>
 </project>

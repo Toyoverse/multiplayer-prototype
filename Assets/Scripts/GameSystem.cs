@@ -1,115 +1,221 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FishNet;
 using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
+using Debug = UnityEngine.Debug;
 
 public class GameSystem : NetworkBehaviour
 {
-    [Header("CHOICES")] 
-    [SerializeField] private Dictionary<int, SKILL_STATE> playerStates = new Dictionary<int, SKILL_STATE>(); //id, state
-    [SerializeField] private int oneID; //player one
-    [SerializeField] private int twoID; //player two
+    [Header("REFERENCES")]
+    [SerializeField] private NetServerCommunicate netServer;
+
+    [Header("GAME STATUS")]
+    [SerializeField] private List<GameChoice> playersChoices;
+    [SerializeField] private int round;
 
     #region Private Methods
-    
-    private void CompareSkills()
+
+    private void Start()
     {
-        if(playerStates[oneID] is SKILL_STATE.NONE || playerStates[twoID] is SKILL_STATE.NONE)
-            return;
-        SendPlayerResult(oneID, GeneralCompare(oneID, twoID));
-        SendPlayerResult(twoID, GeneralCompare(twoID, oneID));
+        if (!InstanceFinder.IsServer)
+            this.gameObject.GetComponent<GameSystem>().enabled = false;
+        netServer ??= FindObjectOfType<NetServerCommunicate>();
     }
 
-    private MATCH_RESULT GeneralCompare(int playerID, int opponentID)
+    private Match_Info GetMatchResult()
     {
-        var result = MATCH_RESULT.NONE;
-        if (playerStates[playerID] == playerStates[opponentID])
-            return MATCH_RESULT.DRAW;
-        switch (playerStates[playerID])
+        const int one = 0;
+        const int two = 1;
+
+        var matchResult = new Match_Info
         {
-            case SKILL_STATE.ROCK:
-                result = playerStates[opponentID] switch
+            choices = playersChoices,
+            isDraw = playersChoices[one].choice == playersChoices[two].choice ? true : false,
+            winnerObjectID = -1,
+            loserObjectID = -1,
+            loserClientID = -1,
+            winnerClientID = -1
+        };
+
+        if (matchResult.isDraw)
+            return matchResult;
+
+        switch (playersChoices[one].choice)
+        {
+            case CARD_TYPE.ROCK:
+                switch (playersChoices[two].choice)
                 {
-                    SKILL_STATE.ROCK => MATCH_RESULT.DRAW,
-                    SKILL_STATE.PAPER => MATCH_RESULT.LOSE,
-                    SKILL_STATE.SCISSOR => MATCH_RESULT.WIN,
-                    _ => MATCH_RESULT.NONE
-                };
+                    case CARD_TYPE.PAPER:
+                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.SCISSOR:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.NONE:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                }
                 break;
-            case SKILL_STATE.PAPER:
-                result = playerStates[opponentID] switch
+            case CARD_TYPE.PAPER:
+                switch (playersChoices[two].choice)
                 {
-                    SKILL_STATE.ROCK => MATCH_RESULT.WIN,
-                    SKILL_STATE.PAPER => MATCH_RESULT.DRAW,
-                    SKILL_STATE.SCISSOR => MATCH_RESULT.LOSE,
-                    _ => MATCH_RESULT.NONE
-                };
+                    case CARD_TYPE.ROCK:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.SCISSOR:
+                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.NONE:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                }
                 break;
-            case SKILL_STATE.SCISSOR:
-                result = playerStates[opponentID] switch
+            case CARD_TYPE.SCISSOR:
+                switch (playersChoices[two].choice)
                 {
-                    SKILL_STATE.ROCK => MATCH_RESULT.LOSE,
-                    SKILL_STATE.PAPER => MATCH_RESULT.WIN,
-                    SKILL_STATE.SCISSOR => MATCH_RESULT.DRAW,
-                    _ => MATCH_RESULT.NONE
-                };
+                    case CARD_TYPE.ROCK:
+                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.PAPER:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                    case CARD_TYPE.NONE:
+                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                        break;
+                }
                 break;
-            default:
-                result = MATCH_RESULT.NONE;
+            case CARD_TYPE.NONE:
+                if (playersChoices[two].choice != CARD_TYPE.NONE)
+                    SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
+                        playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
                 break;
         }
-        
+
+        matchResult.winnerClientID = GetPlayerClientID(matchResult.winnerObjectID);
+        matchResult.loserClientID = GetPlayerClientID(matchResult.loserObjectID);
+        return matchResult;
+    }
+
+    private void SetPlayerOneWinner(ref int winID, ref int loseID, int oneID, int twoID)
+    {
+        winID = oneID;
+        loseID = twoID;
+    }
+    
+    private void SetPlayerTwoWinner(ref int winID, ref int loseID, int oneID, int twoID)
+    {
+        winID = twoID;
+        loseID = oneID;
+    }
+
+    private CARD_TYPE GetPlayerChoice(int objectID)
+    {
+        var result = CARD_TYPE.NONE;
+        for (var i = 0; i < playersChoices.Count; i++)
+        {
+            if (objectID == playersChoices[i].playerObjectID)
+                result = playersChoices[i].choice;
+        }
+
         return result;
     }
     
-    #endregion
-    
-    #region Network Methods
-
-    public override void OnStartClient()
+    private int GetPlayerClientID(int objectID)
     {
-        base.OnStartClient();
-        if (!IsServer)
+        var result = -1;
+        for (var i = 0; i < playersChoices.Count; i++)
         {
-            gameObject.GetComponent<GameSystem>().enabled = false;
+            if (objectID == playersChoices[i].playerObjectID)
+                result = playersChoices[i].playerClientID;
         }
+
+        return result;
     }
 
-    [ServerRpc]
-    public void ConfirmSkillServer(int playerID, SKILL_STATE state) => ConfirmSkill(playerID, state);
-
-    public void ConfirmSkill(int playerID, SKILL_STATE state)
+    private CARD_TYPE GetTypeFromString(string type)
     {
-        playerStates[playerID] = state;
+        return type.ToUpper() switch
+        {
+            "NONE" => CARD_TYPE.NONE,
+            "ROCK" => CARD_TYPE.ROCK,
+            "PAPER" => CARD_TYPE.PAPER,
+            "SCISSOR" => CARD_TYPE.SCISSOR
+        };
     }
 
-    public void SendPlayerResult(int playerID, MATCH_RESULT result)
+    private void CheckChoices()
     {
+        if (playersChoices.Count < 2)
+            return;
+        var result = GetMatchResult();
+        if (result.isDraw)
+        {
+            netServer.SendToClientResult(playersChoices[0].playerClientID, playersChoices[0].playerObjectID, "DRAW");
+            netServer.SendToClientResult(playersChoices[1].playerClientID, playersChoices[1].playerObjectID, "DRAW");
+            ResetPlayerChoices();
+            return;
+        }
+        netServer.SendToClientResult(result.loserClientID, result.loserObjectID, "LOSE");
+        netServer.SendToClientResult(result.winnerClientID, result.winnerObjectID, "WIN");
+        ResetPlayerChoices();
+    }
+
+    private void ResetPlayerChoices()
+    {
+        playersChoices = new List<GameChoice>();
+        round++;
+    }
+
+    #endregion
+    
+    #region Public methods
+    
+    public void RegisterNewPlayerChoice(int clientID, int objectID, string pChoice)
+    {
+        if (playersChoices == null)
+            ResetPlayerChoices();
+
+        var _pChoice = GetTypeFromString(pChoice);
+
+        /*foreach (var gameChoice in playersChoices)
+        {
+            if (gameChoice.playerObjectID == objectID)
+            {
+                gameChoice.choice = _pChoice;
+                return;
+            }
+        }*/
         
-    }
+        var item = new GameChoice
+        {
+            playerClientID = clientID,
+            playerObjectID = objectID,
+            choice = _pChoice
+        };
+        playersChoices.Add(item);
 
-    public void ConnectNewPlayer(int playerID)
-    {
-        playerStates.Add(playerID, SKILL_STATE.NONE);
+        CheckChoices();
     }
     
     #endregion
 }
 
-public enum SKILL_STATE
+[Serializable]
+public class GameChoice
 {
-    NONE = 0,
-    ROCK = 1,
-    PAPER = 2,
-    SCISSOR = 3
-}
-
-public enum MATCH_RESULT
-{
-    NONE = 0,
-    LOSE = 1,
-    DRAW = 2,
-    WIN = 3
+    public int playerClientID;
+    public int playerObjectID;
+    public CARD_TYPE choice;
 }
