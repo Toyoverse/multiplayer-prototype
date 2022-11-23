@@ -424,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1617824014
 Transform:
   m_ObjectHideFlags: 0
@@ -466,7 +466,8 @@ MonoBehaviour:
   _scenePathHash: 3552194577
   <SceneId>k__BackingField: 15256559538590233657
   <AssetPathHash>k__BackingField: 0
-  _sceneNetworkObjects: []
+  _sceneNetworkObjects:
+  - {fileID: 1617824015}
 --- !u!114 &1617824016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,7 +485,10 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 1617824015}
   netServer: {fileID: 261233565}
   playersChoices: []
+  playerHealths: []
   round: 0
+  maxHealth: 3
+  roundDamage: 1
 --- !u!1 &1781507504
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5b84862f3942c4e9e5a09cf08acb20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  round: 0
 --- !u!4 &2052337381
 Transform:
   m_ObjectHideFlags: 0

@@ -77,9 +77,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f17f25fa0a17784f8df4471d61bc12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusManager: {fileID: 0}
-  uiManager: {fileID: 0}
   playerInput: {fileID: 4557844051861172445}
+  uiCanvasObject: {fileID: 0}
+  localManager: {fileID: 0}
+  myNetClientCommunicate: {fileID: 0}
+  myStatusManager: {fileID: 0}
 --- !u!1 &4557844051861172447
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,4 +126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e63772ff3d5914eb2fb1d4fd1581da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonA: 0
+  rockButton: {fileID: 0}
+  paperButton: {fileID: 0}
+  scissorButton: {fileID: 0}

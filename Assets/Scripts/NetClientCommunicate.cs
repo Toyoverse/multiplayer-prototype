@@ -44,33 +44,33 @@ public class NetClientCommunicate : NetworkBehaviour
 
     private void TreatMessage(NetworkMessage message)
     {
+        var myID = ClientManager.GetInstanceID();
+        if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID)
+            return;
+        
+        Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType + 
+                  " - Content: [String] " + message.Content + " | [Value] " + message.ValueContent);
+        
         switch (message.MessageType)
         {
             case (int)MESSAGE_TYPE.STRING:
                 Debug.Log("Received string message: " + message.Content);
                 break;
             case (int)MESSAGE_TYPE.NEW_CONNECTION:
-                refs.localManager.ConnectionSuccess();
+                refs.localManager.ConnectionSuccess(message.ValueContent);
                 break;
             case (int)MESSAGE_TYPE.START_GAME:
-                refs.myStatusManager.InitHealth(message.ValueContent);
                 refs.localManager.GameInit();
+                break;
+            case (int)MESSAGE_TYPE.GAME_OVER:
+                refs.localManager.GameOver(message.Content);
                 break;
         }
 
         if (message.MessageType != (int)MESSAGE_TYPE.ROUND_RESULT)
             return;
         
-        var myID = ClientManager.GetInstanceID();
-        /*if (id == message.InstanceID || this.NetworkObject.ObjectId == message.NetworkObject.ObjectId)
-            return;*/ //Esse if era pra ler a mensagem apenas quem não a tivesse enviado
-       
-        if (myID == message.ClientID && this.NetworkObject.ObjectId == message.ObjectID)
-        {
-            Debug.Log("Received message of type " + message.MessageType + ", received from " 
-                      + message.ObjectID + ": " + message.Content);
-            refs.localManager.RunRoundResult(message.Content, message.ValueContent);
-        }
+        refs.localManager.RunRoundResult(message.Content, message.ValueContent);
     }
     
     private void SendNewConnectionToServer()

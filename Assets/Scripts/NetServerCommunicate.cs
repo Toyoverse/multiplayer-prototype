@@ -46,7 +46,7 @@ public class NetServerCommunicate : MonoBehaviour
                 InstanceFinder.ServerManager.Broadcast(netMessage);
                 break;
             case MESSAGE_TYPE.CARD_CHOICE:
-                gameSystem.RegisterNewPlayerChoice(netMessage.ClientID, netMessage.ObjectID, netMessage.Content);
+                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, netMessage.Content);
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
                 if (gameSystem.playersConnected >= 2)

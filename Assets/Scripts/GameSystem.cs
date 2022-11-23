@@ -6,6 +6,7 @@ using FishNet;
 using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
+using Tools;
 using Debug = UnityEngine.Debug;
 
 public class GameSystem : NetworkBehaviour
@@ -16,7 +17,7 @@ public class GameSystem : NetworkBehaviour
     [Header("GAME STATUS")]
     [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerHealth> playerHealths;
-    [SerializeField] private int round;
+    [SerializeField] private int round = 0;
     public int playersConnected => playerHealths?.Count ?? 0;
 
     [Header("LIFE VALUES")] 
@@ -41,7 +42,7 @@ public class GameSystem : NetworkBehaviour
         if (playerHealths == null)
             ResetPlayersHealth();
 
-        if (playerHealths.Count == 2)
+        if (playerHealths.Count >= 2)
             return;
         
         var newPlayer = new PlayerHealth()
@@ -58,7 +59,7 @@ public class GameSystem : NetworkBehaviour
             SendStartGameForAllClients();
     }
     
-    public void RegisterNewPlayerChoice(int clientID, int objectID, string pChoice)
+    public void RegisterPlayerChoice(int clientID, int objectID, string pChoice)
     {
         if (playersChoices == null)
             ResetPlayerChoices();
@@ -94,8 +95,7 @@ public class GameSystem : NetworkBehaviour
         if (!InstanceFinder.IsServer)
             this.gameObject.GetComponent<GameSystem>().enabled = false;
         netServer ??= FindObjectOfType<NetServerCommunicate>();
-        onEndRound += ResetPlayerChoices;
-        onEndRound += CheckGameOver;
+        onEndRound += EndRoundChecks;
     }
 
     private Match_Info GetMatchResult()
@@ -219,9 +219,12 @@ public class GameSystem : NetworkBehaviour
 
     private void CheckChoices()
     {
+        SendGameSystemInfoToClients();
+        
         if (playersChoices.Count != 2)
             return;
 
+        round++;
         var result = GetMatchResult();
         if (result.isDraw)
         {
@@ -231,9 +234,13 @@ public class GameSystem : NetworkBehaviour
         else
         {
             DamagePlayer(result.loserObjectID);
-            SendToClientResult(GetPlayerChoice(result.loserObjectID), loseCode);
-            SendToClientResult(GetPlayerChoice(result.winnerObjectID), winCode);
+            if (GetPlayerDeath() == null)
+            {
+                SendToClientResult(GetPlayerChoice(result.loserObjectID), loseCode);
+                SendToClientResult(GetPlayerChoice(result.winnerObjectID), winCode);
+            }
         }
+
         onEndRound?.Invoke();
     }
 
@@ -265,8 +272,8 @@ public class GameSystem : NetworkBehaviour
 
     private void ResetPlayerChoices()
     {
+        playersChoices.Clear();
         playersChoices = new List<GameChoice>();
-        round++;
     }
     
     private void CheckGameOver()
@@ -275,14 +282,39 @@ public class GameSystem : NetworkBehaviour
         if (playerDeath != null)
         {
             round = 0;
-            ResetPlayersHealth();
-            //TODO: DISCONNECT CLIENTS
+            SendGameOverToClients();
         }
+    }
+
+    private void SendGameOverToClients()
+    {
+        var playerDeath = GetPlayerDeath();
+        var playerAlive = GetPlayerAlive();
+        SendGameOverMessage(playerDeath, loseCode);
+        SendGameOverMessage(playerAlive, winCode);
+        ResetPlayersHealth();
+    }
+
+    private void SendGameOverMessage(PlayerHealth player, string endCode)
+    {
+        var gameOverMessage = new NetworkMessage()
+        {
+            ClientID = player.playerClientID,
+            ObjectID = player.playerObjectID,
+            Content = endCode,
+            MessageType = (int)MESSAGE_TYPE.GAME_OVER,
+            ValueContent = player.playerHealth
+        };
+        netServer.SendMessageToClient(gameOverMessage);
     }
 
     private PlayerHealth GetPlayerDeath()
     {
         return playerHealths.FirstOrDefault(player => player.playerHealth <= 0.1f);
+    }
+    private PlayerHealth GetPlayerAlive()
+    {
+        return playerHealths.FirstOrDefault(player => player.playerHealth >= 0);
     }
 
     private void DamagePlayer(int objectID)
@@ -323,6 +355,36 @@ public class GameSystem : NetworkBehaviour
             };
             netServer.SendMessageToClient(netMessage);
         }
+    }
+
+    private void SendStringMessageForAllClients(string message)
+    {
+        foreach (var player in playerHealths)
+        {
+            var netMessage = new NetworkMessage
+            {
+                ClientID = player.playerClientID,
+                ObjectID = player.playerObjectID,
+                Content = message,
+                MessageType = (int)MESSAGE_TYPE.STRING,
+                ValueContent = player.playerHealth
+            };
+            netServer.SendMessageToClient(netMessage);
+        }
+    }
+
+    private void SendGameSystemInfoToClients()
+    {
+        var m = "playersChoices.Count: " + playersChoices.Count + " | round: " + round + 
+                "\nPlayer[" + playerHealths[0].playerObjectID + "] Health: " + playerHealths[0].playerHealth +
+                "\nPlayer[" + playerHealths[1].playerObjectID + "] Health: " + playerHealths[1].playerHealth;
+        SendStringMessageForAllClients(m);
+    }
+
+    private void EndRoundChecks()
+    {
+        ResetPlayerChoices();
+        CheckGameOver();
     }
 
     #endregion

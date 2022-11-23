@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5b84862f3942c4e9e5a09cf08acb20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  round: 0
 --- !u!4 &239386957
 Transform:
   m_ObjectHideFlags: 0
@@ -313,6 +314,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4393252309867130426, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393252310051871673, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 7443408887813606049, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -492,7 +501,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1617824014
 Transform:
   m_ObjectHideFlags: 0
@@ -552,7 +561,10 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 1617824015}
   netServer: {fileID: 261233565}
   playersChoices: []
+  playerHealths: []
   round: 0
+  maxHealth: 3
+  roundDamage: 1
 --- !u!1 &1781507504
 GameObject:
   m_ObjectHideFlags: 0

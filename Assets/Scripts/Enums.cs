@@ -14,5 +14,6 @@ public enum MESSAGE_TYPE
     CARD_CHOICE = 2,
     ROUND_RESULT = 3,
     STRING = 4,
-    START_GAME = 5
+    START_GAME = 5,
+    GAME_OVER = 6
 }

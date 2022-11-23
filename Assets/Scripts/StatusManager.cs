@@ -35,7 +35,6 @@ public class StatusManager : NetworkBehaviour
     public void InitHealth(float value)
     {
         health = maxHealth = value;
-        onChangeHealt?.Invoke();
         InitializeUI();
     }
     
@@ -48,15 +47,7 @@ public class StatusManager : NetworkBehaviour
         var playerUI = Instantiate(uiPrefab, refs.uiCanvasObject.transform);
         _uiManager = playerUI.GetComponent<UIManager>();
         _uiManager.AddUIEvents(this);
-        onChangeHealt += GameOverCheck;
-    }
-
-    private void GameOverCheck() //Death
-    {
-        if (health <= 0.1f)
-        {
-            //GAME OVER
-        }
+        onChangeHealt?.Invoke();
     }
 
     private void OnDestroy()

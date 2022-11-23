@@ -226,6 +226,17 @@ public class NetworkHudCanvases : MonoBehaviour
         DeselectButtons();
     }
 
+    public void OnlyDisconnect()
+    {
+        if (_networkManager == null)
+            return;
+
+        if (_clientState != LocalConnectionState.Stopped)
+            _networkManager.ClientManager.StopConnection();
+
+        DeselectButtons();
+    }
+
 
     private void SetEventSystem()
     {
