@@ -9,6 +9,13 @@ public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
     
+    #region Public Methods
+
+    public void SendMessageToClient(NetworkMessage networkMessage) =>
+        InstanceFinder.ServerManager.Broadcast(networkMessage);
+    
+    #endregion
+    
     #region Private Methods
     
     private void OnEnable()
@@ -41,25 +48,12 @@ public class NetServerCommunicate : MonoBehaviour
             case MESSAGE_TYPE.CARD_CHOICE:
                 gameSystem.RegisterNewPlayerChoice(netMessage.ClientID, netMessage.ObjectID, netMessage.Content);
                 break;
-            case MESSAGE_TYPE.MATCH_RESULT:
+            case MESSAGE_TYPE.NEW_CONNECTION:
+                if (gameSystem.playersConnected >= 2)
+                    return;
+                gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID);
                 break;
         }
-    }
-    
-    #endregion
-    
-    #region Public Methods
-
-    public void SendToClientResult(int clientID, int objectID, string message)
-    {
-        var netMessage = new NetworkMessage
-        {
-            ClientID = clientID,
-            ObjectID = objectID,
-            Content = message,
-            MessageType = (int)MESSAGE_TYPE.MATCH_RESULT
-        };
-        InstanceFinder.ServerManager.Broadcast(netMessage);
     }
     
     #endregion

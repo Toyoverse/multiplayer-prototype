@@ -5,19 +5,18 @@ using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet;
+using Tools;
 
 public class NetClientCommunicate : NetworkBehaviour
 {
-    [Header("REFERENCES")] 
-    private ScriptsReferences refs;
+    private ScriptsReferences refs => ScriptsReferences.Instance;
 
     #region Public Methods
     
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (refs == null)
-            refs = FindObjectOfType<ScriptsReferences>();
+
         if (!base.IsOwner)
         {
             gameObject.GetComponent<NetClientCommunicate>().enabled = false;
@@ -25,23 +24,14 @@ public class NetClientCommunicate : NetworkBehaviour
         }
         else
         {
-            refs.playerInput.PlayerInputsInit(this);
+            refs.myNetClientCommunicate = this;
+            SendNewConnectionToServer();
         }
         
         InstanceFinder.ClientManager.RegisterBroadcast<NetworkMessage>(OnMessageReceived);
     }
 
-    public void SendChoiceToServer(string choice)
-    {
-        var netMessage = new NetworkMessage()
-        {
-            ClientID = ClientManager.GetInstanceID(),
-            ObjectID = this.NetworkObject.ObjectId,
-            MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            Content = choice
-        };
-        InstanceFinder.ClientManager.Broadcast(netMessage);
-    }
+    public void SendMessageToServer(NetworkMessage networkMessage) => InstanceFinder.ClientManager.Broadcast(networkMessage);
 
     #endregion
     
@@ -54,10 +44,21 @@ public class NetClientCommunicate : NetworkBehaviour
 
     private void TreatMessage(NetworkMessage message)
     {
-        if (message.MessageType == (int)MESSAGE_TYPE.STRING)
-            Debug.Log("Received string message: " + message.Content);
+        switch (message.MessageType)
+        {
+            case (int)MESSAGE_TYPE.STRING:
+                Debug.Log("Received string message: " + message.Content);
+                break;
+            case (int)MESSAGE_TYPE.NEW_CONNECTION:
+                refs.localManager.ConnectionSuccess();
+                break;
+            case (int)MESSAGE_TYPE.START_GAME:
+                refs.myStatusManager.InitHealth(message.ValueContent);
+                refs.localManager.GameInit();
+                break;
+        }
 
-        if (message.MessageType != (int)MESSAGE_TYPE.MATCH_RESULT)
+        if (message.MessageType != (int)MESSAGE_TYPE.ROUND_RESULT)
             return;
         
         var myID = ClientManager.GetInstanceID();
@@ -68,26 +69,19 @@ public class NetClientCommunicate : NetworkBehaviour
         {
             Debug.Log("Received message of type " + message.MessageType + ", received from " 
                       + message.ObjectID + ": " + message.Content);
-            RunResult(message.Content);
+            refs.localManager.RunRoundResult(message.Content, message.ValueContent);
         }
     }
-
-    private void RunResult(string result)
+    
+    private void SendNewConnectionToServer()
     {
-        switch (result.ToUpper())
+        var netMessage = new NetworkMessage()
         {
-            case "WIN":
-                ShowLogs.Instance.Log("ROUND WIN!\nStarting a new round, please wait...");
-                break;
-            case "DRAW":
-                ShowLogs.Instance.Log("DRAW!\nStarting a new round, please wait...");
-                break;
-            case "LOSE":
-                ShowLogs.Instance.Log("ROUND LOSE!\nStarting a new round, please wait...");
-                break;
-        }
-
-        refs.playerInput.RoundInit();
+            ClientID = ClientManager.GetInstanceID(),
+            ObjectID = this.NetworkObject.ObjectId,
+            MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION
+        };
+        SendMessageToServer(netMessage);
     }
 
     #endregion

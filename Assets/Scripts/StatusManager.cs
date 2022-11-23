@@ -7,119 +7,85 @@ using FishNet.Broadcast;
 public class StatusManager : NetworkBehaviour
 {
     [Header("STATUS")] 
-    public float Health;
-    public float Mana;
-    [SerializeField] private float maxHealth;
-    [SerializeField] private float maxMana;
+    public float health;
+    public float maxHealth;
 
-    [Header("REFERENCES")] 
-    private ScriptsReferences refs;
+    [Header("REFERENCES")]
     public GameObject uiPrefab;
     private UIManager _uiManager;
-    
-    [Header("Values per Attack")] 
-    [SerializeField] private float manaCost;
-    [SerializeField] private float hpDamage;
-    [Header("Mana regen config")]
-    [SerializeField] private float manaRegenValue;
-    [SerializeField] private float manaRegenTime;
-    
+    private ScriptsReferences refs => ScriptsReferences.Instance;
+
     #region Events
+    
     public delegate void HealthChange();
     public HealthChange onChangeHealt;
-    public delegate void ManaChange();
-    public ManaChange onChangeMana;
+    
     #endregion
     
     #region Public methods
-    public void AddHealth(float value)
+    
+    public void ChangeHealth(float value)
     {
-        Health += value;
-        if (Health > maxHealth)
-            Health = maxHealth;
+        health = value;
+        if (health > maxHealth)
+            health = maxHealth;
         onChangeHealt?.Invoke();
     }
 
-    public void AddMana(float value)
+    public void InitHealth(float value)
     {
-        Mana += value;
-        if (Mana > maxMana)
-            Mana = maxMana;
-        onChangeMana?.Invoke();
+        health = maxHealth = value;
+        onChangeHealt?.Invoke();
+        InitializeUI();
     }
+    
     #endregion
     
     #region Private methods
-    private void StartStatus()
-    {
-        //ResetStats();
-        InvokeRepeating(nameof(ManaRegen), 0, manaRegenTime);
-    }
-    
-    private void ResetStats()
-    {
-        Health = maxHealth;
-        Mana = maxMana;
-        onChangeHealt?.Invoke();
-        onChangeMana?.Invoke();
-    }
-
-    private void Update()
-    {
-        if (refs == null)
-            return;
-        if (refs.playerInput.spaceButton && Mana >= manaCost)
-        {
-            ChangeManaServer(this.gameObject, -manaCost);
-            ChangeHealthServer(this.gameObject, -hpDamage);
-        }
-    }
-
-    private void ManaRegen() => ChangeManaServer(this.gameObject, manaRegenValue);
 
     private void InitializeUI()
     {
-        refs ??= FindObjectOfType<ScriptsReferences>();
         var playerUI = Instantiate(uiPrefab, refs.uiCanvasObject.transform);
         _uiManager = playerUI.GetComponent<UIManager>();
         _uiManager.AddUIEvents(this);
-        /*if(IsOwner)
-            ResetStats();*/
-        onChangeHealt?.Invoke();
-        onChangeMana?.Invoke();
+        onChangeHealt += GameOverCheck;
+    }
+
+    private void GameOverCheck() //Death
+    {
+        if (health <= 0.1f)
+        {
+            //GAME OVER
+        }
     }
 
     private void OnDestroy()
     {
         Destroy(_uiManager.gameObject);
     }
+    
     #endregion
 
     #region Network methods
+    
     public override void OnStartClient()
     {
         base.OnStartClient();
-        InitializeUI();
-        if (base.IsOwner)
+        if (!base.IsOwner)
         {
-            StartStatus();
+            GetComponent<StatusManager>().enabled = false;
         }
         else
         {
-            GetComponent<StatusManager>().enabled = false;
+            refs.myStatusManager = this;
         }
     }
 
     [ObserversRpc]
-    public void ChangeMana(GameObject gameObject, float value) => gameObject.GetComponent<StatusManager>().AddMana(value);
+    public void ChangeHealth(GameObject obj, float value) => obj.GetComponent<StatusManager>().ChangeHealth(value);
 
     [ServerRpc]
-    public void ChangeManaServer(GameObject gameObject, float value) => ChangeMana(gameObject, value);
-
-    [ObserversRpc]
-    public void ChangeHealth(GameObject gameObject, float value) => gameObject.GetComponent<StatusManager>().AddHealth(value);
-
-    [ServerRpc]
-    public void ChangeHealthServer(GameObject gameObject, float value) => ChangeHealth(gameObject, value);
+    public void ChangeHealthServer(float value) => ChangeHealth(this.gameObject, value);
+    
     #endregion
 }

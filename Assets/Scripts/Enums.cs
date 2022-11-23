@@ -7,18 +7,12 @@ public enum CARD_TYPE
     SCISSOR = 3
 }
 
-public enum MATCH_RESULT
-{
-    NONE = 0,
-    LOSE = 1,
-    DRAW = 2,
-    WIN = 3
-}
-
 public enum MESSAGE_TYPE
 {
     NONE = 0,
-    CARD_CHOICE = 1,
-    MATCH_RESULT = 2,
-    STRING = 3
+    NEW_CONNECTION = 1,
+    CARD_CHOICE = 2,
+    ROUND_RESULT = 3,
+    STRING = 4,
+    START_GAME = 5
 }

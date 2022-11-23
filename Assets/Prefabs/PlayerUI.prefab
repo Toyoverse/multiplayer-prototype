@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthImage: {fileID: 7514673946412475171}
   manaImage: {fileID: 7514673947200738289}
-  scriptsReferences: {fileID: 0}
+  _statusManager: {fileID: 0}
 --- !u!1 &7514673945204962810
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7514673946007476588
 RectTransform:
   m_ObjectHideFlags: 0
