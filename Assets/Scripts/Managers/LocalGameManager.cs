@@ -36,7 +36,7 @@ public class LocalGameManager : MonoBehaviour
 
     public void ConnectionSuccess(float maxHealthValue)
     {
-        ShowLogs.Instance.Log(successConnection);
+        ShowSimpleLogs.Instance.Log(successConnection);
         refs.myStatusManager.InitHealth(maxHealthValue);
     }
     
@@ -54,13 +54,13 @@ public class LocalGameManager : MonoBehaviour
         switch (result.ToUpper())
         {
             case "WIN":
-                ShowLogs.Instance.Log(winMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+                ShowSimpleLogs.Instance.Log(winMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
                 break;
             case "DRAW":
-                ShowLogs.Instance.Log(drawMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+                ShowSimpleLogs.Instance.Log(drawMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
                 break;
             case "LOSE":
-                ShowLogs.Instance.Log(loseMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+                ShowSimpleLogs.Instance.Log(loseMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
                 break;
         }
 
@@ -88,18 +88,18 @@ public class LocalGameManager : MonoBehaviour
     {
         if (timeRemain <= 0)
         {
-            ShowLogs.Instance.Log(disconnectedMessage);
+            ShowSimpleLogs.Instance.Log(disconnectedMessage);
             DisconnectToServer();
         }
         else
         {
-            ShowLogs.Instance.Log(disconnectCountMessage + timeRemain);
+            ShowSimpleLogs.Instance.Log(disconnectCountMessage + timeRemain);
             var newTimeRemain = timeRemain - 1;
             StartCoroutine(TimeTools.InvokeInTime(CountToDisconnect, newTimeRemain, 1));
         }
     }
 
-    private void DisconnectToServer() => FindObjectOfType<NetworkHudCanvases>().OnlyDisconnect();
+    private void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
 
     private void RoundInit() => StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
 
@@ -108,7 +108,7 @@ public class LocalGameManager : MonoBehaviour
         if (refs.myStatusManager.health <= 0.1f)
             return;
         round++;
-        ShowLogs.Instance.Log(roundInitMessage);
+        ShowSimpleLogs.Instance.Log(roundInitMessage);
         refs.playerInput.EnableMoveButtons();
     }
     
@@ -125,7 +125,7 @@ public class LocalGameManager : MonoBehaviour
         };
         refs.myNetClientCommunicate.SendMessageToServer(netMessage);
         
-        ShowLogs.Instance.Log(choiceMessage + move + opponentWait);
+        ShowSimpleLogs.Instance.Log(choiceMessage + move + opponentWait);
     }
 
     private void RockSelect() => MoveSelect(rockCode);

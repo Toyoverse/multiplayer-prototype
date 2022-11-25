@@ -160,7 +160,11 @@ namespace FishNet.Transporting.Tugboat.Client
                 return false;
 
             if (info != null && base.Transport.NetworkManager.CanLog(LoggingType.Common))
+            {
                 Debug.Log($"Local client disconnect reason: {info.Value.Reason}.");
+                if (info.Value.Reason == DisconnectReason.ConnectionFailed)
+                    base.Transport.NetworkManager.onCustomConnectError?.Invoke();
+            }
 
             base.SetConnectionState(LocalConnectionState.Stopping, false);
             StopSocketOnThread();

@@ -1,10 +1,9 @@
 using TMPro;
-using Tools;
 using UnityEngine;
 
 namespace Tools
 {
-    public class ShowLogs : Singleton<ShowLogs>
+    public class ShowSimpleLogs : Singleton<ShowSimpleLogs>
     {
         [Header("REFERENCES")] [SerializeField]
         private TextMeshProUGUI label;

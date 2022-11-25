@@ -12,7 +12,7 @@ public class StatusManager : NetworkBehaviour
 
     [Header("REFERENCES")]
     public GameObject uiPrefab;
-    private UIManager _uiManager;
+    private UIPlayerManager _uiPlayerManager;
     private ScriptsReferences refs => ScriptsReferences.Instance;
 
     #region Events
@@ -45,14 +45,14 @@ public class StatusManager : NetworkBehaviour
     private void InitializeUI()
     {
         var playerUI = Instantiate(uiPrefab, refs.uiCanvasObject.transform);
-        _uiManager = playerUI.GetComponent<UIManager>();
-        _uiManager.AddUIEvents(this);
+        _uiPlayerManager = playerUI.GetComponent<UIPlayerManager>();
+        _uiPlayerManager.AddUIEvents(this);
         onChangeHealt?.Invoke();
     }
 
     private void OnDestroy()
     {
-        Destroy(_uiManager.gameObject);
+        Destroy(_uiPlayerManager.gameObject);
     }
     
     #endregion

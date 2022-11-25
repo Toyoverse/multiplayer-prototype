@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIPlayerManager : MonoBehaviour
 {
     [Header("REFERENCES")] 
     [SerializeField] private Image healthImage;

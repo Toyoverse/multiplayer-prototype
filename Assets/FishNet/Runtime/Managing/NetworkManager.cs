@@ -217,6 +217,10 @@ namespace FishNet.Managing
         internal const ushort MAXIMUM_FRAMERATE = 500;
         #endregion
 
+        #region Custom
+        public delegate void CustomConnectError();
+        public CustomConnectError onCustomConnectError;
+        #endregion
 
         private void Awake()
         {
