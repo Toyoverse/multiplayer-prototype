@@ -24,8 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Head-Nyima-Halftone
-  m_Shader: {fileID: -6465566751694194690, guid: 1f94dd09c640a9443bb3c4a040ab4aab,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1f94dd09c640a9443bb3c4a040ab4aab, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -81,11 +80,11 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _Half_Edge: 1.52
-    - _Half_Offset: 0.19
+    - _Half_Edge: 0.33
+    - _Half_Offset: 0.96
     - _Half_Threshold: 0.0722
     - _OpaqueCullMode: 2
-    - _Pattern_Tiling: 25.9
+    - _Pattern_Tiling: 26.8
     - _RenderQueueType: 1
     - _SrcBlend: 1
     - _StencilRef: 0
