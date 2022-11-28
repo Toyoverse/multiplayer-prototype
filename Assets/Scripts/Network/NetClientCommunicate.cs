@@ -24,6 +24,7 @@ public class NetClientCommunicate : NetworkBehaviour
         }
         else
         {
+            UIMenuManager.Instance.ConnectedSuccess();
             refs.myNetClientCommunicate = this;
             SendNewConnectionToServer();
         }

@@ -14,6 +14,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     [SerializeField] private TextMeshProUGUI labelLogs;
     [SerializeField] private Button startButton;
     [SerializeField] private Button exitButton;
+    [SerializeField] private Canvas mainMenuObj;
 
     private ScriptsReferences refs => ScriptsReferences.Instance;
 
@@ -22,6 +23,26 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     private const string waitOpponentMessage = "Waiting for an opponent.";
     private const string successConnectionMessage = "Connected successfully.";
 
+    #region Public Methods
+    
+    public void ConnectedSuccess() => LogMessage(successConnectionMessage + "\n" + waitOpponentMessage);
+
+    public void GoToStartGame()
+    {
+        mainMenuObj ??= this.gameObject.GetComponent<Canvas>();
+        mainMenuObj.enabled = false;
+    }
+
+    public void BackToMenu()
+    {
+        refs.localManager.DisconnectToServer();
+        mainMenuObj.enabled = true;
+    }
+    
+    #endregion
+    
+    #region Private Methods
+    
     private void Start()
     {
         exitButton.onClick.AddListener(ExitGame);
@@ -46,7 +67,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
             return;
         }
         refs.myTugboat.SetClientAddress(ipInputField.text);
-        refs.myNetHudCanvas.OnClick_Client();
+        refs.myNetHudCanvas.OnlyConnect();
     }
 
     private void LogMessage(string message) => labelLogs.text = message;
@@ -60,4 +81,6 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     {
         refs.myTugboat.NetworkManager.onCustomConnectError -= OnConnectError;
     }
+    
+    #endregion
 }

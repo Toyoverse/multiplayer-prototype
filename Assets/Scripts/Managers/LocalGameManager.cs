@@ -24,6 +24,8 @@ public class LocalGameManager : MonoBehaviour
     private const string genericErrorMessage = "Something went wrong, please try restarting the game.";
 
     public int round = 0;
+
+    private string gameOverMessage = "";
     
     #region Events
 
@@ -70,15 +72,20 @@ public class LocalGameManager : MonoBehaviour
 
     public void GameOver(string result)
     {
-        var resultMessage = result.ToUpper() switch
+        gameOverMessage = result.ToUpper() switch
         {
             "WIN" => matchWinMessage,
             "LOSE" => matchLoseMessage,
             _ => genericErrorMessage
         };
 
+        if(gameOverMessage == matchLoseMessage)
+            refs.myStatusManager.ChangeHealth(0);
+        
         CountToDisconnect(10);
     }
+    
+    public void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
 
     #endregion
     
@@ -93,18 +100,17 @@ public class LocalGameManager : MonoBehaviour
         }
         else
         {
-            ShowSimpleLogs.Instance.Log(disconnectCountMessage + timeRemain);
+            ShowSimpleLogs.Instance.Log(gameOverMessage + "\n" + disconnectCountMessage + timeRemain);
             var newTimeRemain = timeRemain - 1;
             StartCoroutine(TimeTools.InvokeInTime(CountToDisconnect, newTimeRemain, 1));
         }
     }
 
-    private void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
-
     private void RoundInit() => StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
 
     private void InitRound()
     {
+        UIMenuManager.Instance.GoToStartGame();
         if (refs.myStatusManager.health <= 0.1f)
             return;
         round++;
@@ -136,6 +142,8 @@ public class LocalGameManager : MonoBehaviour
     
     private void OnDisable()
     {
+        if(refs is null)
+            return;
         refs.playerInput.rockButton.onClick.RemoveListener(RockSelect);
         refs.playerInput.paperButton.onClick.RemoveListener(PaperSelect);
         refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);

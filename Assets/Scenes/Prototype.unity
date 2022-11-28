@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 262.3369, g: 325.0498, b: 430.21924, a: 1}
+  m_IndirectSpecularColor: {r: 261.9007, g: 324.45554, b: 429.43463, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -552,29 +552,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 284828620390291423, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
+      propertyPath: _autoStartType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 284828620931447527, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 284828620931447528, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 284828621317508967, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 284828621317508968, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 580270684145226101, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3226585576538410367, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4540786949693497689, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
+      propertyPath: _clientAddress
+      value: 3.237.223.198
       objectReference: {fileID: 0}
     - target: {fileID: 6361423939526749180, guid: b0d0f7cfd4c4d534d9bcc0828ee2d24b, type: 3}
       propertyPath: m_Name
@@ -855,10 +863,6 @@ PrefabInstance:
     - target: {fileID: 5861614394208818338, guid: 1dfbe7dc793424b42b995693f92cf64b, type: 3}
       propertyPath: m_Name
       value: Menu_Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 5861614394208818338, guid: 1dfbe7dc793424b42b995693f92cf64b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5861614394208818342, guid: 1dfbe7dc793424b42b995693f92cf64b, type: 3}
       propertyPath: m_Pivot.x

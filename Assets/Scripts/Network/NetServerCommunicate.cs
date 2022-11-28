@@ -4,6 +4,7 @@ using UnityEngine;
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
+using FishNet.Transporting;
 
 public class NetServerCommunicate : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class NetServerCommunicate : MonoBehaviour
         }
         InstanceFinder.ServerManager.RegisterBroadcast<NetworkMessage>(OnMessageReceived);
         gameSystem ??= FindObjectOfType<GameSystem>();
+        InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnectionStateListener;
     }
     
     private void OnDisable()
@@ -55,6 +57,14 @@ public class NetServerCommunicate : MonoBehaviour
                 break;
         }
     }
-    
+
+    private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args)
+    {
+        if (args.ConnectionState == RemoteConnectionState.Stopped)
+        { 
+            gameSystem.ClientDisconnected(conn.ClientId);
+        }
+    }
+
     #endregion
 }

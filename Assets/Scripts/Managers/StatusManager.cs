@@ -52,7 +52,8 @@ public class StatusManager : NetworkBehaviour
 
     private void OnDestroy()
     {
-        Destroy(_uiPlayerManager.gameObject);
+        if(_uiPlayerManager != null)
+            Destroy(_uiPlayerManager.gameObject);
     }
     
     #endregion

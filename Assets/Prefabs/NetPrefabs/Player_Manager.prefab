@@ -51,16 +51,17 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   _networkBehaviours:
   - {fileID: 6130630949578957553}
+  - {fileID: 5285219190113234209}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: -1
+  <PrefabId>k__BackingField: 4
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 16888587979787071765
+  <AssetPathHash>k__BackingField: 16149249539710155304
   _sceneNetworkObjects:
   - {fileID: 862534635934783995}
   - {fileID: 0}
@@ -106,9 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6914b20d7f2fb64dbdfe3b1312eab7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 862534635934783995}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 862534635934783995}
   health: 0
   maxHealth: 0
   uiPrefab: {fileID: 3875880736071651681, guid: cff8cdc6572119e44a251bc4398d0c52, type: 3}

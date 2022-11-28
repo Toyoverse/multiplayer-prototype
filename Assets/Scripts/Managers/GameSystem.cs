@@ -28,13 +28,6 @@ public class GameSystem : NetworkBehaviour
     private const string loseCode = "LOSE";
     private const string drawCode = "DRAW";
 
-    #region Events
-
-    private delegate void EndRound();
-    private EndRound onEndRound;
-
-    #endregion
-
     #region Public methods
     
     public void RegisterNewPlayerConnection(int clientID, int objectID)
@@ -86,6 +79,13 @@ public class GameSystem : NetworkBehaviour
         CheckChoices();
     }
 
+    public void ClientDisconnected(int clientID)
+    {
+        var playerDisconnected = GetPlayerHealthByClientID(clientID);
+        playerDisconnected.playerHealth = 0;
+        SendGameOverToClients();
+    }
+
     #endregion
     
     #region Private Methods
@@ -95,7 +95,6 @@ public class GameSystem : NetworkBehaviour
         if (!InstanceFinder.IsServer)
             this.gameObject.GetComponent<GameSystem>().enabled = false;
         netServer ??= FindObjectOfType<NetServerCommunicate>();
-        onEndRound += EndRoundChecks;
     }
 
     private Match_Info GetMatchResult()
@@ -241,7 +240,7 @@ public class GameSystem : NetworkBehaviour
             }
         }
 
-        onEndRound?.Invoke();
+        EndRoundChecks();
     }
 
     private void SendToClientResult(GameChoice playerChoice, string result)
@@ -385,6 +384,17 @@ public class GameSystem : NetworkBehaviour
     {
         ResetPlayerChoices();
         CheckGameOver();
+    }
+
+    private PlayerHealth GetPlayerHealthByClientID(int id)
+    {
+        for (var i = 0; i < playerHealths.Count; i++)
+        {
+            if (playerHealths[i].playerClientID == id)
+                return playerHealths[i];
+        }
+
+        return null;
     }
 
     #endregion

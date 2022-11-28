@@ -444,6 +444,7 @@ GameObject:
   - component: {fileID: 5861614394208818343}
   - component: {fileID: 5861614394208818336}
   - component: {fileID: 5861614394208818337}
+  - component: {fileID: 6295166835074171412}
   m_Layer: 5
   m_Name: Menu_Canvas
   m_TagString: Untagged
@@ -535,6 +536,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6295166835074171412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5861614394208818338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c089ec478f6aa438aae3fd7fe9963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ipInputField: {fileID: 5861614394212903638}
+  labelLogs: {fileID: 5861614394915793844}
+  startButton: {fileID: 5861614394497515898}
+  exitButton: {fileID: 5861614394586710265}
+  mainMenuObj: {fileID: 5861614394208818343}
 --- !u!1 &5861614394212903632
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,8 +1448,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1448,15 +1466,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 72
+  m_fontSizeBase: 34.53
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1484,7 +1502,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 30.185257, y: 67.41085, z: 28.763412, w: 80.067825}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
