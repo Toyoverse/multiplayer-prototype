@@ -17,3 +17,13 @@ public enum MESSAGE_TYPE
     START_GAME = 5,
     GAME_OVER = 6
 }
+
+public enum GAME_STATE
+{
+    NONE = 0,
+    WAIT_CONNECTIONS = 1,
+    STARTING = 2,
+    CHOICE_TIME = 3,
+    COMPARE_TIME = 4,
+    GAME_OVER = 5
+}

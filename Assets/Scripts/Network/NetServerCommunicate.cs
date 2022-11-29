@@ -9,6 +9,8 @@ using FishNet.Transporting;
 public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
+
+    private int testClientCount = 0;
     
     #region Public Methods
 
@@ -18,7 +20,16 @@ public class NetServerCommunicate : MonoBehaviour
     #endregion
     
     #region Private Methods
-    
+
+    private void Update()
+    {
+        if (InstanceFinder.ServerManager.Clients.Count != testClientCount)
+        {
+            testClientCount = InstanceFinder.ServerManager.Clients.Count;
+            gameSystem.SendStringMessageForAllClients("ClientCount: " + testClientCount);
+        }
+    }
+
     private void OnEnable()
     {
         if (!InstanceFinder.IsServer)
@@ -28,6 +39,7 @@ public class NetServerCommunicate : MonoBehaviour
         InstanceFinder.ServerManager.RegisterBroadcast<NetworkMessage>(OnMessageReceived);
         gameSystem ??= FindObjectOfType<GameSystem>();
         InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnectionStateListener;
+        //InstanceFinder.ServerManager.NetworkManager.TransportManager.Transport.OnClientConnectionState += OnRemoteConnectionStateListener;
     }
     
     private void OnDisable()
@@ -51,19 +63,25 @@ public class NetServerCommunicate : MonoBehaviour
                 gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, netMessage.Content);
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
-                if (gameSystem.playersConnected >= 2)
+                if (gameSystem.gameState != GAME_STATE.WAIT_CONNECTIONS)
+                {
+                    gameSystem.SendStringMessageForAllClients("[SERVER] The server is not accepting new connections, " +
+                                                              "there is already a match in progress. Connected " +
+                                                              "Clients: " + gameSystem.playersConnected);
                     return;
+                }
                 gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID);
                 break;
         }
     }
 
-    private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args)
+    private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args /*ClientConnectionStateArgs args*/)
     {
-        if (args.ConnectionState == RemoteConnectionState.Stopped)
+        gameSystem.ClientDisconnected(conn, args);
+        /*if (args.ConnectionState == RemoteConnectionState.Stopped)
         { 
             gameSystem.ClientDisconnected(conn.ClientId);
-        }
+        }*/
     }
 
     #endregion

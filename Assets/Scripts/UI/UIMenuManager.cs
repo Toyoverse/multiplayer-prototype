@@ -35,7 +35,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
 
     public void BackToMenu()
     {
-        refs.localManager.DisconnectToServer();
+        //refs.localManager.DisconnectToServer();
         mainMenuObj.enabled = true;
     }
     

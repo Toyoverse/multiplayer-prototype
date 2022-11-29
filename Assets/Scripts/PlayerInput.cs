@@ -12,6 +12,9 @@ public class PlayerInput : MonoBehaviour
     public Button paperButton;
     public Button scissorButton;
 
+    [Header("GAME BUTTONS")] 
+    public Button menuButton;
+
     #region Public Methods
 
     public void EnableMoveButtons() => MoveButtonsInteractable(true);

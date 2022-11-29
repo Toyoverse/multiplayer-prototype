@@ -47,6 +47,7 @@ public class LocalGameManager : MonoBehaviour
         refs.playerInput.rockButton.onClick.AddListener(RockSelect);
         refs.playerInput.paperButton.onClick.AddListener(PaperSelect);
         refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
+        refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
 
         RoundInit();
     }
@@ -91,6 +92,12 @@ public class LocalGameManager : MonoBehaviour
     
     #region Private Methods
 
+    private void BackToMenu()
+    {
+        DisconnectToServer();
+        UIMenuManager.Instance.BackToMenu();
+    }
+    
     private void CountToDisconnect(float timeRemain)
     {
         if (timeRemain <= 0)
