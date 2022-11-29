@@ -22,6 +22,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     private const string connectionErrorMessage = "Connection error. Please try again.";
     private const string waitOpponentMessage = "Waiting for an opponent.";
     private const string successConnectionMessage = "Connected successfully.";
+    private const string enterIpMessage = "Enter server adress and start...";
 
     #region Public Methods
     
@@ -37,6 +38,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     {
         //refs.localManager.DisconnectToServer();
         mainMenuObj.enabled = true;
+        LogMessage(enterIpMessage);
     }
     
     #endregion
@@ -48,6 +50,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
         exitButton.onClick.AddListener(ExitGame);
         startButton.onClick.AddListener(StartGame);
         refs.myTugboat.NetworkManager.onCustomConnectError += OnConnectError;
+        LogMessage(enterIpMessage);
     }
 
     private void ExitGame()

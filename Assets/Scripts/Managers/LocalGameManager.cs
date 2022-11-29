@@ -104,6 +104,7 @@ public class LocalGameManager : MonoBehaviour
         {
             ShowSimpleLogs.Instance.Log(disconnectedMessage);
             DisconnectToServer();
+            StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
         }
         else
         {
