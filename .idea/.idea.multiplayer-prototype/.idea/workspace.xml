@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="Fix network problems and more;&#10;- Fixed bugs in server and network connection;&#10;- Fixed problems in HDRP;&#10;- Added Game state in game system;&#10;- Added menu button in gameplay;&#10;- Added win for W.O. if one client disconnect during game;">
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" afterDir="false" />
+    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskBold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskBold SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskRegular SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskRegular SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,16 +18,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Fonts/wbv5 SDF.asset" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Prefabs/UI_GameCanvas.prefab" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Enums.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Enums.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/ShowSimpleLogs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/TimeTools.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/UI/UIMenuManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Editor/TMP_EditorUtility.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/InputField.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Selectable.cs" root0="SKIP_HIGHLIGHTING" />
@@ -107,7 +110,8 @@
       <workItem from="1669729639162" duration="534000" />
       <workItem from="1669731494680" duration="6515000" />
       <workItem from="1669743735176" duration="4565000" />
-      <workItem from="1669749397761" duration="5631000" />
+      <workItem from="1669749397761" duration="6757000" />
+      <workItem from="1669825112159" duration="2421000" />
     </task>
     <task id="LOCAL-00001" summary="First commit - WIP Multiplayer with dedicated server;">
       <created>1668734091475</created>
@@ -193,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669756478559</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Back to menu after disconnect in game over;">
+      <created>1669757106472</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1669757106472</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,7 +240,8 @@
     <MESSAGE value="Import and fix HDRP problems;" />
     <MESSAGE value="Menu with IP label and fix Network connections;" />
     <MESSAGE value="Fix network problems and more;&#10;- Fixed bugs in server and network connection;&#10;- Fixed problems in HDRP;&#10;- Added Game state in game system;&#10;- Added menu button in gameplay;&#10;- Added win for W.O. if one client disconnect during game;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix network problems and more;&#10;- Fixed bugs in server and network connection;&#10;- Fixed problems in HDRP;&#10;- Added Game state in game system;&#10;- Added menu button in gameplay;&#10;- Added win for W.O. if one client disconnect during game;" />
+    <MESSAGE value="Back to menu after disconnect in game over;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Back to menu after disconnect in game over;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -19,6 +19,7 @@ public class GameSystem : NetworkBehaviour
     [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerHealth> playerHealths;
     [SerializeField] private int round = 0;
+    [SerializeField] private int inactiveRounds = 0;
     public int playersConnected => playerHealths?.Count ?? 0;
 
     [Header("LIFE VALUES")] 
@@ -30,7 +31,8 @@ public class GameSystem : NetworkBehaviour
     private const string drawCode = "DRAW";
 
     private float timer;
-    private int roundLimit = 12;
+    private int roundTimeLimit = 12;
+    private int inactiveRoundsLimit = 3;
 
     public GAME_STATE gameState;
 
@@ -70,7 +72,7 @@ public class GameSystem : NetworkBehaviour
 
         foreach (var gameChoice in playersChoices)
         {
-            if (gameChoice.playerObjectID == objectID)
+            if (gameChoice.playerObjectID == objectID && gameChoice.playerClientID == clientID)
             {
                 gameChoice.choice = _pChoice;
                 return;
@@ -98,7 +100,7 @@ public class GameSystem : NetworkBehaviour
         playerDisconnected.playerHealth = 0;*/
         if (args.ConnectionState is RemoteConnectionState.Started)
             return;
-        GameOverForWO();
+        GameOverAllWin();
         var message = "ClientDisconnected_Args: args.connectionID: " + args.ConnectionId + ", args.connectionState: " 
                       + args.ConnectionState + "args.transportIndex: " + args.TransportIndex + 
                       " | NetConn.ClientID: " + conn.ClientId;
@@ -244,16 +246,15 @@ public class GameSystem : NetworkBehaviour
     {
         SendGameSystemInfoToClients();
         
-        if (gameState != GAME_STATE.COMPARE_TIME)
-            return;
-
-        round++;
         var result = GetMatchResult();
         if (result.isDraw)
         {
             if (result.isInactivePlayers)
+                inactiveRounds++;
+
+            if (inactiveRounds >= inactiveRoundsLimit)
             {
-                ChangeGameState(GAME_STATE.GAME_OVER);
+                GameOverAllLose();
                 return;
             }
             
@@ -270,6 +271,7 @@ public class GameSystem : NetworkBehaviour
             }
         }
 
+        round++;
         //EndRoundChecks();
         CheckGameOver();
     }
@@ -335,10 +337,17 @@ public class GameSystem : NetworkBehaviour
         //ResetPlayersHealth();
     }
 
-    private void GameOverForWO()
+    private void GameOverAllWin()
     {
         for(var i = 0; i < playerHealths.Count; i++)
             SendGameOverMessage(playerHealths[i], winCode);
+        ChangeGameState(GAME_STATE.GAME_OVER);
+    }
+    
+    private void GameOverAllLose()
+    {
+        for(var i = 0; i < playerHealths.Count; i++)
+            SendGameOverMessage(playerHealths[i], loseCode);
         ChangeGameState(GAME_STATE.GAME_OVER);
     }
 
@@ -382,6 +391,7 @@ public class GameSystem : NetworkBehaviour
     {
         playerHealths = new List<PlayerHealth>();
         round = 0;
+        inactiveRounds = 0;
         timer = 0;
         playersChoices?.Clear();
     }
@@ -455,7 +465,7 @@ public class GameSystem : NetworkBehaviour
         if (gameState != GAME_STATE.CHOICE_TIME)
             return;
         timer += Time.deltaTime;
-        if (timer >= roundLimit)
+        if (timer >= roundTimeLimit)
         {
             GoToCompareTime();
         }
@@ -513,7 +523,14 @@ public class GameSystem : NetworkBehaviour
 
     private bool AllPlayersChose()
     {
-        return playersChoices.All(choice => choice.choice != CARD_TYPE.NONE);
+        var result = true;
+        foreach (var choice in playersChoices)
+        {
+            if (choice.choice == CARD_TYPE.NONE) 
+                result = false;
+        }
+
+        return result;
     }
 
     #endregion
