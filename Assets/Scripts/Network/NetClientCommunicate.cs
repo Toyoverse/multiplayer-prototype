@@ -46,7 +46,7 @@ public class NetClientCommunicate : NetworkBehaviour
     private void TreatMessage(NetworkMessage message)
     {
         var myID = ClientManager.GetInstanceID();
-        if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID)
+        if (!(myID == message.ClientID && this.NetworkObject.ObjectId == message.ObjectID))
             return;
         
         Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType + 

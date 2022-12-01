@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FishNet;
 using UnityEngine;
 using FishNet.Connection;
-using FishNet.Object;
 using FishNet.Transporting;
-using Tools;
-using Debug = UnityEngine.Debug;
 
-public class GameSystem : NetworkBehaviour
+public class GameSystem : MonoBehaviour
 {
     [Header("REFERENCES")]
     [SerializeField] private NetServerCommunicate netServer;
@@ -244,36 +240,39 @@ public class GameSystem : NetworkBehaviour
 
     private void CheckChoices()
     {
-        SendGameSystemInfoToClients();
+        //SendGameSystemInfoToClients();
         
         var result = GetMatchResult();
         if (result.isDraw)
         {
             if (result.isInactivePlayers)
-                inactiveRounds++;
-
-            if (inactiveRounds >= inactiveRoundsLimit)
             {
-                GameOverAllLose();
-                return;
+                inactiveRounds++;
+                if (inactiveRounds >= inactiveRoundsLimit)
+                {
+                    GameOverAllLose();
+                    return;
+                }
             }
-            
+
             foreach (var gameChoice in playersChoices)
                 SendToClientResult(gameChoice, drawCode);
         }
         else
         {
+            round++;
             DamagePlayer(result.loserObjectID);
-            if (GetPlayerDeath() == null)
+            var playerDeath = GetPlayerDeath();
+            if (playerDeath == null)
             {
                 SendToClientResult(GetPlayerChoice(result.loserObjectID), loseCode);
                 SendToClientResult(GetPlayerChoice(result.winnerObjectID), winCode);
+                ClearChoices();
+                ChangeGameState(GAME_STATE.CHOICE_TIME);
             }
+            else
+                SendGameOverToClients();
         }
-
-        round++;
-        //EndRoundChecks();
-        CheckGameOver();
     }
 
     private void SendToClientResult(GameChoice playerChoice, string result)
@@ -302,39 +301,13 @@ public class GameSystem : NetworkBehaviour
         netServer.SendMessageToClient(netMessage);
     }
 
-    /*private void ResetPlayerChoices()
-    {
-        playersChoices.Clear();
-        playersChoices = new List<GameChoice>();
-    }*/
-    
-    private void CheckGameOver()
-    {
-        var playerDeath = GetPlayerDeath();
-        if (playerDeath != null)
-        {
-            SendGameOverToClients();
-            ChangeGameState(GAME_STATE.GAME_OVER);
-        }
-        else
-        {
-            ClearChoices();
-            ChangeGameState(GAME_STATE.CHOICE_TIME);
-        }
-    }
-
-    private void ResetGameChoices()
-    {
-        
-    }
-    
     private void SendGameOverToClients()
     {
         var playerDeath = GetPlayerDeath();
         var playerAlive = GetPlayerAlive();
         SendGameOverMessage(playerDeath, loseCode);
         SendGameOverMessage(playerAlive, winCode);
-        //ResetPlayersHealth();
+        ChangeGameState(GAME_STATE.GAME_OVER);
     }
 
     private void GameOverAllWin()
@@ -441,12 +414,6 @@ public class GameSystem : NetworkBehaviour
                 "\nPlayer[" + playerHealths[0].playerObjectID + "] Health: " + playerHealths[0].playerHealth +
                 "\nPlayer[" + playerHealths[1].playerObjectID + "] Health: " + playerHealths[1].playerHealth;
         SendStringMessageForAllClients(m);
-    }
-
-    private void EndRoundChecks()
-    {
-        //ResetPlayerChoices();
-        CheckGameOver();
     }
 
     private PlayerHealth GetPlayerHealthByClientID(int id)

@@ -10,7 +10,7 @@ public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
 
-    private int testClientCount = 0;
+    //private int testClientCount = 0;
     
     #region Public Methods
 
@@ -21,14 +21,14 @@ public class NetServerCommunicate : MonoBehaviour
     
     #region Private Methods
 
-    private void Update()
+    /*private void Update()
     {
         if (InstanceFinder.ServerManager.Clients.Count != testClientCount)
         {
             testClientCount = InstanceFinder.ServerManager.Clients.Count;
             gameSystem.SendStringMessageForAllClients("ClientCount: " + testClientCount);
         }
-    }
+    }*/
 
     private void OnEnable()
     {
