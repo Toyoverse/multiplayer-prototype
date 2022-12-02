@@ -44,7 +44,7 @@ public class StatusManager : NetworkBehaviour
 
     private void InitializeUI()
     {
-        var playerUI = Instantiate(uiPrefab, refs.uiCanvasObject.transform);
+        var playerUI = Instantiate(uiPrefab, refs.uiMyHpTarget.transform);
         _uiPlayerManager = playerUI.GetComponent<UIPlayerManager>();
         _uiPlayerManager.AddUIEvents(this);
         onChangeHealt?.Invoke();

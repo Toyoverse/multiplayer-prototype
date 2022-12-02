@@ -1089,6 +1089,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 239386956}
     - target: {fileID: 4557844051694574846, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: uiMyHpTarget
+      value: 
+      objectReference: {fileID: 6777568462214013046}
+    - target: {fileID: 4557844051694574846, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
       propertyPath: myNetHudCanvas
       value: 
       objectReference: {fileID: 4540786948943956606}
@@ -1096,6 +1100,10 @@ PrefabInstance:
       propertyPath: uiCanvasObject
       value: 
       objectReference: {fileID: 1985308836}
+    - target: {fileID: 4557844051694574846, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: uiOpponentHpTarget
+      value: 
+      objectReference: {fileID: 6777568462214013045}
     - target: {fileID: 4557844051861172445, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
       propertyPath: menuButton
       value: 
@@ -1361,6 +1369,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6777568462214013045 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2919207513702690443, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+  m_PrefabInstance: {fileID: 6777568462214013041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6777568462214013046 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8084414228301482677, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+  m_PrefabInstance: {fileID: 6777568462214013041}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7662938572011216064
 PrefabInstance:
   m_ObjectHideFlags: 0
