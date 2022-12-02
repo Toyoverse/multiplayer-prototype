@@ -20,5 +20,5 @@ public struct Match_Info
     public int loserObjectID;
     public int winnerClientID;
     public int loserClientID;
-    public bool isInactivePlayers;
+    //public bool isInactivePlayers;
 }

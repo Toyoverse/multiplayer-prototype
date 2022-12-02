@@ -10,6 +10,7 @@ using Tools;
 public class NetClientCommunicate : NetworkBehaviour
 {
     private ScriptsReferences refs => ScriptsReferences.Instance;
+    private int myID;
 
     #region Public Methods
     
@@ -27,6 +28,7 @@ public class NetClientCommunicate : NetworkBehaviour
             UIMenuManager.Instance.ConnectedSuccess();
             refs.myNetClientCommunicate = this;
             SendNewConnectionToServer();
+            myID = ClientManager.GetInstanceID();
         }
         
         InstanceFinder.ClientManager.RegisterBroadcast<NetworkMessage>(OnMessageReceived);
@@ -45,13 +47,10 @@ public class NetClientCommunicate : NetworkBehaviour
 
     private void TreatMessage(NetworkMessage message)
     {
-        var myID = ClientManager.GetInstanceID();
-        if (!(myID == message.ClientID && this.NetworkObject.ObjectId == message.ObjectID))
-            return;
-        
-        Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType + 
+        if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID) return;
+        Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType +
                   " - Content: [String] " + message.Content + " | [Value] " + message.ValueContent);
-        
+
         switch (message.MessageType)
         {
             case (int)MESSAGE_TYPE.STRING:
@@ -66,12 +65,10 @@ public class NetClientCommunicate : NetworkBehaviour
             case (int)MESSAGE_TYPE.GAME_OVER:
                 refs.localManager.GameOver(message.Content);
                 break;
+            case (int)MESSAGE_TYPE.ROUND_RESULT:
+                refs.localManager.RunRoundResult(message.Content, message.ValueContent);
+                break;
         }
-
-        if (message.MessageType != (int)MESSAGE_TYPE.ROUND_RESULT)
-            return;
-        
-        refs.localManager.RunRoundResult(message.Content, message.ValueContent);
     }
     
     private void SendNewConnectionToServer()

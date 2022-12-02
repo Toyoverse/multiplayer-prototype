@@ -2,9 +2,9 @@
 public enum CARD_TYPE
 {
     NONE = 0,
-    ROCK = 1,
-    PAPER = 2,
-    SCISSOR = 3
+    ROCK = 1, //BOUND
+    PAPER = 2, //DEFENSE
+    SCISSOR = 3 //FAST
 }
 
 public enum MESSAGE_TYPE
@@ -25,5 +25,5 @@ public enum GAME_STATE
     STARTING = 2,
     CHOICE_TIME = 3,
     COMPARE_TIME = 4,
-    GAME_OVER = 5
+    GAME_OVER = 5,
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 11577.85, g: 13292.863, b: 19002.531, a: 1}
+  m_IndirectSpecularColor: {r: 11583.693, g: 13275.162, b: 18893.572, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -264,10 +264,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4937019447022483125, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4937019447022483144, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 4937019447520349061, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019448805967197, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0061035156
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019448805967197, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019448805967198, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019448805967198, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019448805967198, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8959258870851522987, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
       propertyPath: m_Name
       value: Arena_Palawan
@@ -568,14 +596,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 1.8, z: -3.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,7 +623,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 0
+  antialiasing: 1
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -787,7 +815,6 @@ MonoBehaviour:
   playersChoices: []
   playerHealths: []
   round: 0
-  inactiveRounds: 0
   maxHealth: 3
   roundDamage: 1
   gameState: 0
@@ -1208,7 +1235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5861614394208818338, guid: 1dfbe7dc793424b42b995693f92cf64b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5861614394208818342, guid: 1dfbe7dc793424b42b995693f92cf64b, type: 3}
       propertyPath: m_Pivot.x
@@ -1307,6 +1334,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2018879689661186434, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2628727748197427416, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6777568461435813156, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
       propertyPath: m_Name
       value: UI_Canvas
@@ -1393,6 +1428,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6777568461435813160, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8482229881530610451, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1535,6 +1574,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 432580025627967989, guid: 411ed9b9dea14374d818211071868f22, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 432580025627967992, guid: 411ed9b9dea14374d818211071868f22, type: 3}
       propertyPath: m_Name
       value: LOG_Canvas

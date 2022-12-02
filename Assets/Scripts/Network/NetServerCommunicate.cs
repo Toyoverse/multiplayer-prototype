@@ -10,8 +10,6 @@ public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
 
-    //private int testClientCount = 0;
-    
     #region Public Methods
 
     public void SendMessageToClient(NetworkMessage networkMessage) =>
@@ -20,15 +18,6 @@ public class NetServerCommunicate : MonoBehaviour
     #endregion
     
     #region Private Methods
-
-    /*private void Update()
-    {
-        if (InstanceFinder.ServerManager.Clients.Count != testClientCount)
-        {
-            testClientCount = InstanceFinder.ServerManager.Clients.Count;
-            gameSystem.SendStringMessageForAllClients("ClientCount: " + testClientCount);
-        }
-    }*/
 
     private void OnEnable()
     {
@@ -60,7 +49,7 @@ public class NetServerCommunicate : MonoBehaviour
                 InstanceFinder.ServerManager.Broadcast(netMessage);
                 break;
             case MESSAGE_TYPE.CARD_CHOICE:
-                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, netMessage.Content);
+                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, int.Parse(netMessage.Content));
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
                 if (gameSystem.gameState != GAME_STATE.WAIT_CONNECTIONS)
@@ -76,13 +65,7 @@ public class NetServerCommunicate : MonoBehaviour
     }
 
     private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args /*ClientConnectionStateArgs args*/)
-    {
-        gameSystem.ClientDisconnected(conn, args);
-        /*if (args.ConnectionState == RemoteConnectionState.Stopped)
-        { 
-            gameSystem.ClientDisconnected(conn.ClientId);
-        }*/
-    }
+        => gameSystem.ClientDisconnected(conn, args);
 
     #endregion
 }

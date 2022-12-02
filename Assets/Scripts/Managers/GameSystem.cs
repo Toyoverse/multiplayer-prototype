@@ -5,6 +5,7 @@ using FishNet;
 using UnityEngine;
 using FishNet.Connection;
 using FishNet.Transporting;
+using Tools;
 
 public class GameSystem : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerHealth> playerHealths;
     [SerializeField] private int round = 0;
-    [SerializeField] private int inactiveRounds = 0;
+    //[SerializeField] private int inactiveRounds = 0;
     public int playersConnected => playerHealths?.Count ?? 0;
 
     [Header("LIFE VALUES")] 
@@ -26,11 +27,15 @@ public class GameSystem : MonoBehaviour
     private const string loseCode = "LOSE";
     private const string drawCode = "DRAW";
 
-    private float timer;
-    private int roundTimeLimit = 12;
-    private int inactiveRoundsLimit = 3;
+    /*private float timer;
+    private const int roundTimeLimit = 12;
+    private const int inactiveRoundsLimit = 3;*/
 
     public GAME_STATE gameState;
+    
+    private const int oneCode = 0;
+    private const int twoCode = 1;
+    //private const float playerChoicesDelay = 2;
 
     #region Public methods
 
@@ -59,49 +64,32 @@ public class GameSystem : MonoBehaviour
             ChangeGameState(GAME_STATE.STARTING);
     }
     
-    public void RegisterPlayerChoice(int clientID, int objectID, string pChoice)
+    public void RegisterPlayerChoice(int clientID, int objectID, int pChoice)
     {
-        /*if (playersChoices == null)
-            ResetPlayerChoices();*/
-
-        var _pChoice = GetTypeFromString(pChoice);
+        //var _pChoice = GetTypeFromInt(pChoice);
+        var _pChoice = (CARD_TYPE)pChoice;
 
         foreach (var gameChoice in playersChoices)
         {
-            if (gameChoice.playerObjectID == objectID && gameChoice.playerClientID == clientID)
-            {
-                gameChoice.choice = _pChoice;
-                return;
-            }
+            if (gameChoice.playerObjectID != objectID || gameChoice.playerClientID != clientID) 
+                continue;
+            gameChoice.choice = _pChoice;
+            break;
         }
-        
-        /*var item = new GameChoice
-        {
-            playerClientID = clientID,
-            playerObjectID = objectID,
-            choice = _pChoice
-        };
-        playersChoices.Add(item);*/
 
-        //CheckChoices();
-        if(AllPlayersChose())
+        if (AllPlayersChose())
+            //StartCoroutine(TimeTools.InvokeInTime(GoToCompareTime, playerChoicesDelay));
             GoToCompareTime();
     }
 
-    public void ClientDisconnected(/*ClientConnectionStateArgs args*/ NetworkConnection conn, RemoteConnectionStateArgs args)
+    public void ClientDisconnected(NetworkConnection conn, RemoteConnectionStateArgs args)
     {
-        /*var playerDisconnected = GetPlayerHealthByClientID(clientID);
-        if (playerDisconnected == null)
-            return;
-        playerDisconnected.playerHealth = 0;*/
         if (args.ConnectionState is RemoteConnectionState.Started)
             return;
         GameOverAllWin();
         var message = "ClientDisconnected_Args: args.connectionID: " + args.ConnectionId + ", args.connectionState: " 
                       + args.ConnectionState + "args.transportIndex: " + args.TransportIndex + 
                       " | NetConn.ClientID: " + conn.ClientId;
-        /*var message = "ClientDisconnected_Args: " + "connectionState: " + args.ConnectionState
-                      + ", transportIndex: " + args.TransportIndex;*/
         SendStringMessageForAllClients(message);
     }
 
@@ -120,132 +108,89 @@ public class GameSystem : MonoBehaviour
 
     private Match_Info GetMatchResult()
     {
-        const int one = 0;
-        const int two = 1;
-
         var matchResult = new Match_Info
         {
             choices = playersChoices,
-            isDraw = playersChoices[one].choice == playersChoices[two].choice ? true : false,
+            isDraw = playersChoices[oneCode].choice == playersChoices[twoCode].choice,
             winnerObjectID = -1,
             loserObjectID = -1,
             loserClientID = -1,
             winnerClientID = -1,
-            isInactivePlayers = playersChoices[one].choice == CARD_TYPE.NONE && playersChoices[two].choice == CARD_TYPE.NONE
+            //isInactivePlayers = playersChoices[oneCode].choice == CARD_TYPE.NONE && playersChoices[twoCode].choice == CARD_TYPE.NONE
         };
 
         if (matchResult.isDraw)
             return matchResult;
 
-        switch (playersChoices[one].choice)
+        var winnerID = -1;
+
+        switch (playersChoices[oneCode].choice)
         {
             case CARD_TYPE.ROCK:
-                switch (playersChoices[two].choice)
+                winnerID = playersChoices[twoCode].choice switch
                 {
-                    case CARD_TYPE.PAPER:
-                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.SCISSOR:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.NONE:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                }
+                    CARD_TYPE.PAPER => twoCode,
+                    CARD_TYPE.SCISSOR => oneCode,
+                    CARD_TYPE.NONE => oneCode
+                };
                 break;
             case CARD_TYPE.PAPER:
-                switch (playersChoices[two].choice)
+                winnerID = playersChoices[twoCode].choice switch
                 {
-                    case CARD_TYPE.ROCK:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.SCISSOR:
-                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.NONE:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                }
+                    CARD_TYPE.SCISSOR => twoCode,
+                    CARD_TYPE.ROCK => oneCode,
+                    CARD_TYPE.NONE => oneCode
+                };
                 break;
             case CARD_TYPE.SCISSOR:
-                switch (playersChoices[two].choice)
+                winnerID = playersChoices[twoCode].choice switch
                 {
-                    case CARD_TYPE.ROCK:
-                        SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.PAPER:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                    case CARD_TYPE.NONE:
-                        SetPlayerOneWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                            playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
-                        break;
-                }
+                    CARD_TYPE.ROCK => twoCode,
+                    CARD_TYPE.PAPER => oneCode,
+                    CARD_TYPE.NONE => oneCode
+                };
                 break;
             case CARD_TYPE.NONE:
-                if (playersChoices[two].choice != CARD_TYPE.NONE)
-                    SetPlayerTwoWinner(ref matchResult.winnerObjectID, ref matchResult.loserObjectID,
-                        playersChoices[one].playerObjectID, playersChoices[two].playerObjectID);
+                if (playersChoices[twoCode].choice != CARD_TYPE.NONE)
+                    winnerID = twoCode;
                 break;
         }
 
-        matchResult.winnerClientID = GetPlayerClientID(matchResult.winnerObjectID);
-        matchResult.loserClientID = GetPlayerClientID(matchResult.loserObjectID);
+        matchResult.winnerObjectID = playersChoices[winnerID].playerObjectID;
+        matchResult.winnerClientID = playersChoices[winnerID].playerClientID;
+        matchResult.loserClientID = winnerID == oneCode
+            ? playersChoices[twoCode].playerClientID
+            : playersChoices[oneCode].playerClientID;
+        matchResult.loserObjectID = winnerID == oneCode
+            ? playersChoices[twoCode].playerObjectID
+            : playersChoices[oneCode].playerObjectID;
         return matchResult;
     }
 
-    private void SetPlayerOneWinner(ref int winID, ref int loseID, int oneID, int twoID)
+    private CARD_TYPE GetTypeFromInt(int type)
     {
-        winID = oneID;
-        loseID = twoID;
-    }
-    
-    private void SetPlayerTwoWinner(ref int winID, ref int loseID, int oneID, int twoID)
-    {
-        winID = twoID;
-        loseID = oneID;
-    }
-
-    private int GetPlayerClientID(int objectID)
-    {
-        var result = -1;
-        for (var i = 0; i < playersChoices.Count; i++)
+        return type switch
         {
-            if (objectID == playersChoices[i].playerObjectID)
-                result = playersChoices[i].playerClientID;
-        }
-
-        return result;
-    }
-
-    private CARD_TYPE GetTypeFromString(string type)
-    {
-        return type.ToUpper() switch
-        {
-            "NONE" => CARD_TYPE.NONE,
-            "ROCK" => CARD_TYPE.ROCK,
-            "PAPER" => CARD_TYPE.PAPER,
-            "SCISSOR" => CARD_TYPE.SCISSOR,
-            _ => throw new ArgumentOutOfRangeException()
+            0 => CARD_TYPE.NONE,
+            1 => CARD_TYPE.ROCK,
+            2 => CARD_TYPE.PAPER,
+            3 => CARD_TYPE.SCISSOR,
+            _ => PlayerChoiceError()
         };
+    }
+
+    private CARD_TYPE PlayerChoiceError()
+    {
+        SendStringMessageForAllClients("[ERROR] Player Choice error, convert to NONE!");
+        return CARD_TYPE.NONE;
     }
 
     private void CheckChoices()
     {
-        //SendGameSystemInfoToClients();
-        
         var result = GetMatchResult();
         if (result.isDraw)
         {
-            if (result.isInactivePlayers)
+            /*if (result.isInactivePlayers)
             {
                 inactiveRounds++;
                 if (inactiveRounds >= inactiveRoundsLimit)
@@ -253,20 +198,22 @@ public class GameSystem : MonoBehaviour
                     GameOverAllLose();
                     return;
                 }
-            }
+            }*/
 
             foreach (var gameChoice in playersChoices)
                 SendToClientResult(gameChoice, drawCode);
+            ClearChoices();
+            ChangeGameState(GAME_STATE.CHOICE_TIME);
         }
         else
         {
             round++;
-            DamagePlayer(result.loserObjectID);
+            DamagePlayer(result.loserObjectID, result.loserClientID);
             var playerDeath = GetPlayerDeath();
             if (playerDeath == null)
             {
-                SendToClientResult(GetPlayerChoice(result.loserObjectID), loseCode);
-                SendToClientResult(GetPlayerChoice(result.winnerObjectID), winCode);
+                SendToClientResult(GetPlayerChoice(result.loserObjectID, result.loserClientID), loseCode);
+                SendToClientResult(GetPlayerChoice(result.winnerObjectID, result.winnerClientID), winCode);
                 ClearChoices();
                 ChangeGameState(GAME_STATE.CHOICE_TIME);
             }
@@ -283,7 +230,7 @@ public class GameSystem : MonoBehaviour
             ObjectID = playerChoice.playerObjectID,
             Content = result,
             MessageType = (int)MESSAGE_TYPE.ROUND_RESULT,
-            ValueContent = GetPlayerHealth(playerChoice.playerObjectID)
+            ValueContent = GetPlayerHealth(playerChoice.playerObjectID, playerChoice.playerClientID)
         };
         netServer.SendMessageToClient(netMessage);
     }
@@ -346,33 +293,41 @@ public class GameSystem : MonoBehaviour
         return playerHealths.FirstOrDefault(player => player.playerHealth >= 0);
     }
 
-    private void DamagePlayer(int objectID)
+    private void DamagePlayer(int objectID, int clientID)
     {
         for (var i = 0; i < playerHealths.Count; i++)
         {
-            if (playerHealths[i].playerObjectID == objectID)
+            if (playerHealths[i].playerObjectID == objectID 
+                && playerHealths[i].playerClientID == clientID)
                 playerHealths[i].playerHealth -= roundDamage;
         }
     }
 
-    private float GetPlayerHealth(int objectID)
+    private float GetPlayerHealth(int objectID, int clientID)
     {
-        return (from t in playerHealths where t.playerObjectID == objectID select t.playerHealth).FirstOrDefault();
+        float result = 0;
+        foreach (var playerHealth in playerHealths)
+        {
+            if (playerHealth.playerObjectID == objectID 
+                && playerHealth.playerClientID == clientID)
+                result = playerHealth.playerHealth;
+        }
+
+        return result;
     }
 
     private void ClearGameMatch()
     {
         playerHealths = new List<PlayerHealth>();
         round = 0;
-        inactiveRounds = 0;
-        timer = 0;
+        /*inactiveRounds = 0;
+        timer = 0;*/
         playersChoices?.Clear();
     }
 
-    private GameChoice GetPlayerChoice(int objectID)
-    {
-        return playersChoices.FirstOrDefault(gameChoice => objectID == gameChoice.playerObjectID);
-    }
+    private GameChoice GetPlayerChoice(int objectID, int clientID)
+        =>  playersChoices.FirstOrDefault(gameChoice => objectID == gameChoice.playerObjectID 
+                                                        && clientID == gameChoice.playerClientID);
 
     private void SendStartGameForAllClients()
     {
@@ -411,8 +366,8 @@ public class GameSystem : MonoBehaviour
         if (playerHealths.Count < 2 || playersChoices.Count < 2)
             return;
         var m = "playersChoices.Count: " + playersChoices.Count + " | round: " + round + 
-                "\nPlayer[" + playerHealths[0].playerObjectID + "] Health: " + playerHealths[0].playerHealth +
-                "\nPlayer[" + playerHealths[1].playerObjectID + "] Health: " + playerHealths[1].playerHealth;
+                "\nPlayer[" + playerHealths[oneCode].playerObjectID + "] Health: " + playerHealths[oneCode].playerHealth +
+                "\nPlayer[" + playerHealths[twoCode].playerObjectID + "] Health: " + playerHealths[twoCode].playerHealth;
         SendStringMessageForAllClients(m);
     }
 
@@ -427,21 +382,19 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (gameState != GAME_STATE.CHOICE_TIME)
             return;
         timer += Time.deltaTime;
         if (timer >= roundTimeLimit)
-        {
             GoToCompareTime();
-        }
-    }
+    }*/
 
     private void GoToCompareTime()
     {
         ChangeGameState(GAME_STATE.COMPARE_TIME);
-        timer = 0;
+        //timer = 0;
     }
 
     private void CheckNewState()

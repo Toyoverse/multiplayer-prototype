@@ -5,9 +5,9 @@ public class LocalGameManager : MonoBehaviour
 {
     private ScriptsReferences refs => ScriptsReferences.Instance;
     
-    private const string rockCode = "ROCK";
-    private const string paperCode = "PAPER";
-    private const string scissorCode = "SCISSOR";
+    private const string rockCode = "BOUND";
+    private const string paperCode = "DEFENSE";
+    private const string scissorCode = "FAST-ATTACK";
     private const string roundInitMessage = "Round started!\nMake your move!";
     private const string choiceMessage = "You chose ";
     private const string opponentWait = "\nWaiting for the opponent's move...";
@@ -126,7 +126,7 @@ public class LocalGameManager : MonoBehaviour
         refs.playerInput.EnableMoveButtons();
     }
     
-    private void MoveSelect(string move)
+    private void MoveSelect(CARD_TYPE move)
     {
         refs.playerInput.DisableMoveButtons();
         
@@ -135,18 +135,18 @@ public class LocalGameManager : MonoBehaviour
             ClientID = refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
             ObjectID = refs.myNetClientCommunicate.NetworkObject.ObjectId,
             MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            Content = move
+            Content = ((int)move).ToString()
         };
         refs.myNetClientCommunicate.SendMessageToServer(netMessage);
         
         ShowSimpleLogs.Instance.Log(choiceMessage + move + opponentWait);
     }
 
-    private void RockSelect() => MoveSelect(rockCode);
+    private void RockSelect() => MoveSelect(CARD_TYPE.ROCK);
 
-    private void PaperSelect() => MoveSelect(paperCode);
+    private void PaperSelect() => MoveSelect(CARD_TYPE.PAPER);
 
-    private void ScissorSelect() => MoveSelect(scissorCode);
+    private void ScissorSelect() => MoveSelect(CARD_TYPE.SCISSOR);
     
     private void OnDisable()
     {
