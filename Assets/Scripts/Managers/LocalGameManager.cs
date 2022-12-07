@@ -8,7 +8,7 @@ public class LocalGameManager : MonoBehaviour
     private const string rockCode = "BOUND";
     private const string paperCode = "DEFENSE";
     private const string scissorCode = "FAST-ATTACK";
-    private const string roundInitMessage = "Round started!\nMake your move!";
+    public const string roundInitMessage = "Round started!\nMake your move!";
     private const string choiceMessage = "You chose ";
     private const string opponentWait = "\nWaiting for the opponent's move...";
     private const string successConnection = "Connection success!\nWaiting for an opponent...";
@@ -22,11 +22,15 @@ public class LocalGameManager : MonoBehaviour
     private const string disconnectedMessage = "Disconnected from server.";
     private const string disconnectCountMessage = "You will be disconnected from the server in ";
     private const string genericErrorMessage = "Something went wrong, please try restarting the game.";
+    private const string opponentCardMessage = "Your opponent chose ";
 
     public int round = 0;
 
     private string gameOverMessage = "";
-    
+    private int endGameDisconnectDelay = 5;
+
+    public LOCAL_STATE gameState = LOCAL_STATE.NONE;
+
     #region Events
 
     public delegate void StartRound();
@@ -36,6 +40,8 @@ public class LocalGameManager : MonoBehaviour
 
     #region Public Methods
 
+    public void ChangeLocalState(LOCAL_STATE newState) => gameState = newState;
+    
     public void ConnectionSuccess(float maxHealthValue)
     {
         ShowSimpleLogs.Instance.Log(successConnection);
@@ -49,24 +55,29 @@ public class LocalGameManager : MonoBehaviour
         refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
         refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
 
+        ChangeLocalState(LOCAL_STATE.GAMEPLAY);
         RoundInit();
     }
     
     public void RunRoundResult(string result, float healthValue)
     {
-        switch (result.ToUpper())
+        string[] resultSplit = result.Split("/");
+        var log = opponentCardMessage + resultSplit[1] + ".\n";
+        switch (resultSplit[0].ToUpper())
         {
             case "WIN":
-                ShowSimpleLogs.Instance.Log(winMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+                log += winMessage + "\n";
                 break;
-            case "DRAW":
-                ShowSimpleLogs.Instance.Log(drawMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+            case "DRAW": 
+                log += drawMessage + "\n";
                 break;
             case "LOSE":
-                ShowSimpleLogs.Instance.Log(loseMessage + "\n" + startingRoundMessage + "\n" + waitMessage);
+                log += loseMessage + "\n";
                 break;
         }
+        log += startingRoundMessage + "\n" + waitMessage;
 
+        ShowSimpleLogs.Instance.Log(log);
         refs.myStatusManager.ChangeHealth(healthValue);
         RoundInit();
     }
@@ -83,7 +94,7 @@ public class LocalGameManager : MonoBehaviour
         if(gameOverMessage == matchLoseMessage)
             refs.myStatusManager.ChangeHealth(0);
         
-        CountToDisconnect(10);
+        CountToDisconnect(endGameDisconnectDelay);
     }
     
     public void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
@@ -103,7 +114,7 @@ public class LocalGameManager : MonoBehaviour
         if (timeRemain <= 0)
         {
             ShowSimpleLogs.Instance.Log(disconnectedMessage);
-            DisconnectToServer();
+            //DisconnectToServer();
             StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
         }
         else
@@ -135,18 +146,18 @@ public class LocalGameManager : MonoBehaviour
             ClientID = refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
             ObjectID = refs.myNetClientCommunicate.NetworkObject.ObjectId,
             MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            Content = ((int)move).ToString()
+            StringContent = ((int)move).ToString()
         };
         refs.myNetClientCommunicate.SendMessageToServer(netMessage);
         
         ShowSimpleLogs.Instance.Log(choiceMessage + move + opponentWait);
     }
 
-    private void RockSelect() => MoveSelect(CARD_TYPE.ROCK);
+    private void RockSelect() => MoveSelect(CARD_TYPE.BOND);
 
-    private void PaperSelect() => MoveSelect(CARD_TYPE.PAPER);
+    private void PaperSelect() => MoveSelect(CARD_TYPE.DEFENSE);
 
-    private void ScissorSelect() => MoveSelect(CARD_TYPE.SCISSOR);
+    private void ScissorSelect() => MoveSelect(CARD_TYPE.ATTACK);
     
     private void OnDisable()
     {

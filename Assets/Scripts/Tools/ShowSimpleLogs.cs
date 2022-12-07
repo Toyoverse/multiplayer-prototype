@@ -19,5 +19,7 @@ namespace Tools
         {
             Instance.label.text = message;
         }
+
+        public string GetActualMessageInLog() => label.text;
     }
 }

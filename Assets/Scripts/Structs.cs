@@ -8,17 +8,14 @@ public struct NetworkMessage : IBroadcast
     public int ClientID;
     public int ObjectID;
     public int MessageType;
-    public string Content;
+    public string StringContent;
     public float ValueContent;
 }
 
 public struct Match_Info
 {
-    public List<GameChoice> choices; //ObjectID, Choice
     public bool isDraw;
-    public int winnerObjectID;
-    public int loserObjectID;
-    public int winnerClientID;
-    public int loserClientID;
+    public GameChoice winnerChoice;
+    public GameChoice loserChoice;
     //public bool isInactivePlayers;
 }

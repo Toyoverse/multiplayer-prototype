@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Tools;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -39,7 +40,16 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
         //refs.localManager.DisconnectToServer();
         mainMenuObj.enabled = true;
         LogMessage(enterIpMessage);
+        refs.localManager.ChangeLocalState(LOCAL_STATE.MENU);
     }
+
+    public void OnKicked()
+    {
+        ShowSimpleLogs.Instance.Log("You have been disconnected from the server.");
+        StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
+    }
+    
+    public void LogMessage(string message) => labelLogs.text = message;
     
     #endregion
     
@@ -72,8 +82,6 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
         refs.myTugboat.SetClientAddress(ipInputField.text);
         refs.myNetHudCanvas.OnlyConnect();
     }
-
-    private void LogMessage(string message) => labelLogs.text = message;
 
     private void OnConnectError()
     {

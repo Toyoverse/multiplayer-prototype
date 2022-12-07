@@ -3,6 +3,7 @@ using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Broadcast;
+using Tools;
 
 public class StatusManager : NetworkBehaviour
 {
@@ -52,6 +53,9 @@ public class StatusManager : NetworkBehaviour
 
     private void OnDestroy()
     {
+        if(health > 0)
+            UIMenuManager.Instance.OnKicked();
+        
         if(_uiPlayerManager != null)
             Destroy(_uiPlayerManager.gameObject);
     }

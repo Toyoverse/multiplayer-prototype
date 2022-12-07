@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="UI Game adjusts - Add player HP target;">
-      <change afterPath="$PROJECT_DIR$/Assets/FishNet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/GameAssets/Meshes/Animations/Materials/move_backward_B-Blue.mat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/GameAssets/Meshes/Animations/Materials/move_backward_B-Blue.mat.meta" afterDir="false" />
+    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/PerkSystem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/PerkSystem.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ButtonEvents.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ButtonEvents.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameAssets/Materials/Environment/ImageEnhance_Arena_Palawan.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameAssets/Materials/Environment/ImageEnhance_Arena_Palawan.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameAssets/Prefabs/Arena_Palawan.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameAssets/Prefabs/Arena_Palawan.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/LOG_Canvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/LOG_Canvas.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enums.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enums.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/LocalGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/LocalGameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/StatusManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/StatusManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network/NetClientCommunicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network/NetClientCommunicate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network/NetServerCommunicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network/NetServerCommunicate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Structs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Structs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Base_Frame-Defense-Card_Green.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Base_Frame-Defense-Card_Green.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tools/ShowSimpleLogs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tools/ShowSimpleLogs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tools/TimeTools.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tools/TimeTools.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
@@ -29,14 +27,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Prefabs/UI_GameCanvas.prefab" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scenes/Prototype.unity" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Enums.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/StatusManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Network/NetClientCommunicate.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Network/NetServerCommunicate.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/ScriptsReferences.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/ShowSimpleLogs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/TimeTools.cs" root0="FORCE_HIGHLIGHTING" />
@@ -45,6 +36,8 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Editor/TMP_EditorUtility.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/InputField.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Selectable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4c260e2d919b4886954c7f43ae1916833d200/6f/72db66dd/IPointerEnterHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -132,7 +125,9 @@
       <workItem from="1669749397761" duration="6757000" />
       <workItem from="1669825112159" duration="4498000" />
       <workItem from="1669910291256" duration="8449000" />
-      <workItem from="1669994881872" duration="12404000" />
+      <workItem from="1669994881872" duration="12579000" />
+      <workItem from="1670245964364" duration="8222000" />
+      <workItem from="1670337934534" duration="20633000" />
     </task>
     <task id="LOCAL-00001" summary="First commit - WIP Multiplayer with dedicated server;">
       <created>1668734091475</created>
@@ -246,7 +241,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670000340602</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="General adjusts:&#10;- Game System little refactor;&#10;- Camera and Arena;&#10;- Defense card;">
+      <created>1670024556607</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1670024556607</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -286,7 +288,8 @@
     <MESSAGE value="Game system updates;" />
     <MESSAGE value="GameSystem and Net Communication adjusts;" />
     <MESSAGE value="UI Game adjusts - Add player HP target;" />
-    <option name="LAST_COMMIT_MESSAGE" value="UI Game adjusts - Add player HP target;" />
+    <MESSAGE value="General adjusts:&#10;- Game System little refactor;&#10;- Camera and Arena;&#10;- Defense card;" />
+    <option name="LAST_COMMIT_MESSAGE" value="General adjusts:&#10;- Game System little refactor;&#10;- Camera and Arena;&#10;- Defense card;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

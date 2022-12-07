@@ -2,9 +2,9 @@
 public enum CARD_TYPE
 {
     NONE = 0,
-    ROCK = 1, //BOUND
-    PAPER = 2, //DEFENSE
-    SCISSOR = 3 //FAST
+    BOND = 1, //ROCK
+    DEFENSE = 2, //PAPER
+    ATTACK = 3 //SCISSOR
 }
 
 public enum MESSAGE_TYPE
@@ -18,7 +18,7 @@ public enum MESSAGE_TYPE
     GAME_OVER = 6
 }
 
-public enum GAME_STATE
+public enum SERVER_STATE
 {
     NONE = 0,
     WAIT_CONNECTIONS = 1,
@@ -26,4 +26,19 @@ public enum GAME_STATE
     CHOICE_TIME = 3,
     COMPARE_TIME = 4,
     GAME_OVER = 5,
+}
+
+public enum SIMPLE_RESULT
+{
+    NONE = 0,
+    LOSE = 1,
+    DRAW = 2,
+    WIN = 3
+}
+
+public enum LOCAL_STATE
+{
+    NONE = 0,
+    MENU = 1,
+    GAMEPLAY = 2
 }

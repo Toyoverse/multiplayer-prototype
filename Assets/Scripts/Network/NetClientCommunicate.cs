@@ -6,6 +6,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using FishNet;
 using Tools;
+using FishNet.Transporting;
 
 public class NetClientCommunicate : NetworkBehaviour
 {
@@ -49,12 +50,18 @@ public class NetClientCommunicate : NetworkBehaviour
     {
         if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID) return;
         Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType +
-                  " - Content: [String] " + message.Content + " | [Value] " + message.ValueContent);
+                  " - Content: [String] " + message.StringContent + " | [Value] " + message.ValueContent
+                  + " - [ID's] Client: " + message.ClientID + " | Object: " + message.ObjectID);
 
         switch (message.MessageType)
         {
             case (int)MESSAGE_TYPE.STRING:
-                Debug.Log("Received string message: " + message.Content);
+                Debug.Log("Received string message: " + message.StringContent);
+                if (message.StringContent.Contains("[SERVER]"))
+                    if(refs.localManager.gameState is LOCAL_STATE.MENU)
+                        UIMenuManager.Instance.LogMessage(message.StringContent);
+                    else
+                        ShowSimpleLogs.Instance.Log(message.StringContent);
                 break;
             case (int)MESSAGE_TYPE.NEW_CONNECTION:
                 refs.localManager.ConnectionSuccess(message.ValueContent);
@@ -63,10 +70,10 @@ public class NetClientCommunicate : NetworkBehaviour
                 refs.localManager.GameInit();
                 break;
             case (int)MESSAGE_TYPE.GAME_OVER:
-                refs.localManager.GameOver(message.Content);
+                refs.localManager.GameOver(message.StringContent);
                 break;
             case (int)MESSAGE_TYPE.ROUND_RESULT:
-                refs.localManager.RunRoundResult(message.Content, message.ValueContent);
+                refs.localManager.RunRoundResult(message.StringContent, message.ValueContent);
                 break;
         }
     }

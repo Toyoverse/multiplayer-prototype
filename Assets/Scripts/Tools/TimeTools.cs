@@ -19,6 +19,12 @@ namespace Tools
             yield return new WaitForSeconds(time);
             method?.Invoke(methodFloat);
         }
+        
+        public static IEnumerator InvokeInTime(Action<bool> method, bool methodBool, float time)
+        {
+            yield return new WaitForSeconds(time);
+            method?.Invoke(methodBool);
+        }
 
         #endregion
 

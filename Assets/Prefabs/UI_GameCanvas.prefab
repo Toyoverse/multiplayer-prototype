@@ -147,8 +147,9 @@ GameObject:
   - component: {fileID: 2550712429667946850}
   - component: {fileID: 1767553145521971052}
   - component: {fileID: 2018879689661186434}
+  - component: {fileID: 2655004143290903670}
   m_Layer: 5
-  m_Name: PAPER_Button
+  m_Name: PAPER_Def_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,6 +258,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2655004143290903670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689849516694994432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b94c31c97b485d91e47114b257b89c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardType: 2
+  button: {fileID: 2018879689661186434}
 --- !u!1 &2919207513702690443
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,8 +320,9 @@ GameObject:
   - component: {fileID: 6707472104625469763}
   - component: {fileID: 4315322500344762921}
   - component: {fileID: 2628727748197427416}
+  - component: {fileID: 2410486410529282055}
   m_Layer: 5
-  m_Name: SCISSOR_Button
+  m_Name: SCISSOR_Att_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,6 +431,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2410486410529282055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3492855613165521877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b94c31c97b485d91e47114b257b89c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardType: 3
+  button: {fileID: 2628727748197427416}
 --- !u!1 &4112505510530239848
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,8 +849,9 @@ GameObject:
   - component: {fileID: 5945210079885298540}
   - component: {fileID: 3137066694508304966}
   - component: {fileID: 8482229881530610451}
+  - component: {fileID: 1974148234728065223}
   m_Layer: 5
-  m_Name: ROCK_Button
+  m_Name: ROCK_Bon_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -929,6 +960,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1974148234728065223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5578829771330314082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b94c31c97b485d91e47114b257b89c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardType: 1
+  button: {fileID: 8482229881530610451}
 --- !u!1 &6777568461435813156
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,10 +5,12 @@ using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
 using FishNet.Transporting;
+using Tools;
 
 public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
+    public float disconnectDelay = 2;
 
     #region Public Methods
 
@@ -34,38 +36,51 @@ public class NetServerCommunicate : MonoBehaviour
     private void OnDisable()
     {
         InstanceFinder.ServerManager.UnregisterBroadcast<NetworkMessage>(OnMessageReceived);
+        InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionStateListener;
     }
 
     private void OnMessageReceived(NetworkConnection networkConnection, NetworkMessage message) 
-        => TreatMessage(message);
+        => TreatMessage(message, networkConnection);
 
-    private void TreatMessage(NetworkMessage netMessage)
+    private void TreatMessage(NetworkMessage netMessage, NetworkConnection conn)
     {
         switch ((MESSAGE_TYPE)netMessage.MessageType)
         {
             case MESSAGE_TYPE.NONE:
-                netMessage.Content = "Server receive message type is none.";
+                netMessage.StringContent = "Server receive message type is none.";
                 netMessage.MessageType = (int)MESSAGE_TYPE.STRING;
                 InstanceFinder.ServerManager.Broadcast(netMessage);
                 break;
             case MESSAGE_TYPE.CARD_CHOICE:
-                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, int.Parse(netMessage.Content));
+                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, int.Parse(netMessage.StringContent));
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
-                if (gameSystem.gameState != GAME_STATE.WAIT_CONNECTIONS)
+                if (gameSystem.serverState != SERVER_STATE.WAIT_CONNECTIONS)
                 {
-                    gameSystem.SendStringMessageForAllClients("[SERVER] The server is not accepting new connections, " +
-                                                              "there is already a match in progress. Connected " +
-                                                              "Clients: " + gameSystem.playersConnected);
-                    return;
+                    AutoKickMessage(netMessage.ClientID, netMessage.ObjectID);
+                    StartCoroutine(TimeTools.InvokeInTime(conn.Disconnect, true, disconnectDelay));
                 }
-                gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID);
+                else
+                    gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID, conn);
                 break;
         }
     }
 
     private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args /*ClientConnectionStateArgs args*/)
         => gameSystem.ClientDisconnected(conn, args);
+
+    private void AutoKickMessage(int clientID, int objectID)
+    {
+        var netMessage = new NetworkMessage()
+        {
+            ClientID = clientID,
+            ObjectID = objectID,
+            MessageType = (int)MESSAGE_TYPE.STRING,
+            StringContent = "[SERVER] The server is not accepting new connections, please try again later.",
+            ValueContent = -1
+        };
+        SendMessageToClient(netMessage);
+    }
 
     #endregion
 }
