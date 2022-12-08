@@ -20,12 +20,12 @@ public class GameSystem : MonoBehaviour
     public int playersConnected => playerClients?.Count ?? 0;
 
     [Header("LIFE VALUES")] 
-    [SerializeField] private float maxHealth = 3;
+    [SerializeField] private float maxHealth = 4;
     [SerializeField] private float roundDamage = 1;
 
-    private const string winCode = "WIN";
-    private const string loseCode = "LOSE";
-    private const string drawCode = "DRAW";
+    private const SIMPLE_RESULT winCode = SIMPLE_RESULT.WIN;
+    private const SIMPLE_RESULT loseCode = SIMPLE_RESULT.LOSE;
+    private const SIMPLE_RESULT drawCode = SIMPLE_RESULT.DRAW;
 
     /*private float timer;
     private const int roundTimeLimit = 12;
@@ -177,8 +177,12 @@ public class GameSystem : MonoBehaviour
                 }
             }*/
 
-            foreach (var gameChoice in playersChoices)
-                SendToClientResult(gameChoice, drawCode, gameChoice);
+            foreach (var player in playerClients)
+            {
+                var opponent = GetOpponent(player);
+                SendToClientResult(GetPlayerChoice(player.playerObjectID, player.playerClientID), drawCode, 
+                    GetPlayerChoice(opponent.playerObjectID, opponent.playerClientID));
+            }
             ClearChoices();
             ChangeGameState(SERVER_STATE.CHOICE_TIME);
         }
@@ -199,7 +203,7 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    private void SendToClientResult(GameChoice playerChoice, string result, GameChoice opponentChoice)
+    private void SendToClientResult(GameChoice playerChoice, SIMPLE_RESULT result, GameChoice opponentChoice)
     {
         var stringContent = result + "/" + opponentChoice.choice;
         var netMessage = new NetworkMessage
@@ -208,7 +212,8 @@ public class GameSystem : MonoBehaviour
             ObjectID = playerChoice.playerObjectID,
             StringContent = stringContent,
             MessageType = (int)MESSAGE_TYPE.ROUND_RESULT,
-            ValueContent = GetPlayerHealth(playerChoice.playerObjectID, playerChoice.playerClientID)
+            ValueOneContent = GetPlayerHealth(playerChoice.playerObjectID, playerChoice.playerClientID),
+            ValueTwoContent = GetPlayerHealth(opponentChoice.playerObjectID, opponentChoice.playerClientID)
         };
         netServer.SendMessageToClient(netMessage);
     }
@@ -221,7 +226,8 @@ public class GameSystem : MonoBehaviour
             ObjectID = playerClient.playerObjectID,
             StringContent = "",
             MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION,
-            ValueContent = playerClient.playerHealth
+            ValueOneContent = playerClient.playerHealth,
+            ValueTwoContent = playerClient.playerHealth
         };
         netServer.SendMessageToClient(netMessage);
     }
@@ -242,15 +248,16 @@ public class GameSystem : MonoBehaviour
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
-    private void SendGameOverMessage(PlayerClient player, string endCode)
+    private void SendGameOverMessage(PlayerClient player, SIMPLE_RESULT endCode)
     {
         var gameOverMessage = new NetworkMessage()
         {
             ClientID = player.playerClientID,
             ObjectID = player.playerObjectID,
-            StringContent = endCode,
+            StringContent = endCode.ToString(),
             MessageType = (int)MESSAGE_TYPE.GAME_OVER,
-            ValueContent = player.playerHealth
+            ValueOneContent = player.playerHealth,
+            ValueTwoContent = endCode == SIMPLE_RESULT.WIN ? 0 : -1
         };
         netServer.SendMessageToClient(gameOverMessage);
     }
@@ -325,7 +332,7 @@ public class GameSystem : MonoBehaviour
                 ObjectID = player.playerObjectID,
                 StringContent = "",
                 MessageType = (int)MESSAGE_TYPE.START_GAME,
-                ValueContent = player.playerHealth
+                ValueOneContent = player.playerHealth
             };
             netServer.SendMessageToClient(netMessage);
         }
@@ -341,7 +348,7 @@ public class GameSystem : MonoBehaviour
                 ObjectID = player.playerObjectID,
                 StringContent = message,
                 MessageType = (int)MESSAGE_TYPE.STRING,
-                ValueContent = player.playerHealth
+                ValueOneContent = player.playerHealth
             };
             netServer.SendMessageToClient(netMessage);
         }

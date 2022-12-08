@@ -5,14 +5,16 @@ using FishNet.Object;
 using FishNet.Broadcast;
 using Tools;
 
-public class StatusManager : NetworkBehaviour
+public class StatusManager : MonoBehaviour
 {
     [Header("STATUS")] 
     public float health;
     public float maxHealth;
+    public float opHealth;
 
     [Header("REFERENCES")]
     public GameObject uiPrefab;
+    public GameObject opUiPrefab;
     private UIPlayerManager _uiPlayerManager;
     private ScriptsReferences refs => ScriptsReferences.Instance;
 
@@ -21,10 +23,13 @@ public class StatusManager : NetworkBehaviour
     public delegate void HealthChange();
     public HealthChange onChangeHealt;
     
+    public delegate void OpHpChange();
+    public OpHpChange onOpHpChange;
+
     #endregion
     
     #region Public methods
-    
+
     public void ChangeHealth(float value)
     {
         health = value;
@@ -32,11 +37,23 @@ public class StatusManager : NetworkBehaviour
             health = maxHealth;
         onChangeHealt?.Invoke();
     }
+    
+    public void ChangeOpHealth(float value)
+    {
+        opHealth = value;
+        if (opHealth > maxHealth)
+            opHealth = maxHealth;
+        onOpHpChange?.Invoke();
+    }
 
     public void InitHealth(float value)
     {
-        health = maxHealth = value;
         InitializeUI();
+        InitializeOpponentUI();
+        health = maxHealth = value;
+        //InitializeUI();
+        ChangeHealth(value);
+        ChangeOpHealth(value);
     }
     
     #endregion
@@ -50,6 +67,14 @@ public class StatusManager : NetworkBehaviour
         _uiPlayerManager.AddUIEvents(this);
         onChangeHealt?.Invoke();
     }
+    
+    private void InitializeOpponentUI()
+    {
+        var playerUI = Instantiate(opUiPrefab, refs.uiOpponentHpTarget.transform);
+        _uiPlayerManager = playerUI.GetComponent<UIPlayerManager>();
+        _uiPlayerManager.AddOpUIEvents(this);
+        onOpHpChange?.Invoke();
+    }
 
     private void OnDestroy()
     {
@@ -59,29 +84,6 @@ public class StatusManager : NetworkBehaviour
         if(_uiPlayerManager != null)
             Destroy(_uiPlayerManager.gameObject);
     }
-    
-    #endregion
-
-    #region Network methods
-    
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        if (!base.IsOwner)
-        {
-            GetComponent<StatusManager>().enabled = false;
-        }
-        else
-        {
-            refs.myStatusManager = this;
-        }
-    }
-
-    [ObserversRpc]
-    public void ChangeHealth(GameObject obj, float value) => obj.GetComponent<StatusManager>().ChangeHealth(value);
-
-    [ServerRpc]
-    public void ChangeHealthServer(float value) => ChangeHealth(this.gameObject, value);
     
     #endregion
 }
