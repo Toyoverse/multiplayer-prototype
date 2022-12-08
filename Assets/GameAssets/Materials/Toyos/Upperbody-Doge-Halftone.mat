@@ -83,11 +83,11 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _Half_Edge: 1.52
+    - _Half_Edge: 1.43
     - _Half_Offset: 0.19
-    - _Half_Threshold: 0.073
+    - _Half_Threshold: 0.0965
     - _OpaqueCullMode: 2
-    - _Pattern_Tiling: 19.7
+    - _Pattern_Tiling: 13.3
     - _RenderQueueType: 4
     - _SrcBlend: 1
     - _StencilRef: 0
