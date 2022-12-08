@@ -35,7 +35,8 @@ public class NetClientCommunicate : NetworkBehaviour
         InstanceFinder.ClientManager.RegisterBroadcast<NetworkMessage>(OnMessageReceived);
     }
 
-    public void SendMessageToServer(NetworkMessage networkMessage) => InstanceFinder.ClientManager.Broadcast(networkMessage);
+    public void SendMessageToServer(NetworkMessage networkMessage) 
+        => InstanceFinder.ClientManager.Broadcast(networkMessage);
 
     #endregion
     

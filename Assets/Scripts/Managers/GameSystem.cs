@@ -195,7 +195,7 @@ public class GameSystem : MonoBehaviour
                 ChangeGameState(SERVER_STATE.CHOICE_TIME);
             }
             else
-                SendGameOverToClients();
+                SendGameOverToClients(playerDeath);
         }
     }
 
@@ -226,19 +226,18 @@ public class GameSystem : MonoBehaviour
         netServer.SendMessageToClient(netMessage);
     }
 
-    private void SendGameOverToClients()
+    private void SendGameOverToClients(PlayerClient loser)
     {
-        var playerDeath = GetPlayerDeath();
-        var playerAlive = GetPlayerAlive();
-        SendGameOverMessage(playerDeath, loseCode);
-        SendGameOverMessage(playerAlive, winCode);
+        var winner = GetOpponent(loser);
+        SendGameOverMessage(loser, loseCode);
+        SendGameOverMessage(winner, winCode);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
 
     private void GameOverWoWin()
     {
         for(var i = 0; i < playerClients.Count; i++)
-            if(!playerClients[i].networkConnection.IsActive)
+            if(playerClients[i].networkConnection.IsActive)
                 SendGameOverMessage(playerClients[i], winCode);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
@@ -256,13 +255,20 @@ public class GameSystem : MonoBehaviour
         netServer.SendMessageToClient(gameOverMessage);
     }
 
-    private PlayerClient GetPlayerDeath()
+    private PlayerClient GetPlayerDeath() => playerClients.FirstOrDefault(player => player.playerHealth <= 0.1f);
+    
+    private PlayerClient GetPlayerAlive() => playerClients.FirstOrDefault(player => player.playerHealth >= 0);
+
+    private PlayerClient GetOpponent(PlayerClient myPlayer)
     {
-        return playerClients.FirstOrDefault(player => player.playerHealth <= 0.1f);
-    }
-    private PlayerClient GetPlayerAlive()
-    {
-        return playerClients.FirstOrDefault(player => player.playerHealth >= 0);
+        foreach (var player in playerClients)
+        {
+            if (player.playerClientID == myPlayer.playerClientID 
+                && player.playerObjectID == myPlayer.playerObjectID)
+                continue;
+            return player;
+        }
+        return null;
     }
 
     private void DamagePlayer(GameChoice gameChoice)

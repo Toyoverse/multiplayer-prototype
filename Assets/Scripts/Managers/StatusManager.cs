@@ -54,7 +54,7 @@ public class StatusManager : NetworkBehaviour
     private void OnDestroy()
     {
         if(health > 0)
-            UIMenuManager.Instance.OnKicked();
+            refs.localManager.OnSelfKick();
         
         if(_uiPlayerManager != null)
             Destroy(_uiPlayerManager.gameObject);

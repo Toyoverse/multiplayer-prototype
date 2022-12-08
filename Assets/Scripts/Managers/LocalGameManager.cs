@@ -19,10 +19,11 @@ public class LocalGameManager : MonoBehaviour
     private const string waitMessage = "Please wait.";
     private const string matchWinMessage = "You WON the game!\nCongratulations!";
     private const string matchLoseMessage = "You lost the game. :(\nDon't get discouraged, try again!";
-    private const string disconnectedMessage = "Disconnected from server.";
+    private const string disconnectedMessage = "You have been disconnected from the server.";
     private const string disconnectCountMessage = "You will be disconnected from the server in ";
     private const string genericErrorMessage = "Something went wrong, please try restarting the game.";
     private const string opponentCardMessage = "Your opponent chose ";
+    private const string backToMenuInMenssage = "Back to menu in ";
 
     public int round = 0;
 
@@ -50,11 +51,6 @@ public class LocalGameManager : MonoBehaviour
     
     public void GameInit()
     {
-        refs.playerInput.rockButton.onClick.AddListener(RockSelect);
-        refs.playerInput.paperButton.onClick.AddListener(PaperSelect);
-        refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
-        refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
-
         ChangeLocalState(LOCAL_STATE.GAMEPLAY);
         RoundInit();
     }
@@ -94,14 +90,19 @@ public class LocalGameManager : MonoBehaviour
         if(gameOverMessage == matchLoseMessage)
             refs.myStatusManager.ChangeHealth(0);
         
-        CountToDisconnect(endGameDisconnectDelay);
+        CountToDisconnect(gameOverMessage + "\n" + disconnectCountMessage, endGameDisconnectDelay);
     }
     
     public void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
 
+    public void OnSelfKick() 
+        => CountToDisconnect(disconnectedMessage + "\n" + backToMenuInMenssage, endGameDisconnectDelay);
+
     #endregion
     
     #region Private Methods
+
+    private void Start() => AddButtonEvents();
 
     private void BackToMenu()
     {
@@ -109,19 +110,19 @@ public class LocalGameManager : MonoBehaviour
         UIMenuManager.Instance.BackToMenu();
     }
     
-    private void CountToDisconnect(float timeRemain)
+    private void CountToDisconnect(string defaultMessage, float timeRemain)
     {
         if (timeRemain <= 0)
         {
             ShowSimpleLogs.Instance.Log(disconnectedMessage);
-            //DisconnectToServer();
-            StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
+            if(gameState != LOCAL_STATE.MENU)
+                StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
         }
         else
         {
-            ShowSimpleLogs.Instance.Log(gameOverMessage + "\n" + disconnectCountMessage + timeRemain);
+            ShowSimpleLogs.Instance.Log(defaultMessage + timeRemain);
             var newTimeRemain = timeRemain - 1;
-            StartCoroutine(TimeTools.InvokeInTime(CountToDisconnect, newTimeRemain, 1));
+            StartCoroutine(TimeTools.InvokeInTime(CountToDisconnect, defaultMessage, newTimeRemain, 1));
         }
     }
 
@@ -158,14 +159,27 @@ public class LocalGameManager : MonoBehaviour
     private void PaperSelect() => MoveSelect(CARD_TYPE.DEFENSE);
 
     private void ScissorSelect() => MoveSelect(CARD_TYPE.ATTACK);
-    
-    private void OnDisable()
+
+    private void OnDisable() => RemoveButtonEvents();
+
+    private void AddButtonEvents()
+    {
+        if(refs is null)
+            return;
+        refs.playerInput.rockButton.onClick.AddListener(RockSelect);
+        refs.playerInput.paperButton.onClick.AddListener(PaperSelect);
+        refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
+        refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
+    }
+
+    private void RemoveButtonEvents()
     {
         if(refs is null)
             return;
         refs.playerInput.rockButton.onClick.RemoveListener(RockSelect);
         refs.playerInput.paperButton.onClick.RemoveListener(PaperSelect);
         refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);
+        refs.playerInput.menuButton.onClick.RemoveListener(BackToMenu);
     }
 
     #endregion

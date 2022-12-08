@@ -17,6 +17,12 @@ public class NetServerCommunicate : MonoBehaviour
     public void SendMessageToClient(NetworkMessage networkMessage) =>
         InstanceFinder.ServerManager.Broadcast(networkMessage);
     
+    public void RemoveEvents()
+    {
+        InstanceFinder.ServerManager.UnregisterBroadcast<NetworkMessage>(OnMessageReceived);
+        InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionStateListener;
+    }
+    
     #endregion
     
     #region Private Methods
@@ -33,11 +39,7 @@ public class NetServerCommunicate : MonoBehaviour
         //InstanceFinder.ServerManager.NetworkManager.TransportManager.Transport.OnClientConnectionState += OnRemoteConnectionStateListener;
     }
     
-    private void OnDisable()
-    {
-        InstanceFinder.ServerManager.UnregisterBroadcast<NetworkMessage>(OnMessageReceived);
-        InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionStateListener;
-    }
+    private void OnDisable() => RemoveEvents();
 
     private void OnMessageReceived(NetworkConnection networkConnection, NetworkMessage message) 
         => TreatMessage(message, networkConnection);
