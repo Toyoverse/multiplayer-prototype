@@ -7,19 +7,23 @@ public class UIPlayerManager : MonoBehaviour
     [Header("REFERENCES")] 
     [SerializeField] private Image healthImage;
     [SerializeField] private StatusManager _statusManager;
-    [SerializeField] private TextMeshProUGUI roundCount;
-    private ScriptsReferences refs => ScriptsReferences.Instance;
+    private bool myHealth = false;
 
     //private methods
-    private void UpdateHealthUI() => healthImage.fillAmount = _statusManager.health / _statusManager.maxHealth;
+    private void UpdateHealthUI() => healthImage.fillAmount = 
+        (myHealth ? _statusManager.health : _statusManager.opHealth) / _statusManager.maxHealth;
 
     //public methods
     public void AddUIEvents(StatusManager statusManager)
     {
+        myHealth = true;
         _statusManager = statusManager;
         statusManager.onChangeHealt += UpdateHealthUI;
-        refs.localManager.onRoundStart += UpdateRoundUI;
     }
-
-    public void UpdateRoundUI() => roundCount.text = refs.localManager.round.ToString();
+    
+    public void AddOpUIEvents(StatusManager statusManager)
+    {
+        _statusManager = statusManager;
+        statusManager.onOpHpChange += UpdateHealthUI;
+    }
 }

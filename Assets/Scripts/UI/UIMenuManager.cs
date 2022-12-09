@@ -33,6 +33,7 @@ public class UIMenuManager : Tools.Singleton<UIMenuManager>
     {
         mainMenuObj ??= this.gameObject.GetComponent<Canvas>();
         mainMenuObj.enabled = false;
+        refs.localManager.ChangeLocalState(LOCAL_STATE.GAMEPLAY);
     }
 
     public void BackToMenu()

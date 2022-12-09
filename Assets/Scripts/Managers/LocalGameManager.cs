@@ -1,8 +1,12 @@
+using TMPro;
 using UnityEngine;
 using Tools;
 
 public class LocalGameManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI roundText;
+    private const string roundTitle = "ROUND ";
+    
     private ScriptsReferences refs => ScriptsReferences.Instance;
     
     private const string rockCode = "BOUND";
@@ -30,14 +34,7 @@ public class LocalGameManager : MonoBehaviour
     private string gameOverMessage = "";
     private int endGameDisconnectDelay = 5;
 
-    public LOCAL_STATE gameState = LOCAL_STATE.NONE;
-
-    #region Events
-
-    public delegate void StartRound();
-    public StartRound onRoundStart;
-    
-    #endregion
+    public LOCAL_STATE gameState = LOCAL_STATE.MENU;
 
     #region Public Methods
 
@@ -51,11 +48,11 @@ public class LocalGameManager : MonoBehaviour
     
     public void GameInit()
     {
-        ChangeLocalState(LOCAL_STATE.GAMEPLAY);
+        //ChangeLocalState(LOCAL_STATE.GAMEPLAY);
         RoundInit();
     }
     
-    public void RunRoundResult(string result, float healthValue)
+    public void RunRoundResult(string result, float healthValue, float opponentHp)
     {
         string[] resultSplit = result.Split("/");
         var log = opponentCardMessage + resultSplit[1] + ".\n";
@@ -75,6 +72,7 @@ public class LocalGameManager : MonoBehaviour
 
         ShowSimpleLogs.Instance.Log(log);
         refs.myStatusManager.ChangeHealth(healthValue);
+        refs.myStatusManager.ChangeOpHealth(opponentHp);
         RoundInit();
     }
 
@@ -89,6 +87,8 @@ public class LocalGameManager : MonoBehaviour
 
         if(gameOverMessage == matchLoseMessage)
             refs.myStatusManager.ChangeHealth(0);
+        else 
+            refs.myStatusManager.ChangeOpHealth(0);
         
         CountToDisconnect(gameOverMessage + "\n" + disconnectCountMessage, endGameDisconnectDelay);
     }
@@ -130,10 +130,15 @@ public class LocalGameManager : MonoBehaviour
 
     private void InitRound()
     {
-        UIMenuManager.Instance.GoToStartGame();
+        if (gameState != LOCAL_STATE.GAMEPLAY)
+        {
+            round = 0;
+            UIMenuManager.Instance.GoToStartGame();
+        }
         if (refs.myStatusManager.health <= 0.1f)
             return;
         round++;
+        roundText.text = roundTitle + round;
         ShowSimpleLogs.Instance.Log(roundInitMessage);
         refs.playerInput.EnableMoveButtons();
     }

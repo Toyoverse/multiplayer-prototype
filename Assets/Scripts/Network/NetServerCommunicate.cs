@@ -79,7 +79,7 @@ public class NetServerCommunicate : MonoBehaviour
             ObjectID = objectID,
             MessageType = (int)MESSAGE_TYPE.STRING,
             StringContent = "[SERVER] The server is not accepting new connections, please try again later.",
-            ValueContent = -1
+            ValueOneContent = -1
         };
         SendMessageToClient(netMessage);
     }

@@ -51,8 +51,9 @@ public class NetClientCommunicate : NetworkBehaviour
     {
         if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID) return;
         Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType +
-                  " - Content: [String] " + message.StringContent + " | [Value] " + message.ValueContent
-                  + " - [ID's] Client: " + message.ClientID + " | Object: " + message.ObjectID);
+                  " - Content: [String] " + message.StringContent + " | [Value1] " + message.ValueOneContent +
+                  " [Value2] " + message.ValueTwoContent + " - [ID's] Client: " + message.ClientID +
+                  " | Object: " + message.ObjectID);
 
         switch (message.MessageType)
         {
@@ -65,7 +66,7 @@ public class NetClientCommunicate : NetworkBehaviour
                         ShowSimpleLogs.Instance.Log(message.StringContent);
                 break;
             case (int)MESSAGE_TYPE.NEW_CONNECTION:
-                refs.localManager.ConnectionSuccess(message.ValueContent);
+                refs.localManager.ConnectionSuccess(message.ValueOneContent);
                 break;
             case (int)MESSAGE_TYPE.START_GAME:
                 refs.localManager.GameInit();
@@ -74,7 +75,8 @@ public class NetClientCommunicate : NetworkBehaviour
                 refs.localManager.GameOver(message.StringContent);
                 break;
             case (int)MESSAGE_TYPE.ROUND_RESULT:
-                refs.localManager.RunRoundResult(message.StringContent, message.ValueContent);
+                refs.localManager.RunRoundResult(message.StringContent, message.ValueOneContent,
+                    message.ValueTwoContent);
                 break;
         }
     }

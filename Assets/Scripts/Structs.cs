@@ -9,7 +9,8 @@ public struct NetworkMessage : IBroadcast
     public int ObjectID;
     public int MessageType;
     public string StringContent;
-    public float ValueContent;
+    public float ValueOneContent;
+    public float ValueTwoContent;
 }
 
 public struct Match_Info
