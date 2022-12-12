@@ -30,6 +30,7 @@ Transform:
   m_Children:
   - {fileID: 4557844051694574847}
   - {fileID: 4557844051861172446}
+  - {fileID: 1026026067769818318}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -78,10 +79,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 4557844051861172445}
-  uiCanvasObject: {fileID: 0}
+  uiMyHpTarget: {fileID: 0}
+  uiOpponentHpTarget: {fileID: 0}
   localManager: {fileID: 0}
   myNetClientCommunicate: {fileID: 0}
   myStatusManager: {fileID: 0}
+  myNetHudCanvas: {fileID: 0}
+  myTugboat: {fileID: 0}
 --- !u!1 &4557844051861172447
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,3 +133,60 @@ MonoBehaviour:
   rockButton: {fileID: 0}
   paperButton: {fileID: 0}
   scissorButton: {fileID: 0}
+  menuButton: {fileID: 0}
+--- !u!1 &7912233814503237859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1026026067769818318}
+  - component: {fileID: 482597490449667573}
+  m_Layer: 0
+  m_Name: TimelineManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1026026067769818318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7912233814503237859}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 993.9001, y: 633.656, z: -99.9386}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4557844051028631539}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &482597490449667573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7912233814503237859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9496c3b8a67fb41bade032a61bad0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  director: {fileID: 0}
+  animations:
+  - type: 3
+    playable: {fileID: 11400000, guid: 28d57cc303cf48ecaeff74c1ed1d54c6, type: 2}
+  - type: 4
+    playable: {fileID: 11400000, guid: 908f0c4976c742b6a45d40f3a39904ed, type: 2}
+  - type: 1
+    playable: {fileID: 11400000, guid: 37999fa7933c7f24fa54125bea0e2a58, type: 2}
+  - type: 5
+    playable: {fileID: 11400000, guid: f64e02ee857b6a24490b4d99d3b8cc40, type: 2}
+  - type: 2
+    playable: {fileID: 11400000, guid: b71de69860724b1195f91a31d14f989f, type: 2}

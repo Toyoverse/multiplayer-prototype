@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 11050.703, g: 12248.737, b: 15971.73, a: 1}
+  m_IndirectSpecularColor: {r: 10994.661, g: 12191.786, b: 15922.068, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -14064,9 +14064,13 @@ PrefabInstance:
       value: 0.13002248
       objectReference: {fileID: 0}
     - target: {fileID: 4937019446987537701, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+      propertyPath: m_InitialState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937019446987537701, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
       propertyPath: m_PlayableAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 28d57cc303cf48ecaeff74c1ed1d54c6, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 4937019446987537701, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
       propertyPath: m_SceneBindings.Array.size
       value: 280
@@ -25905,6 +25909,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+--- !u!320 &347367549 stripped
+PlayableDirector:
+  m_CorrespondingSourceObject: {fileID: 4937019446987537701, guid: 64339e1d7e2590149a27b380759c96f3, type: 3}
+  m_PrefabInstance: {fileID: 347367548}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -26723,6 +26732,10 @@ PrefabInstance:
       propertyPath: _sceneNetworkObjects.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 482597490449667573, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: director
+      value: 
+      objectReference: {fileID: 347367549}
     - target: {fileID: 1228467592119709973, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
       propertyPath: _scenePathHash
       value: 870183984
@@ -26872,6 +26885,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2126630970}
     - target: {fileID: 4557844051694574846, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: timelineManager
+      value: 
+      objectReference: {fileID: 4557844051286924420}
+    - target: {fileID: 4557844051694574846, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
       propertyPath: uiOpponentHpTarget
       value: 
       objectReference: {fileID: 6777568462214013045}
@@ -26905,6 +26922,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+--- !u!114 &4557844051286924420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 482597490449667573, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+  m_PrefabInstance: {fileID: 4557844051286924419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9496c3b8a67fb41bade032a61bad0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5861614394763563851
 PrefabInstance:
   m_ObjectHideFlags: 0
