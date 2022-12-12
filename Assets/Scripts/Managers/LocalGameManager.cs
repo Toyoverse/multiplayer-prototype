@@ -35,6 +35,10 @@ public class LocalGameManager : MonoBehaviour
     private int endGameDisconnectDelay = 5;
 
     public LOCAL_STATE gameState = LOCAL_STATE.MENU;
+    
+    //Temporary variables for post animation control
+    private float myHp, opHp;
+    public SIMPLE_RESULT myMatchResult = SIMPLE_RESULT.NONE;
 
     #region Public Methods
 
@@ -54,43 +58,69 @@ public class LocalGameManager : MonoBehaviour
     
     public void RunRoundResult(string result, float healthValue, float opponentHp)
     {
-        string[] resultSplit = result.Split("/");
+        var resultSplit = result.Split("/");
+        var simpleResult = GetResultFromString(resultSplit[0].ToUpper());
         var log = opponentCardMessage + resultSplit[1] + ".\n";
-        switch (resultSplit[0].ToUpper())
+        var playableType = PLAYABLE_TYPE.NONE;
+        switch (simpleResult)
         {
-            case "WIN":
+            case SIMPLE_RESULT.WIN:
                 log += winMessage + "\n";
+                playableType = PLAYABLE_TYPE.DAMAGE;
                 break;
-            case "DRAW": 
+            case SIMPLE_RESULT.DRAW: 
                 log += drawMessage + "\n";
+                playableType = PLAYABLE_TYPE.DRAW;
                 break;
-            case "LOSE":
+            case SIMPLE_RESULT.LOSE:
                 log += loseMessage + "\n";
+                playableType = PLAYABLE_TYPE.KNOCKBACK;
                 break;
         }
+        
         log += startingRoundMessage + "\n" + waitMessage;
-
+        refs.timelineManager.PlayAnimation(playableType);
         ShowSimpleLogs.Instance.Log(log);
-        refs.myStatusManager.ChangeHealth(healthValue);
-        refs.myStatusManager.ChangeOpHealth(opponentHp);
+        myHp = healthValue;
+        opHp = opponentHp;
+    }
+
+    public void OnEndRoundAnimation()
+    {
+        refs.myStatusManager.ChangeHealth(myHp);
+        refs.myStatusManager.ChangeOpHealth(opHp);
         RoundInit();
     }
 
-    public void GameOver(string result)
+    public void OnEndMatchAnimation()
     {
-        gameOverMessage = result.ToUpper() switch
-        {
-            "WIN" => matchWinMessage,
-            "LOSE" => matchLoseMessage,
-            _ => genericErrorMessage
-        };
-
         if(gameOverMessage == matchLoseMessage)
             refs.myStatusManager.ChangeHealth(0);
         else 
             refs.myStatusManager.ChangeOpHealth(0);
         
         CountToDisconnect(gameOverMessage + "\n" + disconnectCountMessage, endGameDisconnectDelay);
+        myMatchResult = SIMPLE_RESULT.NONE;
+    }
+
+    public void GameOver(string result)
+    {
+        myMatchResult = GetResultFromString(result);
+        gameOverMessage = myMatchResult switch
+        {
+            SIMPLE_RESULT.WIN => matchWinMessage,
+            SIMPLE_RESULT.LOSE => matchLoseMessage,
+            _ => genericErrorMessage
+        };
+
+        var playableType = myMatchResult switch
+        {
+            SIMPLE_RESULT.WIN => PLAYABLE_TYPE.VICTORY,
+            SIMPLE_RESULT.LOSE => PLAYABLE_TYPE.DEFEAT,
+            _ => PLAYABLE_TYPE.NONE
+        };
+        
+        refs.timelineManager.PlayAnimation(playableType);
     }
     
     public void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
@@ -186,6 +216,15 @@ public class LocalGameManager : MonoBehaviour
         refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);
         refs.playerInput.menuButton.onClick.RemoveListener(BackToMenu);
     }
+
+    private SIMPLE_RESULT GetResultFromString(string stringResult)
+        => stringResult.ToUpper() switch
+            {
+                "WIN" => SIMPLE_RESULT.WIN,
+                "LOSE" => SIMPLE_RESULT.LOSE,
+                "DRAW" => SIMPLE_RESULT.DRAW,
+                _ => SIMPLE_RESULT.NONE
+            };
 
     #endregion
 }

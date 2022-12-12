@@ -1,5 +1,6 @@
 using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
+using Managers;
 using Tools;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class ScriptsReferences : Singleton<ScriptsReferences>
     public StatusManager myStatusManager;
     public NetworkHudCanvases myNetHudCanvas;
     public Tugboat myTugboat;
-    
+    public TimelineManager timelineManager;
+
     //c1ccd940e985bdb4bb6232d39d25a853
 }

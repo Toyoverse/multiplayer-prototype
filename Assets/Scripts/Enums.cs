@@ -42,3 +42,13 @@ public enum LOCAL_STATE
     MENU = 1,
     GAMEPLAY = 2
 }
+
+public enum PLAYABLE_TYPE
+{
+    NONE = 0,
+    DAMAGE = 1,
+    KNOCKBACK = 2,
+    DRAW = 3,
+    VICTORY = 4,
+    DEFEAT = 5
+}

@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="Update perk system;&#10;Update auto disconnect;&#10;Fixing bug in button events;">
-      <change afterPath="$PROJECT_DIR$/Assets/Sprites/LifebarTestSlider.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sprites/LifebarTestSlider.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sprites/lifebarplayerbackground.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sprites/lifebarplayerbackground.png.meta" afterDir="false" />
+    <list default="true" id="fb08ebd0-e9ee-4fc6-92d3-31b25ec0bb33" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/TimelineManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.multiplayer-prototype/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/CustomPackages/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CustomPackages/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskBold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskBold SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskRegular SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/AlteHaasGroteskRegular SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/wbv5 SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/NetPrefabs/Player_Manager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/NetPrefabs/Player_Manager.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/PlayerUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/PlayerUI.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI_GameCanvas.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Managers.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Managers.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Prototype.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/GameSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enums.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enums.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/LocalGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/LocalGameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/StatusManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/StatusManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network/NetClientCommunicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network/NetClientCommunicate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network/NetServerCommunicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network/NetServerCommunicate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Structs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Structs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayerManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ScriptsReferences.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ScriptsReferences.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,30 +17,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Fonts/AlteHaasGroteskBold SDF.asset" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Fonts/AlteHaasGroteskRegular SDF.asset" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Fonts/wbv5 SDF.asset" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scenes/Prototype.unity" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scenes/Prototype.unity" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scenes/Prototype.unity" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Prefabs/Managers.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Enums.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Enums.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/LocalGameManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/PerkSystem.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Managers/StatusManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Network/NetClientCommunicate.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Network/NetServerCommunicate.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Managers/TimelineManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/ScriptsReferences.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/ShowSimpleLogs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tools/TimeTools.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/Tools/TimeTools.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIMenuManager.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Meus_Arquivos/_Lucid_Dreams/multiplayer-prototype/Assets/Scripts/UI/UIMenuManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.6.5/Tests/Runtime/Shared/010-NotSupported.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Editor/TMP_EditorUtility.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/InputField.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Selectable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4a31731933e0419ca5a995305014ad37157a00/44/12387832/PlayableAsset.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4c260e2d919b4886954c7f43ae1916833d200/6f/72db66dd/IPointerEnterHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -109,10 +86,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="4948">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="4948" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -148,7 +125,8 @@
       <workItem from="1670245964364" duration="8222000" />
       <workItem from="1670337934534" duration="20875000" />
       <workItem from="1670430688885" duration="1028000" />
-      <workItem from="1670520601948" duration="13852000" />
+      <workItem from="1670520601948" duration="13985000" />
+      <workItem from="1670853570576" duration="5917000" />
     </task>
     <task id="LOCAL-00001" summary="First commit - WIP Multiplayer with dedicated server;">
       <created>1668734091475</created>
@@ -283,7 +261,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670530397224</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Heath bar for player and opponent;&#10;UI adjusts;&#10;Status manager change for local script;">
+      <created>1670539279755</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1670539279755</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,7 +311,8 @@
     <MESSAGE value="General adjusts:&#10;- Game System little refactor;&#10;- Camera and Arena;&#10;- Defense card;" />
     <MESSAGE value="Multiplayer end match fixed;&#10;Button hover show card info;&#10;Card type changed for Toyo card types;&#10;Game system general adjusts - Perk system added;&#10;Local game state added;&#10;Auto kick extra clients;" />
     <MESSAGE value="Update perk system;&#10;Update auto disconnect;&#10;Fixing bug in button events;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update perk system;&#10;Update auto disconnect;&#10;Fixing bug in button events;" />
+    <MESSAGE value="Heath bar for player and opponent;&#10;UI adjusts;&#10;Status manager change for local script;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Heath bar for player and opponent;&#10;UI adjusts;&#10;Status manager change for local script;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
