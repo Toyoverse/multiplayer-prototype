@@ -12,6 +12,10 @@ public class NetServerCommunicate : MonoBehaviour
     [SerializeField] private GameSystem gameSystem;
     public float disconnectDelay = 2;
 
+    private const string serverFullMessage =
+        "[SERVER] The server is not accepting new connections, please try again later.";
+    private const string clientVersionWrongMessage = "Unable to connect to the server. The game version is outdated.";
+
     #region Public Methods
 
     public void SendMessageToClient(NetworkMessage networkMessage) =>
@@ -57,13 +61,15 @@ public class NetServerCommunicate : MonoBehaviour
                 gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, int.Parse(netMessage.StringContent));
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
-                if (gameSystem.serverState != SERVER_STATE.WAIT_CONNECTIONS)
+                if (netMessage.StringContent == Application.version
+                    && gameSystem.serverState is SERVER_STATE.WAIT_CONNECTIONS)
+                    gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID, conn);
+                else
                 {
-                    AutoKickMessage(netMessage.ClientID, netMessage.ObjectID);
+                    var isFull = gameSystem.serverState != SERVER_STATE.WAIT_CONNECTIONS;
+                    AutoKickMessage(netMessage.ClientID, netMessage.ObjectID, isFull);
                     StartCoroutine(TimeTools.InvokeInTime(conn.Disconnect, true, disconnectDelay));
                 }
-                else
-                    gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID, conn);
                 break;
         }
     }
@@ -71,14 +77,15 @@ public class NetServerCommunicate : MonoBehaviour
     private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args /*ClientConnectionStateArgs args*/)
         => gameSystem.ClientDisconnected(conn, args);
 
-    private void AutoKickMessage(int clientID, int objectID)
+    private void AutoKickMessage(int clientID, int objectID, bool serverIsFull = false)
     {
+        var message = serverIsFull ? serverFullMessage : clientVersionWrongMessage;
         var netMessage = new NetworkMessage()
         {
             ClientID = clientID,
             ObjectID = objectID,
-            MessageType = (int)MESSAGE_TYPE.STRING,
-            StringContent = "[SERVER] The server is not accepting new connections, please try again later.",
+            MessageType = (int)MESSAGE_TYPE.CONNECTION_REFUSE,
+            StringContent = message,
             ValueOneContent = -1
         };
         SendMessageToClient(netMessage);

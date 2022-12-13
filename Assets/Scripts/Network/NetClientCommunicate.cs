@@ -7,6 +7,7 @@ using FishNet.Object;
 using FishNet;
 using Tools;
 using FishNet.Transporting;
+using Unity.VisualScripting;
 
 public class NetClientCommunicate : NetworkBehaviour
 {
@@ -60,10 +61,7 @@ public class NetClientCommunicate : NetworkBehaviour
             case (int)MESSAGE_TYPE.STRING:
                 Debug.Log("Received string message: " + message.StringContent);
                 if (message.StringContent.Contains("[SERVER]"))
-                    if(refs.localManager.gameState is LOCAL_STATE.MENU)
-                        UIMenuManager.Instance.LogMessage(message.StringContent);
-                    else
-                        ShowSimpleLogs.Instance.Log(message.StringContent);
+                    LogMessage(message.StringContent);
                 break;
             case (int)MESSAGE_TYPE.NEW_CONNECTION:
                 refs.localManager.ConnectionSuccess(message.ValueOneContent);
@@ -78,6 +76,9 @@ public class NetClientCommunicate : NetworkBehaviour
                 refs.localManager.RunRoundResult(message.StringContent, message.ValueOneContent,
                     message.ValueTwoContent);
                 break;
+            case (int)MESSAGE_TYPE.CONNECTION_REFUSE:
+                LogMessage(message.StringContent);
+                break;
         }
     }
     
@@ -90,6 +91,14 @@ public class NetClientCommunicate : NetworkBehaviour
             MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION
         };
         SendMessageToServer(netMessage);
+    }
+
+    private void LogMessage(string message)
+    {
+        if(refs.localManager.gameState is LOCAL_STATE.MENU)
+            UIMenuManager.Instance.LogMessage(message);
+        else
+            ShowSimpleLogs.Instance.Log(message);
     }
 
     #endregion

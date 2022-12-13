@@ -15,7 +15,8 @@ public enum MESSAGE_TYPE
     ROUND_RESULT = 3,
     STRING = 4,
     START_GAME = 5,
-    GAME_OVER = 6
+    GAME_OVER = 6,
+    CONNECTION_REFUSE = 7
 }
 
 public enum SERVER_STATE
