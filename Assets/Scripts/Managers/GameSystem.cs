@@ -16,7 +16,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerClient> playerClients;
     [SerializeField] private int round = 0;
-    //[SerializeField] private int inactiveRounds = 0;
+    [SerializeField] private int inactiveRounds = 0;
     public int playersConnected => playerClients?.Count ?? 0;
 
     [Header("LIFE VALUES")] 
@@ -26,10 +26,8 @@ public class GameSystem : MonoBehaviour
     private const SIMPLE_RESULT winCode = SIMPLE_RESULT.WIN;
     private const SIMPLE_RESULT loseCode = SIMPLE_RESULT.LOSE;
     private const SIMPLE_RESULT drawCode = SIMPLE_RESULT.DRAW;
-
-    /*private float timer;
-    private const int roundTimeLimit = 12;
-    private const int inactiveRoundsLimit = 3;*/
+    
+    private const int inactiveRoundsLimit = 5;
 
     public SERVER_STATE serverState;
     
@@ -167,15 +165,13 @@ public class GameSystem : MonoBehaviour
         var result = GetMatchResult();
         if (result.isDraw)
         {
-            /*if (result.isInactivePlayers)
-            {
+            if (AllPlayersInactive())
                 inactiveRounds++;
-                if (inactiveRounds >= inactiveRoundsLimit)
-                {
-                    GameOverAllLose();
-                    return;
-                }
-            }*/
+            if (inactiveRounds >= inactiveRoundsLimit)
+            {
+                GameOverAllLose();
+                return;
+            }
 
             foreach (var player in playerClients)
             {
@@ -201,6 +197,16 @@ public class GameSystem : MonoBehaviour
             else
                 SendGameOverToClients(playerDeath);
         }
+    }
+
+    private bool AllPlayersInactive()
+    {
+        var inactiveCount = 0;
+        foreach (var choice in playersChoices)
+            if (choice.choice is CARD_TYPE.NONE)
+                inactiveCount++;
+
+        return inactiveCount == playersChoices.Count;
     }
 
     private void SendToClientResult(GameChoice playerChoice, SIMPLE_RESULT result, GameChoice opponentChoice)
@@ -245,6 +251,14 @@ public class GameSystem : MonoBehaviour
         for(var i = 0; i < playerClients.Count; i++)
             if(playerClients[i].networkConnection.IsActive)
                 SendGameOverMessage(playerClients[i], winCode);
+        ChangeGameState(SERVER_STATE.GAME_OVER);
+    }
+    
+    private void GameOverAllLose()
+    {
+        for(var i = 0; i < playerClients.Count; i++)
+            if(playerClients[i].networkConnection.IsActive)
+                SendGameOverMessage(playerClients[i], loseCode);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
@@ -304,8 +318,7 @@ public class GameSystem : MonoBehaviour
     private void ClearGameMatch()
     {
         round = 0;
-        /*inactiveRounds = 0;
-        timer = 0;*/
+        inactiveRounds = 0;
         playersChoices?.Clear();
         if (serverState is SERVER_STATE.GAME_OVER)
         {
