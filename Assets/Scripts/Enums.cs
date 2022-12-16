@@ -1,10 +1,11 @@
 
 public enum CARD_TYPE
 {
-    NONE = 0,
-    BOND = 1, //ROCK
-    DEFENSE = 2, //PAPER
-    ATTACK = 3 //SCISSOR
+    EMPTY = 0,
+    NONE = 1,
+    BOND = 2, //ROCK
+    DEFENSE = 3, //PAPER
+    ATTACK = 4 //SCISSOR
 }
 
 public enum MESSAGE_TYPE
@@ -52,4 +53,12 @@ public enum PLAYABLE_TYPE
     DRAW = 3,
     VICTORY = 4,
     DEFEAT = 5
+}
+
+public enum KICK_REASON
+{
+    NONE = 0,
+    SERVER_IS_FULL = 1,
+    WRONG_VERSION = 2,
+    INACTIVE = 3
 }

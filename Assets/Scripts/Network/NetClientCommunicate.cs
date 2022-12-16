@@ -77,7 +77,7 @@ public class NetClientCommunicate : NetworkBehaviour
                     message.ValueTwoContent);
                 break;
             case (int)MESSAGE_TYPE.CONNECTION_REFUSE:
-                LogMessage(message.StringContent);
+                ClientKickedThreat(message.StringContent);
                 break;
         }
     }
@@ -88,7 +88,8 @@ public class NetClientCommunicate : NetworkBehaviour
         {
             ClientID = ClientManager.GetInstanceID(),
             ObjectID = this.NetworkObject.ObjectId,
-            MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION
+            MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION,
+            StringContent = Application.version
         };
         SendMessageToServer(netMessage);
     }
@@ -99,6 +100,14 @@ public class NetClientCommunicate : NetworkBehaviour
             UIMenuManager.Instance.LogMessage(message);
         else
             ShowSimpleLogs.Instance.Log(message);
+    }
+
+    private void ClientKickedThreat(string message)
+    {
+        if(refs.localManager.gameState != LOCAL_STATE.MENU)
+            refs.localManager.BackToMenu();
+        
+        UIMenuManager.Instance.LogMessage(message);
     }
 
     #endregion

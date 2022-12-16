@@ -14,23 +14,31 @@ public class NetServerCommunicate : MonoBehaviour
 
     private const string serverFullMessage =
         "[SERVER] The server is not accepting new connections, please try again later.";
-    private const string clientVersionWrongMessage = "Unable to connect to the server. The game version is outdated.";
+    private const string versionWrongMessage = "Unable to connect to the server. The game version is outdated.";
+    private const string inactiveMessage = "You have been logged out for inactivity.";
 
     #region Public Methods
 
     public void SendMessageToClient(NetworkMessage networkMessage) =>
         InstanceFinder.ServerManager.Broadcast(networkMessage);
+
+    public void KickPlayer(PlayerClient client, KICK_REASON kickReason)
+    {
+        AutoKickMessage(client.playerClientID, client.playerObjectID, kickReason);
+        StartCoroutine(TimeTools.InvokeInTime(client.networkConnection.Disconnect, 
+            true, disconnectDelay));
+    }
+
+    #endregion
     
-    public void RemoveEvents()
+    #region Private Methods
+
+    private void RemoveEvents()
     {
         InstanceFinder.ServerManager.UnregisterBroadcast<NetworkMessage>(OnMessageReceived);
         InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionStateListener;
     }
     
-    #endregion
-    
-    #region Private Methods
-
     private void OnEnable()
     {
         if (!InstanceFinder.IsServer)
@@ -66,8 +74,10 @@ public class NetServerCommunicate : MonoBehaviour
                     gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID, conn);
                 else
                 {
-                    var isFull = gameSystem.serverState != SERVER_STATE.WAIT_CONNECTIONS;
-                    AutoKickMessage(netMessage.ClientID, netMessage.ObjectID, isFull);
+                    var kickReason = gameSystem.serverState != SERVER_STATE.WAIT_CONNECTIONS
+                        ? KICK_REASON.WRONG_VERSION
+                        : KICK_REASON.SERVER_IS_FULL;
+                    AutoKickMessage(netMessage.ClientID, netMessage.ObjectID, kickReason);
                     StartCoroutine(TimeTools.InvokeInTime(conn.Disconnect, true, disconnectDelay));
                 }
                 break;
@@ -77,16 +87,22 @@ public class NetServerCommunicate : MonoBehaviour
     private void OnRemoteConnectionStateListener(NetworkConnection conn, RemoteConnectionStateArgs args /*ClientConnectionStateArgs args*/)
         => gameSystem.ClientDisconnected(conn, args);
 
-    private void AutoKickMessage(int clientID, int objectID, bool serverIsFull = false)
+    private void AutoKickMessage(int clientID, int objectID, KICK_REASON reason)
     {
-        var message = serverIsFull ? serverFullMessage : clientVersionWrongMessage;
+        var message = reason switch
+        {
+            KICK_REASON.NONE => "Connection generic error.",
+            KICK_REASON.SERVER_IS_FULL => serverFullMessage,
+            KICK_REASON.WRONG_VERSION => versionWrongMessage,
+            KICK_REASON.INACTIVE => inactiveMessage
+        };
         var netMessage = new NetworkMessage()
         {
             ClientID = clientID,
             ObjectID = objectID,
             MessageType = (int)MESSAGE_TYPE.CONNECTION_REFUSE,
             StringContent = message,
-            ValueOneContent = -1
+            ValueOneContent = (int)reason
         };
         SendMessageToClient(netMessage);
     }

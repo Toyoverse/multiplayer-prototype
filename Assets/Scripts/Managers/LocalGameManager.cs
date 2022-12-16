@@ -1,11 +1,16 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using Tools;
+using UnityEngine.UI;
 
 public class LocalGameManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI roundText;
     private const string roundTitle = "ROUND ";
+    [SerializeField] private TextMeshProUGUI roundTimeText;
+    [SerializeField] private GameObject roundTimeObj;
+    private const string roundTimeEnd = "TIME OUT!";
     
     private ScriptsReferences refs => ScriptsReferences.Instance;
     
@@ -39,6 +44,12 @@ public class LocalGameManager : MonoBehaviour
     //Temporary variables for post animation control
     private float myHp, opHp;
     public SIMPLE_RESULT myMatchResult = SIMPLE_RESULT.NONE;
+    
+    //Round time control
+    [SerializeField] private float roundTime;
+    private const float roundTimeLimit = 10;
+    private bool moveReady = false;
+    private CARD_TYPE cardSelected = CARD_TYPE.EMPTY;
 
     #region Public Methods
 
@@ -128,18 +139,18 @@ public class LocalGameManager : MonoBehaviour
     public void OnSelfKick() 
         => CountToDisconnect(disconnectedMessage + "\n" + backToMenuInMenssage, endGameDisconnectDelay);
 
+    public void BackToMenu()
+    {
+        DisconnectToServer();
+        UIMenuManager.Instance.BackToMenu();
+    }
+    
     #endregion
     
     #region Private Methods
 
     private void Start() => AddButtonEvents();
 
-    private void BackToMenu()
-    {
-        DisconnectToServer();
-        UIMenuManager.Instance.BackToMenu();
-    }
-    
     private void CountToDisconnect(string defaultMessage, float timeRemain)
     {
         if (timeRemain <= 0)
@@ -170,23 +181,25 @@ public class LocalGameManager : MonoBehaviour
         round++;
         roundText.text = roundTitle + round;
         ShowSimpleLogs.Instance.Log(roundInitMessage);
-        refs.playerInput.EnableMoveButtons();
+        StartCoroutine(RoundCount());
     }
     
     private void MoveSelect(CARD_TYPE move)
     {
-        refs.playerInput.DisableMoveButtons();
-        
+        moveReady = true;
+        cardSelected = move;
+    }
+
+    private void SendMoveToServer()
+    {
         var netMessage = new NetworkMessage()
         {
             ClientID = refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
             ObjectID = refs.myNetClientCommunicate.NetworkObject.ObjectId,
             MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            StringContent = ((int)move).ToString()
+            StringContent = ((int)cardSelected).ToString()
         };
         refs.myNetClientCommunicate.SendMessageToServer(netMessage);
-        
-        ShowSimpleLogs.Instance.Log(choiceMessage + move + opponentWait);
     }
 
     private void RockSelect() => MoveSelect(CARD_TYPE.BOND);
@@ -225,6 +238,54 @@ public class LocalGameManager : MonoBehaviour
                 "DRAW" => SIMPLE_RESULT.DRAW,
                 _ => SIMPLE_RESULT.NONE
             };
+
+    private IEnumerator RoundCount()
+    {
+        roundTime = roundTimeLimit;
+        moveReady = false;
+        cardSelected = CARD_TYPE.EMPTY;
+        roundTimeText.text = roundTime.ToString();
+        roundTimeObj.SetActive(true);
+        refs.playerInput.EnableMoveButtons();
+        
+        while (roundTime >= 0)
+        {
+            if (myMatchResult != SIMPLE_RESULT.NONE)
+                roundTime = -1;
+            
+            yield return new WaitForSeconds(1);
+            if (!moveReady)
+            {
+                roundTime--;
+                roundTimeText.text = roundTime.ToString();
+            }
+            else
+            {
+                roundTime = -1;
+                roundTimeText.text = choiceMessage + cardSelected;
+            }
+        }
+        
+        refs.playerInput.DisableMoveButtons();
+        if (myMatchResult != SIMPLE_RESULT.NONE)
+        {
+            roundTimeObj.SetActive(false);
+            roundTimeText.text = "";
+            yield break;
+        }
+        if (!moveReady)
+        {
+            MoveSelect(CARD_TYPE.NONE);
+            roundTimeText.text = roundTimeEnd;
+        }
+        yield return new WaitForSeconds(1);
+        
+        ShowSimpleLogs.Instance.Log(choiceMessage + cardSelected + opponentWait);
+        roundTimeObj.SetActive(false);
+        roundTimeText.text = "";
+        
+        SendMoveToServer();
+    }
 
     #endregion
 }

@@ -162,17 +162,12 @@ public class GameSystem : MonoBehaviour
 
     private void CheckChoices()
     {
+        round++;
         var result = GetMatchResult();
+        if (IsLastInactiveRound())
+            return;
         if (result.isDraw)
         {
-            if (AllPlayersInactive())
-                inactiveRounds++;
-            if (inactiveRounds >= inactiveRoundsLimit)
-            {
-                GameOverAllLose();
-                return;
-            }
-
             foreach (var player in playerClients)
             {
                 var opponent = GetOpponent(player);
@@ -184,7 +179,6 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            round++;
             DamagePlayer(result.loserChoice);
             var playerDeath = GetPlayerDeath();
             if (playerDeath == null)
@@ -199,14 +193,23 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    private bool AllPlayersInactive()
+    private bool IsLastInactiveRound()
     {
-        var inactiveCount = 0;
-        foreach (var choice in playersChoices)
-            if (choice.choice is CARD_TYPE.NONE)
-                inactiveCount++;
+        var thisRoundInactive = true;
+        foreach (var pChoice in playersChoices)
+        {
+            if (pChoice.choice != CARD_TYPE.NONE)
+                thisRoundInactive = false;
+        }
 
-        return inactiveCount == playersChoices.Count;
+        inactiveRounds = thisRoundInactive ? inactiveRounds + 1 : 0;
+        if (inactiveRounds >= inactiveRoundsLimit)
+        {
+            KickAllForInactivity();
+            return true;
+        }
+        else
+            return false;
     }
 
     private void SendToClientResult(GameChoice playerChoice, SIMPLE_RESULT result, GameChoice opponentChoice)
@@ -254,11 +257,12 @@ public class GameSystem : MonoBehaviour
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
-    private void GameOverAllLose()
+    private void KickAllForInactivity()
     {
         for(var i = 0; i < playerClients.Count; i++)
             if(playerClients[i].networkConnection.IsActive)
-                SendGameOverMessage(playerClients[i], loseCode);
+                //SendGameOverMessage(playerClients[i], loseCode);
+                netServer.KickPlayer(playerClients[i], KICK_REASON.INACTIVE);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
@@ -388,20 +392,7 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    /*private void Update()
-    {
-        if (gameState != GAME_STATE.CHOICE_TIME)
-            return;
-        timer += Time.deltaTime;
-        if (timer >= roundTimeLimit)
-            GoToCompareTime();
-    }*/
-
-    private void GoToCompareTime()
-    {
-        ChangeGameState(SERVER_STATE.COMPARE_TIME);
-        //timer = 0;
-    }
+    private void GoToCompareTime() => ChangeGameState(SERVER_STATE.COMPARE_TIME);
 
     private void CheckNewState()
     {
@@ -440,7 +431,7 @@ public class GameSystem : MonoBehaviour
             {
                 playerClientID = playerClients[i].playerClientID,
                 playerObjectID = playerClients[i].playerObjectID,
-                choice = CARD_TYPE.NONE
+                choice = CARD_TYPE.EMPTY
             };
             playersChoices.Add(item);
         }
@@ -451,7 +442,7 @@ public class GameSystem : MonoBehaviour
         var result = true;
         foreach (var choice in playersChoices)
         {
-            if (choice.choice == CARD_TYPE.NONE) 
+            if (choice.choice == CARD_TYPE.EMPTY) 
                 result = false;
         }
 
