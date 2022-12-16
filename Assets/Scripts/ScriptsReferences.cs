@@ -1,3 +1,4 @@
+using System;
 using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using Managers;
@@ -15,6 +16,7 @@ public class ScriptsReferences : Singleton<ScriptsReferences>
     public NetworkHudCanvases myNetHudCanvas;
     public Tugboat myTugboat;
     public TimelineManager timelineManager;
+    public GlobalConfigSO globalConfig;
 
     //c1ccd940e985bdb4bb6232d39d25a853
 }

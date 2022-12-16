@@ -86,6 +86,8 @@ MonoBehaviour:
   myStatusManager: {fileID: 0}
   myNetHudCanvas: {fileID: 0}
   myTugboat: {fileID: 0}
+  timelineManager: {fileID: 0}
+  globalConfig: {fileID: 11400000, guid: 4abde3bbb296e3841b1a106f855dfdef, type: 2}
 --- !u!1 &4557844051861172447
 GameObject:
   m_ObjectHideFlags: 0

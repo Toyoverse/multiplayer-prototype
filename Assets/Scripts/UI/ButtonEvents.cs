@@ -1,4 +1,3 @@
-using System;
 using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,8 +8,9 @@ namespace UI
     public class ButtonEvents : MonoBehaviour, IPointerEnterHandler
     {
         [SerializeField] private CARD_TYPE cardType;
-        private const string beats = " beats ";
+        private const string Beats = " beats ";
         [SerializeField] private Button button;
+        private ScriptsReferences Refs => ScriptsReferences.Instance;
 
         private void Start()
         {
@@ -21,8 +21,8 @@ namespace UI
         {
             if (!button.interactable)
                 return;
-            var log = LocalGameManager.roundInitMessage;
-            log += "\n" + cardType + beats + PerkSystem.GetWeakestType(cardType);
+            var log = Refs.globalConfig.roundInitMessage;
+            log += "\n" + cardType + Beats + PerkSystem.GetWeakestType(cardType);
             ShowSimpleLogs.Instance.Log(log);
         }
     }

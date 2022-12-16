@@ -2,54 +2,28 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using Tools;
-using UnityEngine.UI;
 
 public class LocalGameManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI roundText;
-    private const string roundTitle = "ROUND ";
+    private const string RoundTitle = "ROUND ";
     [SerializeField] private TextMeshProUGUI roundTimeText;
     [SerializeField] private GameObject roundTimeObj;
-    private const string roundTimeEnd = "TIME OUT!";
-    
-    private ScriptsReferences refs => ScriptsReferences.Instance;
-    
-    private const string rockCode = "BOUND";
-    private const string paperCode = "DEFENSE";
-    private const string scissorCode = "FAST-ATTACK";
-    public const string roundInitMessage = "Round started!\nMake your move!";
-    private const string choiceMessage = "You chose ";
-    private const string opponentWait = "\nWaiting for the opponent's move...";
-    private const string successConnection = "Connection success!\nWaiting for an opponent...";
-    private const string winMessage = "ROUND WIN!";
-    private const string loseMessage = "ROUND LOSE!";
-    private const string drawMessage = "DRAW!";
-    private const string startingRoundMessage = "Starting a new round...";
-    private const string waitMessage = "Please wait.";
-    private const string matchWinMessage = "You WON the game!\nCongratulations!";
-    private const string matchLoseMessage = "You lost the game. :(\nDon't get discouraged, try again!";
-    private const string disconnectedMessage = "You have been disconnected from the server.";
-    private const string disconnectCountMessage = "You will be disconnected from the server in ";
-    private const string genericErrorMessage = "Something went wrong, please try restarting the game.";
-    private const string opponentCardMessage = "Your opponent chose ";
-    private const string backToMenuInMenssage = "Back to menu in ";
 
-    public int round = 0;
+    private ScriptsReferences Refs => ScriptsReferences.Instance;
 
-    private string gameOverMessage = "";
-    private int endGameDisconnectDelay = 5;
-
+    [SerializeField] private int round;
+    private string _gameOverMessage = "";
     public LOCAL_STATE gameState = LOCAL_STATE.MENU;
     
     //Temporary variables for post animation control
-    private float myHp, opHp;
+    private float _myHp, _opHp;
     public SIMPLE_RESULT myMatchResult = SIMPLE_RESULT.NONE;
     
     //Round time control
     [SerializeField] private float roundTime;
-    private const float roundTimeLimit = 10;
-    private bool moveReady = false;
-    private CARD_TYPE cardSelected = CARD_TYPE.EMPTY;
+    private bool _moveReady;
+    private CARD_TYPE _cardSelected = CARD_TYPE.EMPTY;
 
     #region Public Methods
 
@@ -57,8 +31,8 @@ public class LocalGameManager : MonoBehaviour
     
     public void ConnectionSuccess(float maxHealthValue)
     {
-        ShowSimpleLogs.Instance.Log(successConnection);
-        refs.myStatusManager.InitHealth(maxHealthValue);
+        ShowSimpleLogs.Instance.Log(Refs.globalConfig.successConnectionMessage);
+        Refs.myStatusManager.InitHealth(maxHealthValue);
     }
     
     public void GameInit()
@@ -71,57 +45,58 @@ public class LocalGameManager : MonoBehaviour
     {
         var resultSplit = result.Split("/");
         var simpleResult = GetResultFromString(resultSplit[0].ToUpper());
-        var log = opponentCardMessage + resultSplit[1] + ".\n";
+        var log = Refs.globalConfig.opponentCardMessage + resultSplit[1] + ".\n";
         var playableType = PLAYABLE_TYPE.NONE;
         switch (simpleResult)
         {
             case SIMPLE_RESULT.WIN:
-                log += winMessage + "\n";
+                log += Refs.globalConfig.winMessage + "\n";
                 playableType = PLAYABLE_TYPE.DAMAGE;
                 break;
             case SIMPLE_RESULT.DRAW: 
-                log += drawMessage + "\n";
+                log += Refs.globalConfig.drawMessage + "\n";
                 playableType = PLAYABLE_TYPE.DRAW;
                 break;
             case SIMPLE_RESULT.LOSE:
-                log += loseMessage + "\n";
+                log += Refs.globalConfig.loseMessage + "\n";
                 playableType = PLAYABLE_TYPE.KNOCKBACK;
                 break;
         }
         
-        log += startingRoundMessage + "\n" + waitMessage;
-        refs.timelineManager.PlayAnimation(playableType);
+        log += Refs.globalConfig.startingRoundMessage + "\n" + Refs.globalConfig.waitMessage;
+        Refs.timelineManager.PlayAnimation(playableType);
         ShowSimpleLogs.Instance.Log(log);
-        myHp = healthValue;
-        opHp = opponentHp;
+        _myHp = healthValue;
+        _opHp = opponentHp;
     }
 
     public void OnEndRoundAnimation()
     {
-        refs.myStatusManager.ChangeHealth(myHp);
-        refs.myStatusManager.ChangeOpHealth(opHp);
+        Refs.myStatusManager.ChangeHealth(_myHp);
+        Refs.myStatusManager.ChangeOpHealth(_opHp);
         RoundInit();
     }
 
     public void OnEndMatchAnimation()
     {
-        if(gameOverMessage == matchLoseMessage)
-            refs.myStatusManager.ChangeHealth(0);
+        if(_gameOverMessage == Refs.globalConfig.matchLoseMessage)
+            Refs.myStatusManager.ChangeHealth(0);
         else 
-            refs.myStatusManager.ChangeOpHealth(0);
+            Refs.myStatusManager.ChangeOpHealth(0);
         
-        CountToDisconnect(gameOverMessage + "\n" + disconnectCountMessage, endGameDisconnectDelay);
+        CountToDisconnect(_gameOverMessage + "\n" + Refs.globalConfig.disconnectCountMessage,
+            Refs.globalConfig.endGameDisconnectDelay);
         myMatchResult = SIMPLE_RESULT.NONE;
     }
 
     public void GameOver(string result)
     {
         myMatchResult = GetResultFromString(result);
-        gameOverMessage = myMatchResult switch
+        _gameOverMessage = myMatchResult switch
         {
-            SIMPLE_RESULT.WIN => matchWinMessage,
-            SIMPLE_RESULT.LOSE => matchLoseMessage,
-            _ => genericErrorMessage
+            SIMPLE_RESULT.WIN => Refs.globalConfig.matchWinMessage,
+            SIMPLE_RESULT.LOSE => Refs.globalConfig.matchLoseMessage,
+            _ => Refs.globalConfig.genericErrorMessage
         };
 
         var playableType = myMatchResult switch
@@ -131,13 +106,12 @@ public class LocalGameManager : MonoBehaviour
             _ => PLAYABLE_TYPE.NONE
         };
         
-        refs.timelineManager.PlayAnimation(playableType);
+        Refs.timelineManager.PlayAnimation(playableType);
     }
-    
-    public void DisconnectToServer() => refs.myNetHudCanvas.OnlyDisconnect();
 
     public void OnSelfKick() 
-        => CountToDisconnect(disconnectedMessage + "\n" + backToMenuInMenssage, endGameDisconnectDelay);
+        => CountToDisconnect(Refs.globalConfig.disconnectedMessage + "\n" 
+                             + Refs.globalConfig.backToMenuCountMessage, Refs.globalConfig.endGameDisconnectDelay);
 
     public void BackToMenu()
     {
@@ -149,13 +123,15 @@ public class LocalGameManager : MonoBehaviour
     
     #region Private Methods
 
+    private void DisconnectToServer() => Refs.myNetHudCanvas.OnlyDisconnect();
+    
     private void Start() => AddButtonEvents();
 
     private void CountToDisconnect(string defaultMessage, float timeRemain)
     {
         if (timeRemain <= 0)
         {
-            ShowSimpleLogs.Instance.Log(disconnectedMessage);
+            ShowSimpleLogs.Instance.Log(Refs.globalConfig.disconnectedMessage);
             if(gameState != LOCAL_STATE.MENU)
                 StartCoroutine(TimeTools.InvokeInTime(BackToMenu, 1));
         }
@@ -176,30 +152,30 @@ public class LocalGameManager : MonoBehaviour
             round = 0;
             UIMenuManager.Instance.GoToStartGame();
         }
-        if (refs.myStatusManager.health <= 0.1f)
+        if (Refs.myStatusManager.health <= 0.1f)
             return;
         round++;
-        roundText.text = roundTitle + round;
-        ShowSimpleLogs.Instance.Log(roundInitMessage);
+        roundText.text = RoundTitle + round;
+        ShowSimpleLogs.Instance.Log(Refs.globalConfig.roundInitMessage);
         StartCoroutine(RoundCount());
     }
     
     private void MoveSelect(CARD_TYPE move)
     {
-        moveReady = true;
-        cardSelected = move;
+        _moveReady = true;
+        _cardSelected = move;
     }
 
     private void SendMoveToServer()
     {
         var netMessage = new NetworkMessage()
         {
-            ClientID = refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
-            ObjectID = refs.myNetClientCommunicate.NetworkObject.ObjectId,
+            ClientID = Refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
+            ObjectID = Refs.myNetClientCommunicate.NetworkObject.ObjectId,
             MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            StringContent = ((int)cardSelected).ToString()
+            StringContent = ((int)_cardSelected).ToString()
         };
-        refs.myNetClientCommunicate.SendMessageToServer(netMessage);
+        Refs.myNetClientCommunicate.SendMessageToServer(netMessage);
     }
 
     private void RockSelect() => MoveSelect(CARD_TYPE.BOND);
@@ -212,22 +188,22 @@ public class LocalGameManager : MonoBehaviour
 
     private void AddButtonEvents()
     {
-        if(refs is null)
+        if(Refs is null)
             return;
-        refs.playerInput.rockButton.onClick.AddListener(RockSelect);
-        refs.playerInput.paperButton.onClick.AddListener(PaperSelect);
-        refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
-        refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
+        Refs.playerInput.rockButton.onClick.AddListener(RockSelect);
+        Refs.playerInput.paperButton.onClick.AddListener(PaperSelect);
+        Refs.playerInput.scissorButton.onClick.AddListener(ScissorSelect);
+        Refs.playerInput.menuButton.onClick.AddListener(BackToMenu);
     }
 
     private void RemoveButtonEvents()
     {
-        if(refs is null)
+        if(Refs is null)
             return;
-        refs.playerInput.rockButton.onClick.RemoveListener(RockSelect);
-        refs.playerInput.paperButton.onClick.RemoveListener(PaperSelect);
-        refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);
-        refs.playerInput.menuButton.onClick.RemoveListener(BackToMenu);
+        Refs.playerInput.rockButton.onClick.RemoveListener(RockSelect);
+        Refs.playerInput.paperButton.onClick.RemoveListener(PaperSelect);
+        Refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);
+        Refs.playerInput.menuButton.onClick.RemoveListener(BackToMenu);
     }
 
     private SIMPLE_RESULT GetResultFromString(string stringResult)
@@ -241,12 +217,12 @@ public class LocalGameManager : MonoBehaviour
 
     private IEnumerator RoundCount()
     {
-        roundTime = roundTimeLimit;
-        moveReady = false;
-        cardSelected = CARD_TYPE.EMPTY;
-        roundTimeText.text = roundTime.ToString();
+        roundTime = Refs.globalConfig.secondsPerRound;
+        _moveReady = false;
+        _cardSelected = CARD_TYPE.EMPTY;
+        roundTimeText.text = "" + roundTime;
         roundTimeObj.SetActive(true);
-        refs.playerInput.EnableMoveButtons();
+        Refs.playerInput.EnableMoveButtons();
         
         while (roundTime >= 0)
         {
@@ -254,33 +230,34 @@ public class LocalGameManager : MonoBehaviour
                 roundTime = -1;
             
             yield return new WaitForSeconds(1);
-            if (!moveReady)
+            if (!_moveReady)
             {
                 roundTime--;
-                roundTimeText.text = roundTime.ToString();
+                roundTimeText.text = "" + roundTime;
             }
             else
             {
                 roundTime = -1;
-                roundTimeText.text = choiceMessage + cardSelected;
+                roundTimeText.text = Refs.globalConfig.choiceMessage + _cardSelected;
             }
         }
         
-        refs.playerInput.DisableMoveButtons();
+        Refs.playerInput.DisableMoveButtons();
         if (myMatchResult != SIMPLE_RESULT.NONE)
         {
             roundTimeObj.SetActive(false);
             roundTimeText.text = "";
             yield break;
         }
-        if (!moveReady)
+        if (!_moveReady)
         {
             MoveSelect(CARD_TYPE.NONE);
-            roundTimeText.text = roundTimeEnd;
+            roundTimeText.text = Refs.globalConfig.roundTimeEndMessage;
         }
         yield return new WaitForSeconds(1);
         
-        ShowSimpleLogs.Instance.Log(choiceMessage + cardSelected + opponentWait);
+        ShowSimpleLogs.Instance.Log(Refs.globalConfig.choiceMessage + _cardSelected 
+                                    + Refs.globalConfig.opponentWaitMessage);
         roundTimeObj.SetActive(false);
         roundTimeText.text = "";
         

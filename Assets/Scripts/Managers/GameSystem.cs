@@ -11,23 +11,18 @@ public class GameSystem : MonoBehaviour
 {
     [Header("REFERENCES")]
     [SerializeField] private NetServerCommunicate netServer;
+    [SerializeField] private ScriptsReferences refs => ScriptsReferences.Instance;
 
     [Header("GAME STATUS")]
     [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerClient> playerClients;
     [SerializeField] private int round = 0;
     [SerializeField] private int inactiveRounds = 0;
-    public int playersConnected => playerClients?.Count ?? 0;
-
-    [Header("LIFE VALUES")] 
-    [SerializeField] private float maxHealth = 4;
-    [SerializeField] private float roundDamage = 1;
+    public int PlayersConnected => playerClients?.Count ?? 0;
 
     private const SIMPLE_RESULT winCode = SIMPLE_RESULT.WIN;
     private const SIMPLE_RESULT loseCode = SIMPLE_RESULT.LOSE;
     private const SIMPLE_RESULT drawCode = SIMPLE_RESULT.DRAW;
-    
-    private const int inactiveRoundsLimit = 5;
 
     public SERVER_STATE serverState;
     
@@ -53,14 +48,14 @@ public class GameSystem : MonoBehaviour
         {
             playerClientID = clientID,
             playerObjectID = objectID,
-            playerHealth = maxHealth,
+            playerHealth = refs.globalConfig.maxHealth,
             networkConnection = conn
         };
         playerClients.Add(newPlayer);
 
         SendToClientHealthInit(newPlayer);
 
-        if (playersConnected >= 2)
+        if (PlayersConnected >= 2)
             ChangeGameState(SERVER_STATE.STARTING);
     }
     
@@ -100,7 +95,10 @@ public class GameSystem : MonoBehaviour
     private void Start()
     {
         if (!InstanceFinder.IsServer)
+        {
             this.gameObject.GetComponent<GameSystem>().enabled = false;
+            return;
+        }
         netServer ??= FindObjectOfType<NetServerCommunicate>();
         if(serverState == SERVER_STATE.NONE)
             ChangeGameState(SERVER_STATE.WAIT_CONNECTIONS);
@@ -203,7 +201,7 @@ public class GameSystem : MonoBehaviour
         }
 
         inactiveRounds = thisRoundInactive ? inactiveRounds + 1 : 0;
-        if (inactiveRounds >= inactiveRoundsLimit)
+        if (inactiveRounds >= refs.globalConfig.maxInactiveRounds)
         {
             KickAllForInactivity();
             return true;
@@ -302,7 +300,7 @@ public class GameSystem : MonoBehaviour
         {
             if (playerClients[i].playerObjectID == gameChoice.playerObjectID 
                 && playerClients[i].playerClientID == gameChoice.playerClientID)
-                playerClients[i].playerHealth -= roundDamage;
+                playerClients[i].playerHealth -= refs.globalConfig.baseDamage;
         }
     }
 

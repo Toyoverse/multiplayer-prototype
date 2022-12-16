@@ -26356,8 +26356,8 @@ MonoBehaviour:
   playerClients: []
   round: 0
   inactiveRounds: 0
-  maxHealth: 4
-  roundDamage: 1
+  maxHealth: 100
+  roundDamage: 10
   serverState: 0
 --- !u!114 &1699154170 stripped
 MonoBehaviour:
