@@ -49,7 +49,8 @@ public class GameSystem : MonoBehaviour
             playerObjectID = objectID,
             playerHealth = refs.globalConfig.maxHealth,
             networkConnection = conn,
-            choice = CARD_TYPE.EMPTY
+            choice = CARD_TYPE.EMPTY,
+            combo = -1
         };
         playerClients.Add(newPlayer);
 
@@ -61,7 +62,6 @@ public class GameSystem : MonoBehaviour
     
     public void RegisterPlayerChoice(int clientID, int objectID, int pChoice)
     {
-        //var _pChoice = GetTypeFromInt(pChoice);
         var _pChoice = (CARD_TYPE)pChoice;
 
         foreach (var playerClient in playerClients)
@@ -74,7 +74,6 @@ public class GameSystem : MonoBehaviour
 
         if (AllPlayersChose())
             StartCoroutine(TimeTools.InvokeInTime(GoToCompareTime, playerChoicesDelay));
-            //GoToCompareTime();
     }
 
     public void ClientDisconnected(NetworkConnection conn, RemoteConnectionStateArgs args)
@@ -114,11 +113,15 @@ public class GameSystem : MonoBehaviour
         };
 
         if (matchResult.isDraw)
+        {
+            ApplyCombos(playerClients[oneCode], playerClients[twoCode], true);
             return matchResult;
+        }
 
         var winnerID = GetWinnerCode(false);
         matchResult.winnerClient = playerClients[winnerID];
         matchResult.loserClient = winnerID == oneCode ? playerClients[twoCode] : playerClients[oneCode];
+        ApplyCombos(matchResult.winnerClient, matchResult.loserClient);
         
         return matchResult;
     }
@@ -172,7 +175,7 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            DamagePlayer(result.loserClient);
+            DamagePlayer(result.loserClient, result.winnerClient);
             var playerDeath = GetPlayerDeath();
             if (playerDeath == null)
             {
@@ -214,8 +217,8 @@ public class GameSystem : MonoBehaviour
             ObjectID = playerClient.playerObjectID,
             StringContent = stringContent,
             MessageType = (int)MESSAGE_TYPE.ROUND_RESULT,
-            ValueOneContent = GetPlayerHealth(playerClient.playerObjectID, playerClient.playerClientID),
-            ValueTwoContent = GetPlayerHealth(opponentClient.playerObjectID, opponentClient.playerClientID)
+            ValueOneContent = playerClient.playerHealth,
+            ValueTwoContent = opponentClient.playerHealth
         };
         netServer.SendMessageToClient(netMessage);
     }
@@ -254,7 +257,6 @@ public class GameSystem : MonoBehaviour
     {
         for(var i = 0; i < playerClients.Count; i++)
             if(playerClients[i].networkConnection.IsActive)
-                //SendGameOverMessage(playerClients[i], loseCode);
                 netServer.KickPlayer(playerClients[i], KICK_REASON.INACTIVE);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
@@ -289,28 +291,8 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    private void DamagePlayer(PlayerClient playerClient)
-    {
-        for (var i = 0; i < playerClients.Count; i++)
-        {
-            if (playerClients[i].playerObjectID == playerClient.playerObjectID 
-                && playerClients[i].playerClientID == playerClient.playerClientID)
-                playerClients[i].playerHealth -= refs.globalConfig.baseDamage;
-        }
-    }
-
-    private float GetPlayerHealth(int objectID, int clientID)
-    {
-        float result = 0;
-        foreach (var playerHealth in playerClients)
-        {
-            if (playerHealth.playerObjectID == objectID 
-                && playerHealth.playerClientID == clientID)
-                result = playerHealth.playerHealth;
-        }
-
-        return result;
-    }
+    private void DamagePlayer(PlayerClient playerClient, PlayerClient opponentClient)
+        => playerClient.playerHealth -= GetComboDamage(opponentClient);
 
     private void ClearGameMatch()
     {
@@ -406,15 +388,35 @@ public class GameSystem : MonoBehaviour
         return result;
     }
 
-    #endregion
-}
+    /// <summary>Get damage based in combo</summary>
+    /// <param name="pClient">PlayerClient with combo to be considered</param><returns></returns>
+    private float GetComboDamage(PlayerClient pClient)
+    {
+        var result = refs.globalConfig.baseDamage;
+        for (var i = 0; i < pClient.combo; i++)
+            result *= refs.globalConfig.comboMultiplier;
+        return result;
+    }
 
-[Serializable]
-public class PlayerClient
-{
-    public int playerClientID;
-    public int playerObjectID;
-    public float playerHealth;
-    public NetworkConnection networkConnection;
-    public CARD_TYPE choice;
+    private void AddCombo(PlayerClient playerClient)
+        => playerClient.combo++;
+    
+    private void ResetCombo(PlayerClient playerClient)
+        => playerClient.combo = -1;
+
+    private void ApplyCombos(PlayerClient winner, PlayerClient loser, bool isDraw = false)
+    {
+        if (isDraw)
+        {
+            ResetCombo(winner);
+            ResetCombo(loser);
+        }
+        else
+        {
+            AddCombo(winner);
+            ResetCombo(loser);
+        }
+    }
+
+    #endregion
 }

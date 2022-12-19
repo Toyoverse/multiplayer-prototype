@@ -3,11 +3,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GlobalConfigSO", menuName = "ScriptableObjects/GlobalConfigSO", order = 0)]
 public class GlobalConfigSO : ScriptableObject
 {
+    [Header("CHEAT")] 
+    public string lanCheat = "TOYOLANMODE";
     [Header("HEALTH")]
     public float maxHealth = 100;
     [Header("DAMAGE & COMBO")]
     public float baseDamage = 10;
-    public float comboMultiplier = 0.5f;
+    public float comboMultiplier = 1.5f;
     [Header("ROUNDS")] 
     public int maxInactiveRounds = 5;
     public float secondsPerRound = 10;

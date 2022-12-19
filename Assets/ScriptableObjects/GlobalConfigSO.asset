@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e50092158c222a54c8a0e2ea1d6a0462, type: 3}
   m_Name: GlobalConfigSO
   m_EditorClassIdentifier: 
+  lanCheat: toyolanmode
   maxHealth: 100
   baseDamage: 10
-  comboMultiplier: 0.5
+  comboMultiplier: 1.5
   maxInactiveRounds: 5
   secondsPerRound: 10
   serverKickDelay: 2
