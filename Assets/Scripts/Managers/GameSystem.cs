@@ -14,7 +14,6 @@ public class GameSystem : MonoBehaviour
     [SerializeField] private ScriptsReferences refs => ScriptsReferences.Instance;
 
     [Header("GAME STATUS")]
-    [SerializeField] private List<GameChoice> playersChoices;
     [SerializeField] private List<PlayerClient> playerClients;
     [SerializeField] private int round = 0;
     [SerializeField] private int inactiveRounds = 0;
@@ -49,7 +48,8 @@ public class GameSystem : MonoBehaviour
             playerClientID = clientID,
             playerObjectID = objectID,
             playerHealth = refs.globalConfig.maxHealth,
-            networkConnection = conn
+            networkConnection = conn,
+            choice = CARD_TYPE.EMPTY
         };
         playerClients.Add(newPlayer);
 
@@ -64,11 +64,11 @@ public class GameSystem : MonoBehaviour
         //var _pChoice = GetTypeFromInt(pChoice);
         var _pChoice = (CARD_TYPE)pChoice;
 
-        foreach (var gameChoice in playersChoices)
+        foreach (var playerClient in playerClients)
         {
-            if (gameChoice.playerObjectID != objectID || gameChoice.playerClientID != clientID) 
+            if (playerClient.playerObjectID != objectID || playerClient.playerClientID != clientID) 
                 continue;
-            gameChoice.choice = _pChoice;
+            playerClient.choice = _pChoice;
             break;
         }
 
@@ -108,18 +108,17 @@ public class GameSystem : MonoBehaviour
     {
         var matchResult = new Match_Info
         {
-            isDraw = playersChoices[oneCode].choice == playersChoices[twoCode].choice,
-            winnerChoice = new GameChoice(),
-            loserChoice = new GameChoice()
-            //isInactivePlayers = playersChoices[oneCode].choice == CARD_TYPE.NONE && playersChoices[twoCode].choice == CARD_TYPE.NONE
+            isDraw = playerClients[oneCode].choice == playerClients[twoCode].choice,
+            winnerClient = new PlayerClient(),
+            loserClient = new PlayerClient()
         };
 
         if (matchResult.isDraw)
             return matchResult;
 
         var winnerID = GetWinnerCode(false);
-        matchResult.winnerChoice = playersChoices[winnerID];
-        matchResult.loserChoice = winnerID == oneCode ? playersChoices[twoCode] : playersChoices[oneCode];
+        matchResult.winnerClient = playerClients[winnerID];
+        matchResult.loserClient = winnerID == oneCode ? playerClients[twoCode] : playerClients[oneCode];
         
         return matchResult;
     }
@@ -129,12 +128,12 @@ public class GameSystem : MonoBehaviour
         if (isDraw)
             return -1;
         
-        if (playersChoices[oneCode].choice == CARD_TYPE.NONE)
+        if (playerClients[oneCode].choice == CARD_TYPE.NONE)
             return twoCode;
 
-        var pTwoLose = PerkSystem.GetWeakestType(playersChoices[oneCode].choice);
-        if (playersChoices[twoCode].choice == pTwoLose
-            || playersChoices[twoCode].choice == CARD_TYPE.NONE)
+        var pTwoLose = PerkSystem.GetWeakestType(playerClients[oneCode].choice);
+        if (playerClients[twoCode].choice == pTwoLose
+            || playerClients[twoCode].choice == CARD_TYPE.NONE)
             return oneCode;
         else
             return twoCode;
@@ -167,22 +166,18 @@ public class GameSystem : MonoBehaviour
         if (result.isDraw)
         {
             foreach (var player in playerClients)
-            {
-                var opponent = GetOpponent(player);
-                SendToClientResult(GetPlayerChoice(player.playerObjectID, player.playerClientID), drawCode, 
-                    GetPlayerChoice(opponent.playerObjectID, opponent.playerClientID));
-            }
+                SendToClientResult(player, drawCode, GetOpponent(player));
             ClearChoices();
             ChangeGameState(SERVER_STATE.CHOICE_TIME);
         }
         else
         {
-            DamagePlayer(result.loserChoice);
+            DamagePlayer(result.loserClient);
             var playerDeath = GetPlayerDeath();
             if (playerDeath == null)
             {
-                SendToClientResult(result.loserChoice, loseCode, result.winnerChoice);
-                SendToClientResult(result.winnerChoice, winCode, result.loserChoice);
+                SendToClientResult(result.loserClient, loseCode, result.winnerClient);
+                SendToClientResult(result.winnerClient, winCode, result.loserClient);
                 ClearChoices();
                 ChangeGameState(SERVER_STATE.CHOICE_TIME);
             }
@@ -194,9 +189,9 @@ public class GameSystem : MonoBehaviour
     private bool IsLastInactiveRound()
     {
         var thisRoundInactive = true;
-        foreach (var pChoice in playersChoices)
+        foreach (var pClient in playerClients)
         {
-            if (pChoice.choice != CARD_TYPE.NONE)
+            if (pClient.choice != CARD_TYPE.NONE)
                 thisRoundInactive = false;
         }
 
@@ -210,17 +205,17 @@ public class GameSystem : MonoBehaviour
             return false;
     }
 
-    private void SendToClientResult(GameChoice playerChoice, SIMPLE_RESULT result, GameChoice opponentChoice)
+    private void SendToClientResult(PlayerClient playerClient, SIMPLE_RESULT result, PlayerClient opponentClient)
     {
-        var stringContent = result + "/" + opponentChoice.choice;
+        var stringContent = result + "/" + opponentClient.choice;
         var netMessage = new NetworkMessage
         {
-            ClientID = playerChoice.playerClientID,
-            ObjectID = playerChoice.playerObjectID,
+            ClientID = playerClient.playerClientID,
+            ObjectID = playerClient.playerObjectID,
             StringContent = stringContent,
             MessageType = (int)MESSAGE_TYPE.ROUND_RESULT,
-            ValueOneContent = GetPlayerHealth(playerChoice.playerObjectID, playerChoice.playerClientID),
-            ValueTwoContent = GetPlayerHealth(opponentChoice.playerObjectID, opponentChoice.playerClientID)
+            ValueOneContent = GetPlayerHealth(playerClient.playerObjectID, playerClient.playerClientID),
+            ValueTwoContent = GetPlayerHealth(opponentClient.playerObjectID, opponentClient.playerClientID)
         };
         netServer.SendMessageToClient(netMessage);
     }
@@ -294,12 +289,12 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    private void DamagePlayer(GameChoice gameChoice)
+    private void DamagePlayer(PlayerClient playerClient)
     {
         for (var i = 0; i < playerClients.Count; i++)
         {
-            if (playerClients[i].playerObjectID == gameChoice.playerObjectID 
-                && playerClients[i].playerClientID == gameChoice.playerClientID)
+            if (playerClients[i].playerObjectID == playerClient.playerObjectID 
+                && playerClients[i].playerClientID == playerClient.playerClientID)
                 playerClients[i].playerHealth -= refs.globalConfig.baseDamage;
         }
     }
@@ -321,7 +316,6 @@ public class GameSystem : MonoBehaviour
     {
         round = 0;
         inactiveRounds = 0;
-        playersChoices?.Clear();
         if (serverState is SERVER_STATE.GAME_OVER)
         {
             for(var i = 0; i < playerClients.Count; i++)
@@ -332,10 +326,6 @@ public class GameSystem : MonoBehaviour
         playerClients?.Clear();
         playerClients = new List<PlayerClient>();
     }
-
-    private GameChoice GetPlayerChoice(int objectID, int clientID)
-        =>  playersChoices.FirstOrDefault(gameChoice => objectID == gameChoice.playerObjectID 
-                                                        && clientID == gameChoice.playerClientID);
 
     private void SendStartGameForAllClients()
     {
@@ -369,27 +359,6 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    private void SendGameSystemInfoToClients()
-    {
-        if (playerClients.Count < 2 || playersChoices.Count < 2)
-            return;
-        var m = "playersChoices.Count: " + playersChoices.Count + " | round: " + round + 
-                "\nPlayer[" + playerClients[oneCode].playerObjectID + "] Health: " + playerClients[oneCode].playerHealth +
-                "\nPlayer[" + playerClients[twoCode].playerObjectID + "] Health: " + playerClients[twoCode].playerHealth;
-        SendStringMessageForAllClients(m);
-    }
-
-    private PlayerClient GetPlayerHealthByClientID(int id)
-    {
-        for (var i = 0; i < playerClients.Count; i++)
-        {
-            if (playerClients[i].playerClientID == id)
-                return playerClients[i];
-        }
-
-        return null;
-    }
-
     private void GoToCompareTime() => ChangeGameState(SERVER_STATE.COMPARE_TIME);
 
     private void CheckNewState()
@@ -421,26 +390,16 @@ public class GameSystem : MonoBehaviour
 
     private void ClearChoices()
     {
-        playersChoices.Clear();
-        playersChoices = new List<GameChoice>();
         for (var i = 0; i < playerClients.Count; i++)
-        {
-            var item = new GameChoice
-            {
-                playerClientID = playerClients[i].playerClientID,
-                playerObjectID = playerClients[i].playerObjectID,
-                choice = CARD_TYPE.EMPTY
-            };
-            playersChoices.Add(item);
-        }
+            playerClients[i].choice = CARD_TYPE.EMPTY;
     }
 
     private bool AllPlayersChose()
     {
         var result = true;
-        foreach (var choice in playersChoices)
+        foreach (var playerClient in playerClients)
         {
-            if (choice.choice == CARD_TYPE.EMPTY) 
+            if (playerClient.choice == CARD_TYPE.EMPTY) 
                 result = false;
         }
 
@@ -451,18 +410,11 @@ public class GameSystem : MonoBehaviour
 }
 
 [Serializable]
-public class GameChoice
-{
-    public int playerClientID;
-    public int playerObjectID;
-    public CARD_TYPE choice;
-}
-
-[Serializable]
 public class PlayerClient
 {
     public int playerClientID;
     public int playerObjectID;
     public float playerHealth;
     public NetworkConnection networkConnection;
+    public CARD_TYPE choice;
 }

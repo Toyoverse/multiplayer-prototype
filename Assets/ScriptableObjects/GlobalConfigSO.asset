@@ -18,7 +18,8 @@ MonoBehaviour:
   maxInactiveRounds: 5
   secondsPerRound: 10
   serverKickDelay: 2
-  successConnection: 'Connection success!
+  endGameDisconnectDelay: 3
+  successConnectionMessage: 'Connection success!
 
     Waiting for an opponent...'
   serverIsFullMessage: The server is not accepting new connections, please try again
@@ -31,7 +32,7 @@ MonoBehaviour:
 
     Make your move!'
   choiceMessage: 'You chose '
-  opponentWait: '
+  opponentWaitMessage: '
 
     Waiting for the opponent''s move...'
   winMessage: ROUND WIN!
@@ -48,3 +49,4 @@ MonoBehaviour:
   opponentCardMessage: 'Your opponent chose '
   backToMenuCountMessage: 'Back to menu in '
   genericErrorMessage: Something went wrong, please try restarting the game.
+  roundTimeEndMessage: TIME OUT!

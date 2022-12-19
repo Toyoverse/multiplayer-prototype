@@ -16,7 +16,7 @@ public struct NetworkMessage : IBroadcast
 public struct Match_Info
 {
     public bool isDraw;
-    public GameChoice winnerChoice;
-    public GameChoice loserChoice;
+    public PlayerClient winnerClient;
+    public PlayerClient loserClient;
     //public bool isInactivePlayers;
 }
