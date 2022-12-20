@@ -60,15 +60,13 @@ public class GameSystem : MonoBehaviour
             ChangeGameState(SERVER_STATE.STARTING);
     }
     
-    public void RegisterPlayerChoice(int clientID, int objectID, int pChoice)
+    public void RegisterPlayerChoice(int clientID, int objectID, CARD_TYPE pChoice)
     {
-        var _pChoice = (CARD_TYPE)pChoice;
-
         foreach (var playerClient in playerClients)
         {
             if (playerClient.playerObjectID != objectID || playerClient.playerClientID != clientID) 
                 continue;
-            playerClient.choice = _pChoice;
+            playerClient.choice = pChoice;
             break;
         }
 
@@ -210,38 +208,21 @@ public class GameSystem : MonoBehaviour
 
     private void SendToClientResult(PlayerClient playerClient, SIMPLE_RESULT result, PlayerClient opponentClient)
     {
-        var stringContent = result + "/" + opponentClient.choice;
-        var netMessage = new NetworkMessage
-        {
-            ClientID = playerClient.playerClientID,
-            ObjectID = playerClient.playerObjectID,
-            StringContent = stringContent,
-            MessageType = (int)MESSAGE_TYPE.ROUND_RESULT,
-            ValueOneContent = playerClient.playerHealth,
-            ValueTwoContent = opponentClient.playerHealth
-        };
+        var netMessage = JsonData.GetServerMessage(playerClient, opponentClient, MESSAGE_TYPE.ROUND_RESULT, result);
         netServer.SendMessageToClient(netMessage);
     }
 
     private void SendToClientHealthInit(PlayerClient playerClient)
     {
-        var netMessage = new NetworkMessage
-        {
-            ClientID = playerClient.playerClientID,
-            ObjectID = playerClient.playerObjectID,
-            StringContent = "",
-            MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION,
-            ValueOneContent = playerClient.playerHealth,
-            ValueTwoContent = playerClient.playerHealth
-        };
+        var netMessage = JsonData.GetServerMessage(playerClient, playerClient, MESSAGE_TYPE.NEW_CONNECTION);
         netServer.SendMessageToClient(netMessage);
     }
 
     private void SendGameOverToClients(PlayerClient loser)
     {
         var winner = GetOpponent(loser);
-        SendGameOverMessage(loser, loseCode);
-        SendGameOverMessage(winner, winCode);
+        SendGameOverMessage(loser, loseCode, winner);
+        SendGameOverMessage(winner, winCode, loser);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
 
@@ -249,7 +230,7 @@ public class GameSystem : MonoBehaviour
     {
         for(var i = 0; i < playerClients.Count; i++)
             if(playerClients[i].networkConnection.IsActive)
-                SendGameOverMessage(playerClients[i], winCode);
+                SendGameOverMessage(playerClients[i], winCode, playerClients[i]);
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
@@ -261,17 +242,9 @@ public class GameSystem : MonoBehaviour
         ChangeGameState(SERVER_STATE.GAME_OVER);
     }
     
-    private void SendGameOverMessage(PlayerClient player, SIMPLE_RESULT endCode)
+    private void SendGameOverMessage(PlayerClient player, SIMPLE_RESULT endCode, PlayerClient opponent)
     {
-        var gameOverMessage = new NetworkMessage()
-        {
-            ClientID = player.playerClientID,
-            ObjectID = player.playerObjectID,
-            StringContent = endCode.ToString(),
-            MessageType = (int)MESSAGE_TYPE.GAME_OVER,
-            ValueOneContent = player.playerHealth,
-            ValueTwoContent = endCode == SIMPLE_RESULT.WIN ? 0 : -1
-        };
+        var gameOverMessage = JsonData.GetServerMessage(player, opponent, MESSAGE_TYPE.GAME_OVER, endCode);
         netServer.SendMessageToClient(gameOverMessage);
     }
 
@@ -313,14 +286,7 @@ public class GameSystem : MonoBehaviour
     {
         foreach (var player in playerClients)
         {
-            var netMessage = new NetworkMessage
-            {
-                ClientID = player.playerClientID,
-                ObjectID = player.playerObjectID,
-                StringContent = "",
-                MessageType = (int)MESSAGE_TYPE.START_GAME,
-                ValueOneContent = player.playerHealth
-            };
+            var netMessage = JsonData.GetServerMessage(player, player, MESSAGE_TYPE.START_GAME);
             netServer.SendMessageToClient(netMessage);
         }
     }
@@ -329,14 +295,7 @@ public class GameSystem : MonoBehaviour
     {
         foreach (var player in playerClients)
         {
-            var netMessage = new NetworkMessage
-            {
-                ClientID = player.playerClientID,
-                ObjectID = player.playerObjectID,
-                StringContent = message,
-                MessageType = (int)MESSAGE_TYPE.STRING,
-                ValueOneContent = player.playerHealth
-            };
+            var netMessage = JsonData.GetServerSimpleStringMessage(player.playerClientID, player.playerObjectID, message);
             netServer.SendMessageToClient(netMessage);
         }
     }

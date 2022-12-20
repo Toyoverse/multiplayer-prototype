@@ -58,18 +58,19 @@ public class NetServerCommunicate : MonoBehaviour
 
     private void TreatMessage(NetworkMessage netMessage, NetworkConnection conn)
     {
-        switch ((MESSAGE_TYPE)netMessage.MessageType)
+        var content = JsonData.GetClientMessage(netMessage.Content);
+        switch (content.messageType)
         {
             case MESSAGE_TYPE.NONE:
-                netMessage.StringContent = "Server receive message type is none.";
-                netMessage.MessageType = (int)MESSAGE_TYPE.STRING;
-                InstanceFinder.ServerManager.Broadcast(netMessage);
+                var returnMessage = JsonData.GetServerSimpleStringMessage(netMessage.ClientID, netMessage.ObjectID,
+                    "Server receive message type is none.");
+                InstanceFinder.ServerManager.Broadcast(returnMessage);
                 break;
             case MESSAGE_TYPE.CARD_CHOICE:
-                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, int.Parse(netMessage.StringContent));
+                gameSystem.RegisterPlayerChoice(netMessage.ClientID, netMessage.ObjectID, content.choice);
                 break;
             case MESSAGE_TYPE.NEW_CONNECTION:
-                if (netMessage.StringContent == Application.version
+                if (content.version == Application.version
                     && gameSystem.serverState is SERVER_STATE.WAIT_CONNECTIONS)
                     gameSystem.RegisterNewPlayerConnection(netMessage.ClientID, netMessage.ObjectID, conn);
                 else
@@ -91,19 +92,12 @@ public class NetServerCommunicate : MonoBehaviour
     {
         var message = reason switch
         {
-            KICK_REASON.NONE => "Connection generic error.",
             KICK_REASON.SERVER_IS_FULL => serverFullMessage,
             KICK_REASON.WRONG_VERSION => versionWrongMessage,
-            KICK_REASON.INACTIVE => inactiveMessage
+            KICK_REASON.INACTIVE => inactiveMessage,
+            _ => "Connection generic error."
         };
-        var netMessage = new NetworkMessage()
-        {
-            ClientID = clientID,
-            ObjectID = objectID,
-            MessageType = (int)MESSAGE_TYPE.CONNECTION_REFUSE,
-            StringContent = message,
-            ValueOneContent = (int)reason
-        };
+        var netMessage = JsonData.GetServerKickMessage(clientID, objectID, message, reason);
         SendMessageToClient(netMessage);
     }
 

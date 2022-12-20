@@ -41,13 +41,11 @@ public class LocalGameManager : MonoBehaviour
         RoundInit();
     }
     
-    public void RunRoundResult(string result, float healthValue, float opponentHp)
+    public void RunRoundResult(ServerNetMessage serverResult)
     {
-        var resultSplit = result.Split("/");
-        var simpleResult = GetResultFromString(resultSplit[0].ToUpper());
-        var log = Refs.globalConfig.opponentCardMessage + resultSplit[1] + ".\n";
+        var log = Refs.globalConfig.opponentCardMessage + serverResult.opponentChoice + ".\n";
         var playableType = PLAYABLE_TYPE.NONE;
-        switch (simpleResult)
+        switch (serverResult.roundResult)
         {
             case SIMPLE_RESULT.WIN:
                 log += Refs.globalConfig.winMessage + "\n";
@@ -66,8 +64,8 @@ public class LocalGameManager : MonoBehaviour
         log += Refs.globalConfig.startingRoundMessage + "\n" + Refs.globalConfig.waitMessage;
         Refs.timelineManager.PlayAnimation(playableType);
         ShowSimpleLogs.Instance.Log(log);
-        _myHp = healthValue;
-        _opHp = opponentHp;
+        _myHp = serverResult.playerHealth;
+        _opHp = serverResult.opponentHealth;
     }
 
     public void OnEndRoundAnimation()
@@ -89,9 +87,9 @@ public class LocalGameManager : MonoBehaviour
         myMatchResult = SIMPLE_RESULT.NONE;
     }
 
-    public void GameOver(string result)
+    public void GameOver(SIMPLE_RESULT result)
     {
-        myMatchResult = GetResultFromString(result);
+        myMatchResult = result;
         _gameOverMessage = myMatchResult switch
         {
             SIMPLE_RESULT.WIN => Refs.globalConfig.matchWinMessage,
@@ -168,13 +166,7 @@ public class LocalGameManager : MonoBehaviour
 
     private void SendMoveToServer()
     {
-        var netMessage = new NetworkMessage()
-        {
-            ClientID = Refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
-            ObjectID = Refs.myNetClientCommunicate.NetworkObject.ObjectId,
-            MessageType = (int)MESSAGE_TYPE.CARD_CHOICE,
-            StringContent = ((int)_cardSelected).ToString()
-        };
+        var netMessage = JsonData.GetClientMessage(MESSAGE_TYPE.CARD_CHOICE, _cardSelected);
         Refs.myNetClientCommunicate.SendMessageToServer(netMessage);
     }
 
@@ -205,15 +197,6 @@ public class LocalGameManager : MonoBehaviour
         Refs.playerInput.scissorButton.onClick.RemoveListener(ScissorSelect);
         Refs.playerInput.menuButton.onClick.RemoveListener(BackToMenu);
     }
-
-    private SIMPLE_RESULT GetResultFromString(string stringResult)
-        => stringResult.ToUpper() switch
-            {
-                "WIN" => SIMPLE_RESULT.WIN,
-                "LOSE" => SIMPLE_RESULT.LOSE,
-                "DRAW" => SIMPLE_RESULT.DRAW,
-                _ => SIMPLE_RESULT.NONE
-            };
 
     private IEnumerator RoundCount()
     {

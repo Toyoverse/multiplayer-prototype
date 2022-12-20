@@ -51,46 +51,35 @@ public class NetClientCommunicate : NetworkBehaviour
     private void TreatMessage(NetworkMessage message)
     {
         if (myID != message.ClientID || this.NetworkObject.ObjectId != message.ObjectID) return;
-        Debug.Log("Received message of type " + (MESSAGE_TYPE)message.MessageType +
-                  " - Content: [String] " + message.StringContent + " | [Value1] " + message.ValueOneContent +
-                  " [Value2] " + message.ValueTwoContent + " - [ID's] Client: " + message.ClientID +
-                  " | Object: " + message.ObjectID);
+        var content = JsonData.GetServerMessage(message.Content);
+        Debug.Log("Received message: " + message.Content);
 
-        switch (message.MessageType)
+        switch (content.messageType)
         {
-            case (int)MESSAGE_TYPE.STRING:
-                Debug.Log("Received string message: " + message.StringContent);
-                if (message.StringContent.Contains("[SERVER]"))
-                    LogMessage(message.StringContent);
+            case MESSAGE_TYPE.STRING:
+                LogMessage(content.textMessage);
                 break;
-            case (int)MESSAGE_TYPE.NEW_CONNECTION:
-                refs.localManager.ConnectionSuccess(message.ValueOneContent);
+            case MESSAGE_TYPE.NEW_CONNECTION:
+                refs.localManager.ConnectionSuccess(content.playerHealth);
                 break;
-            case (int)MESSAGE_TYPE.START_GAME:
+            case MESSAGE_TYPE.START_GAME:
                 refs.localManager.GameInit();
                 break;
-            case (int)MESSAGE_TYPE.GAME_OVER:
-                refs.localManager.GameOver(message.StringContent);
+            case MESSAGE_TYPE.GAME_OVER:
+                refs.localManager.GameOver(content.roundResult);
                 break;
-            case (int)MESSAGE_TYPE.ROUND_RESULT:
-                refs.localManager.RunRoundResult(message.StringContent, message.ValueOneContent,
-                    message.ValueTwoContent);
+            case MESSAGE_TYPE.ROUND_RESULT:
+                refs.localManager.RunRoundResult(content);
                 break;
-            case (int)MESSAGE_TYPE.CONNECTION_REFUSE:
-                ClientKickedThreat(message.StringContent);
+            case MESSAGE_TYPE.CONNECTION_REFUSE:
+                ClientKickedThreat(content.textMessage, content.kickReason);
                 break;
         }
     }
     
     private void SendNewConnectionToServer()
     {
-        var netMessage = new NetworkMessage()
-        {
-            ClientID = ClientManager.GetInstanceID(),
-            ObjectID = this.NetworkObject.ObjectId,
-            MessageType = (int)MESSAGE_TYPE.NEW_CONNECTION,
-            StringContent = Application.version
-        };
+        var netMessage = JsonData.GetClientMessage(MESSAGE_TYPE.NEW_CONNECTION);
         SendMessageToServer(netMessage);
     }
 
@@ -102,12 +91,12 @@ public class NetClientCommunicate : NetworkBehaviour
             ShowSimpleLogs.Instance.Log(message);
     }
 
-    private void ClientKickedThreat(string message)
+    private void ClientKickedThreat(string message, KICK_REASON reason)
     {
         if(refs.localManager.gameState != LOCAL_STATE.MENU)
             refs.localManager.BackToMenu();
         
-        UIMenuManager.Instance.LogMessage(message);
+        UIMenuManager.Instance.LogMessage(message + "\n[REASON: " + reason + "]");
     }
 
     #endregion
