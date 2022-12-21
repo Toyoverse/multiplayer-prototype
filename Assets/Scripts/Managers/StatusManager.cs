@@ -16,6 +16,7 @@ public class StatusManager : MonoBehaviour
     public GameObject uiPrefab;
     public GameObject opUiPrefab;
     private UIPlayerManager _uiPlayerManager;
+    private UIPlayerManager _uiOpponentManager;
     private ScriptsReferences refs => ScriptsReferences.Instance;
 
     #region Events
@@ -46,14 +47,18 @@ public class StatusManager : MonoBehaviour
         onOpHpChange?.Invoke();
     }
 
+    public void UpdateMyCombo(int value) => _uiPlayerManager.UpdateCombo(value);
+    public void UpdateOpponentCombo(int value) => _uiOpponentManager.UpdateCombo(value);
+
     public void InitHealth(float value)
     {
         InitializeUI();
         InitializeOpponentUI();
         health = maxHealth = value;
-        //InitializeUI();
         ChangeHealth(value);
         ChangeOpHealth(value);
+        _uiPlayerManager.UpdateCombo(0);
+        _uiOpponentManager.UpdateCombo(0);
     }
     
     #endregion
@@ -71,8 +76,8 @@ public class StatusManager : MonoBehaviour
     private void InitializeOpponentUI()
     {
         var playerUI = Instantiate(opUiPrefab, refs.uiOpponentHpTarget.transform);
-        _uiPlayerManager = playerUI.GetComponent<UIPlayerManager>();
-        _uiPlayerManager.AddOpUIEvents(this);
+        _uiOpponentManager = playerUI.GetComponent<UIPlayerManager>();
+        _uiOpponentManager.AddOpUIEvents(this);
         onOpHpChange?.Invoke();
     }
 

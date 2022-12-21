@@ -192,3 +192,5 @@ MonoBehaviour:
     playable: {fileID: 11400000, guid: f64e02ee857b6a24490b4d99d3b8cc40, type: 2}
   - type: 2
     playable: {fileID: 11400000, guid: b71de69860724b1195f91a31d14f989f, type: 2}
+  - type: 6
+    playable: {fileID: 11400000, guid: 04e4726aae314154caee9f01c6c43289, type: 2}

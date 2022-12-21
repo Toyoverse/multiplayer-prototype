@@ -7,6 +7,8 @@ public class UIPlayerManager : MonoBehaviour
     [Header("REFERENCES")] 
     [SerializeField] private Image healthImage;
     [SerializeField] private StatusManager _statusManager;
+    [SerializeField] private TextMeshProUGUI comboText;
+    private const string comboTitle = "Combo: ";
     private bool myHealth = false;
 
     //private methods
@@ -25,5 +27,11 @@ public class UIPlayerManager : MonoBehaviour
     {
         _statusManager = statusManager;
         statusManager.onOpHpChange += UpdateHealthUI;
+    }
+
+    public void UpdateCombo(int value)
+    {
+        comboText.enabled = !(value <= 0);
+        comboText.text = comboTitle + value;
     }
 }

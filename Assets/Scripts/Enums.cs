@@ -52,7 +52,8 @@ public enum PLAYABLE_TYPE
     KNOCKBACK = 2,
     DRAW = 3,
     VICTORY = 4,
-    DEFEAT = 5
+    DEFEAT = 5,
+    IDLE = 6
 }
 
 public enum KICK_REASON

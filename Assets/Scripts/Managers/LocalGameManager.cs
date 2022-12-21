@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class LocalGameManager : MonoBehaviour
     //Temporary variables for post animation control
     private float _myHp, _opHp;
     public SIMPLE_RESULT myMatchResult = SIMPLE_RESULT.NONE;
+    private int _myCombo, _opCombo;
     
     //Round time control
     [SerializeField] private float roundTime;
@@ -43,35 +45,17 @@ public class LocalGameManager : MonoBehaviour
     
     public void RunRoundResult(ServerNetMessage serverResult)
     {
-        var log = Refs.globalConfig.opponentCardMessage + serverResult.opponentChoice + ".\n";
-        var playableType = PLAYABLE_TYPE.NONE;
-        switch (serverResult.roundResult)
-        {
-            case SIMPLE_RESULT.WIN:
-                log += Refs.globalConfig.winMessage + "\n";
-                playableType = PLAYABLE_TYPE.DAMAGE;
-                break;
-            case SIMPLE_RESULT.DRAW: 
-                log += Refs.globalConfig.drawMessage + "\n";
-                playableType = PLAYABLE_TYPE.DRAW;
-                break;
-            case SIMPLE_RESULT.LOSE:
-                log += Refs.globalConfig.loseMessage + "\n";
-                playableType = PLAYABLE_TYPE.KNOCKBACK;
-                break;
-        }
-        
-        log += Refs.globalConfig.startingRoundMessage + "\n" + Refs.globalConfig.waitMessage;
-        Refs.timelineManager.PlayAnimation(playableType);
-        ShowSimpleLogs.Instance.Log(log);
-        _myHp = serverResult.playerHealth;
-        _opHp = serverResult.opponentHealth;
+        LogRoundResult(serverResult);
+        SetStatsRoundResult(serverResult);
+        PlayRoundAnimationResult(serverResult);
     }
 
     public void OnEndRoundAnimation()
     {
         Refs.myStatusManager.ChangeHealth(_myHp);
         Refs.myStatusManager.ChangeOpHealth(_opHp);
+        Refs.myStatusManager.UpdateMyCombo(_myCombo);
+        Refs.myStatusManager.UpdateOpponentCombo(_opCombo);
         RoundInit();
     }
 
@@ -115,6 +99,7 @@ public class LocalGameManager : MonoBehaviour
     {
         DisconnectToServer();
         UIMenuManager.Instance.BackToMenu();
+        Refs.timelineManager.PlayAnimation(PLAYABLE_TYPE.IDLE);
     }
     
     #endregion
@@ -245,6 +230,38 @@ public class LocalGameManager : MonoBehaviour
         roundTimeText.text = "";
         
         SendMoveToServer();
+    }
+
+    private void LogRoundResult(ServerNetMessage serverResult)
+    {
+        var log = Refs.globalConfig.opponentCardMessage + serverResult.opponentChoice + ".\n";
+        log += serverResult.roundResult switch
+        {
+            SIMPLE_RESULT.WIN => Refs.globalConfig.winMessage + "\n",
+            SIMPLE_RESULT.DRAW => Refs.globalConfig.drawMessage + "\n",
+            SIMPLE_RESULT.LOSE => Refs.globalConfig.loseMessage + "\n"
+        };
+        log += Refs.globalConfig.startingRoundMessage + "\n" + Refs.globalConfig.waitMessage;
+        ShowSimpleLogs.Instance.Log(log);
+    }
+
+    private void PlayRoundAnimationResult(ServerNetMessage serverResult)
+    {
+        var playableType = serverResult.roundResult switch
+        {
+            SIMPLE_RESULT.WIN => PLAYABLE_TYPE.DAMAGE,
+            SIMPLE_RESULT.DRAW => PLAYABLE_TYPE.DRAW,
+            SIMPLE_RESULT.LOSE => PLAYABLE_TYPE.KNOCKBACK
+        };
+        Refs.timelineManager.PlayAnimation(playableType);
+    }
+
+    private void SetStatsRoundResult(ServerNetMessage serverResult)
+    {
+        _myHp = serverResult.playerHealth;
+        _opHp = serverResult.opponentHealth;
+        _myCombo = serverResult.playerCombo;
+        _opCombo = serverResult.opponentCombo;
     }
 
     #endregion
