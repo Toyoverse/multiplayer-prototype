@@ -20,7 +20,7 @@ public class UIPlayerManager : MonoBehaviour
     {
         myHealth = true;
         _statusManager = statusManager;
-        statusManager.onChangeHealt += UpdateHealthUI;
+        statusManager.onMyHpChange += UpdateHealthUI;
     }
     
     public void AddOpUIEvents(StatusManager statusManager)

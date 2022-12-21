@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 11010.651, g: 12208.5, b: 15942.836, a: 1}
+  m_IndirectSpecularColor: {r: 11047.124, g: 12243.932, b: 15967.689, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -280,6 +280,10 @@ PrefabInstance:
     - target: {fileID: 7434956866401752028, guid: b533fbd5b6ea53648806ace851e1ef4c, type: 3}
       propertyPath: m_Name
       value: UiAnimations
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434956866401752028, guid: b533fbd5b6ea53648806ace851e1ef4c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b533fbd5b6ea53648806ace851e1ef4c, type: 3}

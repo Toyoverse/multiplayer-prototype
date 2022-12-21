@@ -22,7 +22,7 @@ public class StatusManager : MonoBehaviour
     #region Events
     
     public delegate void HealthChange();
-    public HealthChange onChangeHealt;
+    public HealthChange onMyHpChange;
     
     public delegate void OpHpChange();
     public OpHpChange onOpHpChange;
@@ -36,7 +36,7 @@ public class StatusManager : MonoBehaviour
         health = value;
         if (health > maxHealth)
             health = maxHealth;
-        onChangeHealt?.Invoke();
+        onMyHpChange?.Invoke();
     }
     
     public void ChangeOpHealth(float value)
@@ -70,7 +70,7 @@ public class StatusManager : MonoBehaviour
         var playerUI = Instantiate(uiPrefab, refs.uiMyHpTarget.transform);
         _uiPlayerManager = playerUI.GetComponent<UIPlayerManager>();
         _uiPlayerManager.AddUIEvents(this);
-        onChangeHealt?.Invoke();
+        onMyHpChange?.Invoke();
     }
     
     private void InitializeOpponentUI()
