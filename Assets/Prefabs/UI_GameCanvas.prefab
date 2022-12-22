@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 508bc22a394c8ab4da3d24679746fd32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 11501716dd024671a57cde2b313dedcb, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 508bc22a394c8ab4da3d24679746fd32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 11501716dd024671a57cde2b313dedcb, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -526,6 +526,7 @@ GameObject:
   - component: {fileID: 1767553145521971052}
   - component: {fileID: 2018879689661186434}
   - component: {fileID: 2655004143290903670}
+  - component: {fileID: 8136642937910631754}
   m_Layer: 5
   m_Name: ROCK_Def_Button
   m_TagString: Untagged
@@ -651,6 +652,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: 2
   button: {fileID: 2018879689661186434}
+--- !u!95 &8136642937910631754
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689849516694994432}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2919207513702690443
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,6 +721,7 @@ GameObject:
   - component: {fileID: 4315322500344762921}
   - component: {fileID: 2628727748197427416}
   - component: {fileID: 2410486410529282055}
+  - component: {fileID: 8092057041895041717}
   m_Layer: 5
   m_Name: SCISSOR_Atk_Button
   m_TagString: Untagged
@@ -825,6 +847,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: 3
   button: {fileID: 2628727748197427416}
+--- !u!95 &8092057041895041717
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3492855613165521877}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4110503537674696536
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,6 +1484,7 @@ GameObject:
   - component: {fileID: 3137066694508304966}
   - component: {fileID: 8482229881530610451}
   - component: {fileID: 1974148234728065223}
+  - component: {fileID: 2773870666132648222}
   m_Layer: 5
   m_Name: PAPER_Bon_Button
   m_TagString: Untagged
@@ -1567,6 +1610,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: 1
   button: {fileID: 8482229881530610451}
+--- !u!95 &2773870666132648222
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5578829771330314082}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6777568461435813156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,6 +1643,7 @@ GameObject:
   - component: {fileID: 6777568461435813158}
   - component: {fileID: 6777568461435813159}
   - component: {fileID: 1985308841}
+  - component: {fileID: 6895161613291110336}
   m_Layer: 5
   m_Name: UI_GameCanvas
   m_TagString: Untagged
@@ -1701,6 +1765,35 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 20}
   m_Constraint: 2
   m_ConstraintCount: 10
+--- !u!320 &6895161613291110336
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6777568461435813156}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 0
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 8069835740750915332, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 2773870666132648222}
+  - key: {fileID: 366936048103285589, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 19992289690629424}
+  - key: {fileID: -1138555919002630112, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 8136642937910631754}
+  - key: {fileID: 8706661878818633152, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 8312662696798027358}
+  - key: {fileID: 5096765687010465511, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 8092057041895041717}
+  - key: {fileID: -8789773542433821532, guid: e9f5c704b4f041a3ba7bbb9abb677d14, type: 2}
+    value: {fileID: 1216738446618706451}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &7780870353936030179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,7 +2031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 508bc22a394c8ab4da3d24679746fd32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 11501716dd024671a57cde2b313dedcb, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
