@@ -1,15 +1,17 @@
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GlobalConfigSO", menuName = "ScriptableObjects/GlobalConfigSO", order = 0)]
 public class GlobalConfigSO : ScriptableObject
 {
     [Header("CHEAT")] 
-    public string lanCheat = "TOYOLANMODE";
+    public string lanCheat = "toyolanmode";
     [Header("HEALTH")]
     public float maxHealth = 100;
     [Header("DAMAGE & COMBO")]
     public float baseDamage = 10;
     public float comboMultiplier = 1.5f;
+    public float repeatCardMultiplier = 1.25f;
     [Header("ROUNDS")] 
     public int maxInactiveRounds = 5;
     public float secondsPerRound = 10;
@@ -39,4 +41,62 @@ public class GlobalConfigSO : ScriptableObject
     [TextArea] public string backToMenuCountMessage = "Back to menu in ";
     [TextArea] public string genericErrorMessage = "Something went wrong, please try restarting the game.";
     [TextArea] public string roundTimeEndMessage = "TIME OUT!";
+
+    [Space(30)]
+    [Header("CAUTION! THIS BUTTON RESETS ALL VALUES!")] 
+    public bool iReallyWantToResetEverything = false;
+
+    public void ResetValues()
+    {
+        if (!iReallyWantToResetEverything)
+        {
+            Debug.LogError("Values have not been reset. To reset all values you need to check the option " +
+                           "'I really want to reset everything'.");
+            return;
+        }
+        lanCheat = "toyolanmode";
+        maxHealth = 100;
+        baseDamage = 10;
+        comboMultiplier = 1.5f;
+        repeatCardMultiplier = 1.25f;
+        maxInactiveRounds = 5;
+        secondsPerRound = 10;
+        serverKickDelay = 2;
+        endGameDisconnectDelay = 5;
+        successConnectionMessage = "Connection success!\nWaiting for an opponent...";
+        serverIsFullMessage =
+            "The server is not accepting new connections, please try again later.";
+        versionWrongMessage = "Unable to connect to the server. The game version is outdated.";
+        inactiveMessage = "You have been logged out for inactivity.";
+        disconnectedMessage = "You have been disconnected from the server.";
+        disconnectCountMessage = "You will be disconnected from the server in ";
+        roundInitMessage = "Round started!\nMake your move!";
+        choiceMessage = "You chose ";
+        opponentWaitMessage = "\nWaiting for the opponent's move...";
+        winMessage = "ROUND WIN!";
+        loseMessage = "ROUND LOSE!";
+        drawMessage = "DRAW!";
+        startingRoundMessage = "Starting a new round...";
+        waitMessage = "Please wait.";
+        matchWinMessage = "You WON the game!\nCongratulations!";
+        matchLoseMessage = "You lost the game. :(\nDon't get discouraged, try again!";
+        opponentCardMessage = "Your opponent chose ";
+        backToMenuCountMessage = "Back to menu in ";
+        genericErrorMessage = "Something went wrong, please try restarting the game.";
+        roundTimeEndMessage = "TIME OUT!";
+        iReallyWantToResetEverything = false;
+        Debug.Log("Values reset successfully!");
+    }
+}
+
+[CustomEditor(typeof(GlobalConfigSO))]
+public class GlobalConfigResetButton : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        var globalConfig = (GlobalConfigSO)target;
+        if(GUILayout.Button("Reset Values"))
+            globalConfig.ResetValues();
+    }
 }

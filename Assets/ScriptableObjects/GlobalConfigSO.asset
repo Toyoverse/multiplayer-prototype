@@ -16,10 +16,11 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 10
   comboMultiplier: 1.5
+  repeatCardMultiplier: 1.25
   maxInactiveRounds: 5
   secondsPerRound: 10
   serverKickDelay: 2
-  endGameDisconnectDelay: 3
+  endGameDisconnectDelay: 5
   successConnectionMessage: 'Connection success!
 
     Waiting for an opponent...'
@@ -51,3 +52,4 @@ MonoBehaviour:
   backToMenuCountMessage: 'Back to menu in '
   genericErrorMessage: Something went wrong, please try restarting the game.
   roundTimeEndMessage: TIME OUT!
+  iReallyWantToResetEverything: 0

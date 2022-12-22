@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1323831551779361945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 306436165614720755}
+  - component: {fileID: 4368738242053533436}
+  m_Layer: 0
+  m_Name: DeckManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &306436165614720755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323831551779361945}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4557844051028631539}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4368738242053533436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323831551779361945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab0aae6c9f8847c3b9f843f72af8069a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4557844051028631532
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,6 +75,8 @@ Transform:
   - {fileID: 4557844051694574847}
   - {fileID: 4557844051861172446}
   - {fileID: 1026026067769818318}
+  - {fileID: 127007694779234615}
+  - {fileID: 306436165614720755}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -86,8 +132,10 @@ MonoBehaviour:
   myStatusManager: {fileID: 0}
   myNetHudCanvas: {fileID: 0}
   myTugboat: {fileID: 0}
-  timelineManager: {fileID: 0}
+  timelineManager: {fileID: 482597490449667573}
   globalConfig: {fileID: 11400000, guid: 4abde3bbb296e3841b1a106f855dfdef, type: 2}
+  deckManager: {fileID: 4368738242053533436}
+  handManager: {fileID: 6516318675321519427}
 --- !u!1 &4557844051861172447
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,6 +184,53 @@ MonoBehaviour:
   paperButton: {fileID: 0}
   scissorButton: {fileID: 0}
   menuButton: {fileID: 0}
+--- !u!1 &7606263634519593006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 127007694779234615}
+  - component: {fileID: 6516318675321519427}
+  m_Layer: 0
+  m_Name: HandManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &127007694779234615
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7606263634519593006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4557844051028631539}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6516318675321519427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7606263634519593006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a900ab2876e40f7bc9ab64204176c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bondCardsUICount: {fileID: 0}
+  attackCardsUICount: {fileID: 0}
+  defenseCardsUICount: {fileID: 0}
 --- !u!1 &7912233814503237859
 GameObject:
   m_ObjectHideFlags: 0

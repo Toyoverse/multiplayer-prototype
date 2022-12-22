@@ -2,38 +2,51 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet.Utility.Extension;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Managers
 {
-    public class CardPile : MonoBehaviour
+    public class CardPile 
     {
-        private List<Card> _cards;
+        private List<CardData> _cards;
         private Action _onPileChangeCallback;
 
         public int count => _cards.Count;
 
         #region Public Methods
     
-        public void AddOnPileChangeAction(Action method) => _onPileChangeCallback += method;
-
-        public void AddCard(Card card)
+        public CardPile(Action pileChangeCallback = null)
         {
-            _cards.Add(card);
+            _cards = new List<CardData>();
+            _onPileChangeCallback += pileChangeCallback;
+        }
+        
+        public void AddOnPileChangeAction(Action method) => _onPileChangeCallback += method;
+        public void RemoveOnPileChangeAction(Action method) => _onPileChangeCallback -= method;
+
+        public void AddCard(CardData cardData)
+        {
+            _cards.Add(cardData);
             _onPileChangeCallback?.Invoke();
         }
     
-        public void AddCards(List<Card> cards)
+        public void AddCards(List<CardData> cards)
         {
             for (var i = 0; i < cards.Count; i++)
                 _cards.Add(cards[i]);
             _onPileChangeCallback?.Invoke();
         }
 
-        public void RemoveCard(Card card)
+        public void RemoveCard(CardData cardData)
         {
-            _cards.Remove(card);
+            _cards.Remove(cardData);
+            _onPileChangeCallback?.Invoke();
+        }
+        
+        public void RemoveCards(List<CardData> cards)
+        {
+            for (var i = 0; i < cards.Count; i++)
+                _cards.Remove(cards[i]);
             _onPileChangeCallback?.Invoke();
         }
 
@@ -43,27 +56,27 @@ namespace Managers
             _onPileChangeCallback?.Invoke();
         }
 
-        public Card GetTopCard(bool removeFromPile = true)
+        public CardData GetTopCard(bool removeFromPile = true)
         {
             if (_cards?.Count <= 0)
                 return null;
             var card = _cards?.First();
-            if(removeFromPile)
+            if(removeFromPile && card != null)
                 RemoveCard(card);
             return card;
         }
     
-        public Card GetBottomCard(bool removeFromPile = true)
+        public CardData GetBottomCard(bool removeFromPile = true)
         {
             if (_cards?.Count <= 0)
                 return null;
             var card = _cards?.Last();
-            if(removeFromPile)
+            if(removeFromPile && card != null)
                 RemoveCard(card);
             return card;
         }
 
-        public List<Card> GetAllCards(bool removeFromPile = true)
+        public List<CardData> GetAllCards(bool removeFromPile = true)
         {
             var allCards = _cards;
             if (removeFromPile)
@@ -74,20 +87,51 @@ namespace Managers
             return allCards;
         }
 
-        public Card GetRandomCard(bool removeFromPile = true)
+        public CardData GetRandomCard(bool removeFromPile = true)
         {
             if (_cards?.Count <= 0)
                 return null;
             var card = _cards?[Random.Range(0, _cards.Count)];
-            if(removeFromPile)
+            if(removeFromPile && card != null)
                 RemoveCard(card);
             return card;
+        }
+
+        public CardData GetCardByType(CARD_TYPE type, bool removeFromPile = true)
+        {
+            var card = _cards.FirstOrDefault(card => card.Type == type);
+            if(removeFromPile && card != null)
+                RemoveCard(card);
+            return card;
+        }
+
+        public int GetAmountCardsByType(CARD_TYPE type)
+        {
+            var count = 0;
+            foreach (var card in _cards)
+            {
+                if (card.Type == type) //TODO: Checar erro aqui!
+                    count++;
+            }
+            return count;
+        }
+
+        public List<CardData> GetAllCardsByType(CARD_TYPE type, bool removeFromPile = true)
+        {
+            var result = new List<CardData>();
+            for (var i = 0; i < _cards.Count; i++)
+            {
+                if (_cards[i].Type == type)
+                    result.Add(_cards[i]);
+            }
+            if(removeFromPile)
+                RemoveCards(result);
+            return result;
         }
 
         #endregion
 
         #region Private Methods
-
 
         #endregion
     }

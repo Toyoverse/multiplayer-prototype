@@ -26,6 +26,7 @@ public class LocalGameManager : MonoBehaviour
     [SerializeField] private float roundTime;
     private bool _moveReady;
     private CARD_TYPE _cardSelected = CARD_TYPE.EMPTY;
+    private int _cardSelectedAmount;
 
     #region Public Methods
 
@@ -40,7 +41,7 @@ public class LocalGameManager : MonoBehaviour
     public void GameInit()
     {
         //ChangeLocalState(LOCAL_STATE.GAMEPLAY);
-        RoundInit();
+        StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
     }
     
     public void RunRoundResult(ServerNetMessage serverResult)
@@ -56,7 +57,7 @@ public class LocalGameManager : MonoBehaviour
         Refs.myStatusManager.ChangeOpHealth(_opHp);
         Refs.myStatusManager.UpdateMyCombo(_myCombo);
         Refs.myStatusManager.UpdateOpponentCombo(_opCombo);
-        RoundInit();
+        StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
     }
 
     public void OnEndMatchAnimation()
@@ -126,15 +127,16 @@ public class LocalGameManager : MonoBehaviour
         }
     }
 
-    private void RoundInit() => StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
-
     private void InitRound()
     {
         if (gameState != LOCAL_STATE.GAMEPLAY)
         {
             round = 0;
             UIMenuManager.Instance.GoToStartGame();
+            Refs.handManager?.BuyInitialHand();
         }
+        else
+            Refs.handManager.BuyRoundCards();
         if (Refs.myStatusManager.health <= 0.1f)
             return;
         round++;
@@ -147,11 +149,12 @@ public class LocalGameManager : MonoBehaviour
     {
         _moveReady = true;
         _cardSelected = move;
+        _cardSelectedAmount = Refs.handManager.DiscardCardsByType(move);
     }
 
     private void SendMoveToServer()
     {
-        var netMessage = JsonData.GetClientMessage(MESSAGE_TYPE.CARD_CHOICE, _cardSelected);
+        var netMessage = JsonData.GetClientMessage(MESSAGE_TYPE.CARD_CHOICE, _cardSelected, _cardSelectedAmount);
         Refs.myNetClientCommunicate.SendMessageToServer(netMessage);
     }
 

@@ -5,7 +5,7 @@ public static class JsonData
 {
     private static ScriptsReferences Refs => ScriptsReferences.Instance;
 
-    public static NetworkMessage GetClientMessage(MESSAGE_TYPE _type, CARD_TYPE _choice = CARD_TYPE.EMPTY)
+    public static NetworkMessage GetClientMessage(MESSAGE_TYPE _type, CARD_TYPE _choice = CARD_TYPE.EMPTY, int _choiceAmount = 0)
         => new()
         {
             ClientID = Refs.myNetClientCommunicate.ClientManager.GetInstanceID(),
@@ -14,7 +14,8 @@ public static class JsonData
             {
                 messageType = _type,
                 version = Application.version,
-                choice = _choice
+                choice = _choice,
+                choiceAmount = _choiceAmount
             })
         };
 
@@ -90,4 +91,5 @@ public class ClientNetMessage
     public MESSAGE_TYPE messageType;
     public string version;
     public CARD_TYPE choice;
+    public int choiceAmount;
 }

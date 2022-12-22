@@ -60,13 +60,14 @@ public class GameSystem : MonoBehaviour
             ChangeGameState(SERVER_STATE.STARTING);
     }
     
-    public void RegisterPlayerChoice(int clientID, int objectID, CARD_TYPE pChoice)
+    public void RegisterPlayerChoice(int clientID, int objectID, CARD_TYPE pChoice, int choiceAmount)
     {
         foreach (var playerClient in playerClients)
         {
             if (playerClient.playerObjectID != objectID || playerClient.playerClientID != clientID) 
                 continue;
             playerClient.choice = pChoice;
+            playerClient.choiceAmount = choiceAmount;
             break;
         }
 
@@ -265,7 +266,7 @@ public class GameSystem : MonoBehaviour
     }
 
     private void DamagePlayer(PlayerClient playerClient, PlayerClient opponentClient)
-        => playerClient.playerHealth -= GetComboDamage(opponentClient);
+        => playerClient.playerHealth -= GetCalculatedDamage(opponentClient);
 
     private void ClearGameMatch()
     {
@@ -332,7 +333,10 @@ public class GameSystem : MonoBehaviour
     private void ClearChoices()
     {
         for (var i = 0; i < playerClients.Count; i++)
+        {
             playerClients[i].choice = CARD_TYPE.EMPTY;
+            playerClients[i].choiceAmount = 0;
+        }
     }
 
     private bool AllPlayersChose()
@@ -347,13 +351,21 @@ public class GameSystem : MonoBehaviour
         return result;
     }
 
-    /// <summary>Get damage based in combo</summary>
-    /// <param name="pClient">PlayerClient with combo to be considered</param><returns></returns>
-    private float GetComboDamage(PlayerClient pClient)
+    /// <summary>Get damage considering number of cards and combo calculation</summary>
+    /// <param name="pClient">PlayerClient with combo and cards to be considered</param><returns></returns>
+    private float GetCalculatedDamage(PlayerClient pClient)
     {
-        var result = refs.globalConfig.baseDamage;
-        for (var i = 0; i < pClient.combo; i++)
-            result *= refs.globalConfig.comboMultiplier;
+        var result = GetPowerCalculation(refs.globalConfig.baseDamage, pClient.choiceAmount - 1,
+            refs.globalConfig.repeatCardMultiplier);
+        result = GetPowerCalculation(result, pClient.combo, refs.globalConfig.comboMultiplier);
+        return result;
+    }
+
+    private float GetPowerCalculation(float baseDamage, int power, float multiplierPerPower)
+    {
+        var result = baseDamage;
+        for (var i = 0; i < power; i++)
+            result *= multiplierPerPower;
         return result;
     }
 

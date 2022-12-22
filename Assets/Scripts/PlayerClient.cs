@@ -9,5 +9,6 @@ public class PlayerClient
     public float playerHealth;
     public NetworkConnection networkConnection;
     public CARD_TYPE choice;
+    public int choiceAmount;
     public int combo;
 }

@@ -17,6 +17,8 @@ public class ScriptsReferences : Singleton<ScriptsReferences>
     public Tugboat myTugboat;
     public TimelineManager timelineManager;
     public GlobalConfigSO globalConfig;
+    public DeckManager deckManager;
+    public HandManager handManager;
 
     //c1ccd940e985bdb4bb6232d39d25a853
 }

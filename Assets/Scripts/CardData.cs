@@ -1,5 +1,5 @@
 
-public class Card
+public class CardData
 {
     public CARD_TYPE Type;
     public string Name;
