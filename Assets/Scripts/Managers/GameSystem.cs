@@ -165,27 +165,26 @@ public class GameSystem : MonoBehaviour
         var result = GetMatchResult();
         if (IsLastInactiveRound())
             return;
-        if (result.isDraw)
+        
+        DamagePlayers(result);
+        var playerDeath = GetPlayerDeath();
+        if (playerDeath == null)
         {
-            foreach (var player in playerClients)
-                SendToClientResult(player, drawCode, GetOpponent(player));
+            if (result.isDraw)
+            {
+                foreach (var player in playerClients)
+                    SendToClientResult(player, drawCode, GetOpponent(player));
+            }
+            else
+            {
+                SendToClientResult(result.loserClient, loseCode, result.winnerClient);
+                SendToClientResult(result.winnerClient, winCode, result.loserClient);
+            }
             ClearChoices();
             ChangeGameState(SERVER_STATE.CHOICE_TIME);
         }
         else
-        {
-            DamagePlayer(result.loserClient, result.winnerClient);
-            var playerDeath = GetPlayerDeath();
-            if (playerDeath == null)
-            {
-                SendToClientResult(result.loserClient, loseCode, result.winnerClient);
-                SendToClientResult(result.winnerClient, winCode, result.loserClient);
-                ClearChoices();
-                ChangeGameState(SERVER_STATE.CHOICE_TIME);
-            }
-            else
-                SendGameOverToClients(playerDeath);
-        }
+            SendGameOverToClients(playerDeath);
     }
 
     private bool IsLastInactiveRound()
@@ -265,8 +264,17 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    private void DamagePlayer(PlayerClient playerClient, PlayerClient opponentClient)
-        => playerClient.playerHealth -= GetCalculatedDamage(opponentClient);
+    private void DamagePlayers(Match_Info matchInfo)
+    {
+        if (matchInfo.isDraw)
+        {
+            var drawDamage = refs.globalConfig.baseDamage * refs.globalConfig.drawDamageMultiplier;
+            playerClients[oneCode].playerHealth -= drawDamage;
+            playerClients[twoCode].playerHealth -= drawDamage;
+        }
+        else
+            matchInfo.loserClient.playerHealth -= GetCalculatedDamage(matchInfo.winnerClient);
+    }
 
     private void ClearGameMatch()
     {

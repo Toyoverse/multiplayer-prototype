@@ -10,12 +10,7 @@ using Tools;
 public class NetServerCommunicate : MonoBehaviour
 {
     [SerializeField] private GameSystem gameSystem;
-    public float disconnectDelay = 2;
-
-    private const string serverFullMessage =
-        "[SERVER] The server is not accepting new connections, please try again later.";
-    private const string versionWrongMessage = "Unable to connect to the server. The game version is outdated.";
-    private const string inactiveMessage = "You have been logged out for inactivity.";
+    private ScriptsReferences Refs => ScriptsReferences.Instance;
 
     #region Public Methods
 
@@ -26,7 +21,7 @@ public class NetServerCommunicate : MonoBehaviour
     {
         AutoKickMessage(client.playerClientID, client.playerObjectID, kickReason);
         StartCoroutine(TimeTools.InvokeInTime(client.networkConnection.Disconnect, 
-            true, disconnectDelay));
+            true, Refs.globalConfig.serverKickDelay));
     }
 
     #endregion
@@ -80,7 +75,8 @@ public class NetServerCommunicate : MonoBehaviour
                         ? KICK_REASON.WRONG_VERSION
                         : KICK_REASON.SERVER_IS_FULL;
                     AutoKickMessage(netMessage.ClientID, netMessage.ObjectID, kickReason);
-                    StartCoroutine(TimeTools.InvokeInTime(conn.Disconnect, true, disconnectDelay));
+                    StartCoroutine(TimeTools.InvokeInTime(conn.Disconnect, true, 
+                        Refs.globalConfig.serverKickDelay));
                 }
                 break;
         }
@@ -93,10 +89,10 @@ public class NetServerCommunicate : MonoBehaviour
     {
         var message = reason switch
         {
-            KICK_REASON.SERVER_IS_FULL => serverFullMessage,
-            KICK_REASON.WRONG_VERSION => versionWrongMessage,
-            KICK_REASON.INACTIVE => inactiveMessage,
-            _ => "Connection generic error."
+            KICK_REASON.SERVER_IS_FULL => Refs.globalConfig.serverIsFullMessage,
+            KICK_REASON.WRONG_VERSION => Refs.globalConfig.versionWrongMessage,
+            KICK_REASON.INACTIVE => Refs.globalConfig.inactiveMessage,
+            _ => Refs.globalConfig.connectionGenericErrorMessage
         };
         var netMessage = JsonData.GetServerKickMessage(clientID, objectID, message, reason);
         SendMessageToClient(netMessage);

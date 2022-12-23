@@ -4,13 +4,11 @@ namespace Managers
 {
     public class DeckManager : MonoBehaviour
     {
+        private ScriptsReferences Refs => ScriptsReferences.Instance;
+        
         public CardPile deck;
         public CardPile graveyard;
-        
-        //debug
-        private readonly int _maxCards = 30;
-        private readonly int _maxTypeCards = 10;
-    
+
         #region Public methods
 
         public void DeckInitialize()
@@ -52,9 +50,9 @@ namespace Managers
         {
             deck = new CardPile();
             var type = CARD_TYPE.BOND;
-            for (var i = 0; i < _maxCards; i++)
+            for (var i = 0; i < Refs.globalConfig.maxDeckAmount; i++)
             {
-                if (deck.GetAmountCardsByType(type) < _maxTypeCards)
+                if (deck.GetAmountCardsByType(type) < Refs.globalConfig.maxCardsPerType)
                 {
                     var card = new CardData()
                     {
@@ -65,7 +63,10 @@ namespace Managers
                     deck.AddCard(card);
                 }
                 else
+                {
                     type++;
+                    i--;
+                }
             }
         }
     

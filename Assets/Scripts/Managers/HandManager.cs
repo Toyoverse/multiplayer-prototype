@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -10,13 +11,10 @@ namespace Managers
         [SerializeField] private TextMeshProUGUI attackCardsUICount;
         [SerializeField] private TextMeshProUGUI defenseCardsUICount;
         private ScriptsReferences Refs => ScriptsReferences.Instance;
-        
         private CardPile _handCards;
-        private int cardsPerRound = 3;
-        private int minCardPerType = 1;
 
         #region Public Methods
-
+        
         public void BuyInitialHand()
         {
             Refs.deckManager.DeckInitialize();
@@ -29,9 +27,13 @@ namespace Managers
 
         public void BuyRoundCards()
         {
-            CheckMinimumCardsPerRound(); 
-            for (var i = 0; i < cardsPerRound; i++)
-                _handCards.AddCard(Refs.deckManager.GetTopDeckCard());
+            CheckMinimumCardsPerRound();
+            for (var i = 0; i < Refs.globalConfig.cardsDrawnPerRound; i++)
+            {
+                var card = Refs.deckManager.GetTopDeckCard();
+                if(card != null)
+                    _handCards.AddCard(card);
+            }
             UpdateUI();
         }
 
@@ -42,21 +44,26 @@ namespace Managers
             UpdateUI();
             return cards.Count;
         }
-        
+
+        public void EnableCardsAmountUI() => EnableCardsAmountUI(true);
+        public void DisableCardsAmountUI() => EnableCardsAmountUI(false);
+
         #endregion
 
         #region Private Methods
+
+        private void Start() => DisableCardsAmountUI();
 
         private void CheckMinimumCardsPerRound()
         {
             var bondCards = _handCards.GetAmountCardsByType(CARD_TYPE.BOND);
             var atkCards = _handCards.GetAmountCardsByType(CARD_TYPE.ATTACK);
             var defCards = _handCards.GetAmountCardsByType(CARD_TYPE.DEFENSE);
-            if(bondCards < minCardPerType)
+            if(bondCards < Refs.globalConfig.minCardsPerTypeInHand)
                 _handCards.AddCard(Refs.deckManager.GetDeckCardByType(CARD_TYPE.BOND));
-            if(atkCards < minCardPerType)
+            if(atkCards < Refs.globalConfig.minCardsPerTypeInHand)
                 _handCards.AddCard(Refs.deckManager.GetDeckCardByType(CARD_TYPE.ATTACK));
-            if(defCards < minCardPerType)
+            if(defCards < Refs.globalConfig.minCardsPerTypeInHand)
                 _handCards.AddCard(Refs.deckManager.GetDeckCardByType(CARD_TYPE.DEFENSE));
         }
 
@@ -65,6 +72,13 @@ namespace Managers
             bondCardsUICount.text = "" + _handCards.GetAmountCardsByType(CARD_TYPE.BOND);
             attackCardsUICount.text = "" + _handCards.GetAmountCardsByType(CARD_TYPE.ATTACK);
             defenseCardsUICount.text = "" + _handCards.GetAmountCardsByType(CARD_TYPE.DEFENSE);
+        }
+        
+        private void EnableCardsAmountUI(bool on)
+        {
+            bondCardsUICount.enabled = on;
+            attackCardsUICount.enabled = on;
+            defenseCardsUICount.enabled = on;
         }
 
         #endregion

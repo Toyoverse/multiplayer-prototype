@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 11048.335, g: 12246.035, b: 15969.636, a: 1}
+  m_IndirectSpecularColor: {r: 11038.449, g: 12235.725, b: 15960.076, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -317,7 +317,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameSystem: {fileID: 1617824016}
-  disconnectDelay: 2
 --- !u!4 &261233566
 Transform:
   m_ObjectHideFlags: 0
@@ -26589,6 +26588,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6777568461435813156, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
   m_PrefabInstance: {fileID: 6777568462214013041}
   m_PrefabAsset: {fileID: 0}
+--- !u!320 &1985308838 stripped
+PlayableDirector:
+  m_CorrespondingSourceObject: {fileID: 6895161613291110336, guid: bab66d0169963b1438325c0a3b826a24, type: 3}
+  m_PrefabInstance: {fileID: 6777568462214013041}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2126630969
 GameObject:
   m_ObjectHideFlags: 0
@@ -26812,6 +26816,14 @@ PrefabInstance:
       propertyPath: director
       value: 
       objectReference: {fileID: 347367549}
+    - target: {fileID: 482597490449667573, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: toyoDirector
+      value: 
+      objectReference: {fileID: 347367549}
+    - target: {fileID: 482597490449667573, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
+      propertyPath: cardsDirector
+      value: 
+      objectReference: {fileID: 1985308838}
     - target: {fileID: 1228467592119709973, guid: 5071146415cdfde4f844c8ad97e1a2b4, type: 3}
       propertyPath: _scenePathHash
       value: 870183984

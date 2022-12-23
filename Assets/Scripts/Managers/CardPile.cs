@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Managers
 {
+    [Serializable]
     public class CardPile 
     {
         private List<CardData> _cards;
@@ -78,10 +79,13 @@ namespace Managers
 
         public List<CardData> GetAllCards(bool removeFromPile = true)
         {
-            var allCards = _cards;
+            var allCards = new List<CardData>();
+            for (var i = 0; i < _cards.Count; i++)
+                allCards.Add(_cards[i]);
             if (removeFromPile)
             {
                 _cards.Clear();
+                _cards = new List<CardData>();
                 _onPileChangeCallback?.Invoke();
             }
             return allCards;
@@ -99,7 +103,14 @@ namespace Managers
 
         public CardData GetCardByType(CARD_TYPE type, bool removeFromPile = true)
         {
-            var card = _cards.FirstOrDefault(card => card.Type == type);
+            CardData card = null;
+            for (var i = 0; i < _cards.Count; i++)
+            {
+                if (_cards[i].Type != type)
+                    continue;
+                card = _cards[i];
+                break;
+            }
             if(removeFromPile && card != null)
                 RemoveCard(card);
             return card;
@@ -108,11 +119,12 @@ namespace Managers
         public int GetAmountCardsByType(CARD_TYPE type)
         {
             var count = 0;
-            foreach (var card in _cards)
+            for (var i = 0; i < _cards.Count; i++)
             {
-                if (card.Type == type) //TODO: Checar erro aqui!
+                if (_cards[i].Type == type) 
                     count++;
             }
+
             return count;
         }
 

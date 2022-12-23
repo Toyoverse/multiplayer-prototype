@@ -1,4 +1,6 @@
+using System;
 
+[Serializable]
 public class CardData
 {
     public CARD_TYPE Type;

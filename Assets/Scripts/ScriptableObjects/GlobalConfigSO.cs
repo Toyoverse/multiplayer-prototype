@@ -12,9 +12,15 @@ public class GlobalConfigSO : ScriptableObject
     public float baseDamage = 10;
     public float comboMultiplier = 1.5f;
     public float repeatCardMultiplier = 1.25f;
+    public float drawDamageMultiplier = 0.25f;
     [Header("ROUNDS")] 
     public int maxInactiveRounds = 5;
     public float secondsPerRound = 10;
+    [Header("CARDS")]
+    public int maxDeckAmount = 30;
+    public int maxCardsPerType = 10;
+    public int cardsDrawnPerRound = 3;
+    public int minCardsPerTypeInHand = 1;
     [Header("NETWORK")] 
     public float serverKickDelay = 2;
     public float endGameDisconnectDelay = 5;
@@ -26,6 +32,7 @@ public class GlobalConfigSO : ScriptableObject
     [TextArea] public string inactiveMessage = "You have been logged out for inactivity.";
     [TextArea] public string disconnectedMessage = "You have been disconnected from the server.";
     [TextArea] public string disconnectCountMessage = "You will be disconnected from the server in ";
+    [TextArea] public string connectionGenericErrorMessage = "Connection generic error.";
     [Header("ROUNDS & MATCH MESSAGES")]
     [TextArea] public string roundInitMessage = "Round started!\nMake your move!";
     [TextArea] public string choiceMessage = "You chose ";
@@ -59,8 +66,13 @@ public class GlobalConfigSO : ScriptableObject
         baseDamage = 10;
         comboMultiplier = 1.5f;
         repeatCardMultiplier = 1.25f;
+        drawDamageMultiplier = 0.25f;
         maxInactiveRounds = 5;
         secondsPerRound = 10;
+        maxDeckAmount = 30;
+        maxCardsPerType = 10;
+        cardsDrawnPerRound = 3;
+        minCardsPerTypeInHand = 1;
         serverKickDelay = 2;
         endGameDisconnectDelay = 5;
         successConnectionMessage = "Connection success!\nWaiting for an opponent...";
@@ -70,6 +82,7 @@ public class GlobalConfigSO : ScriptableObject
         inactiveMessage = "You have been logged out for inactivity.";
         disconnectedMessage = "You have been disconnected from the server.";
         disconnectCountMessage = "You will be disconnected from the server in ";
+        connectionGenericErrorMessage = "Connection generic error.";
         roundInitMessage = "Round started!\nMake your move!";
         choiceMessage = "You chose ";
         opponentWaitMessage = "\nWaiting for the opponent's move...";
@@ -89,6 +102,7 @@ public class GlobalConfigSO : ScriptableObject
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(GlobalConfigSO))]
 public class GlobalConfigResetButton : Editor
 {
@@ -100,3 +114,4 @@ public class GlobalConfigResetButton : Editor
             globalConfig.ResetValues();
     }
 }
+#endif

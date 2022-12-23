@@ -40,14 +40,18 @@ public class LocalGameManager : MonoBehaviour
     
     public void GameInit()
     {
-        //ChangeLocalState(LOCAL_STATE.GAMEPLAY);
+        round = 0;
+        UIMenuManager.Instance.GoToStartGame();
+        Refs.timelineManager.PlayCardsAnimation();
         StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
     }
-    
+
     public void RunRoundResult(ServerNetMessage serverResult)
     {
         LogRoundResult(serverResult);
         SetStatsRoundResult(serverResult);
+        Refs.myStatusManager.UpdateMyCombo(_myCombo);
+        Refs.myStatusManager.UpdateOpponentCombo(_opCombo);
         PlayRoundAnimationResult(serverResult);
     }
 
@@ -55,8 +59,6 @@ public class LocalGameManager : MonoBehaviour
     {
         Refs.myStatusManager.ChangeHealth(_myHp);
         Refs.myStatusManager.ChangeOpHealth(_opHp);
-        Refs.myStatusManager.UpdateMyCombo(_myCombo);
-        Refs.myStatusManager.UpdateOpponentCombo(_opCombo);
         StartCoroutine(TimeTools.InvokeInTime(InitRound, 2));
     }
 
@@ -89,7 +91,7 @@ public class LocalGameManager : MonoBehaviour
             _ => PLAYABLE_TYPE.NONE
         };
         
-        Refs.timelineManager.PlayAnimation(playableType);
+        Refs.timelineManager.PlayToyoAnimation(playableType);
     }
 
     public void OnSelfKick() 
@@ -98,9 +100,10 @@ public class LocalGameManager : MonoBehaviour
 
     public void BackToMenu()
     {
+        Refs.handManager.DisableCardsAmountUI();
         DisconnectToServer();
         UIMenuManager.Instance.BackToMenu();
-        Refs.timelineManager.PlayAnimation(PLAYABLE_TYPE.IDLE);
+        Refs.timelineManager.PlayToyoAnimation(PLAYABLE_TYPE.IDLE);
     }
     
     #endregion
@@ -129,12 +132,8 @@ public class LocalGameManager : MonoBehaviour
 
     private void InitRound()
     {
-        if (gameState != LOCAL_STATE.GAMEPLAY)
-        {
-            round = 0;
-            UIMenuManager.Instance.GoToStartGame();
+        if (round == 0)
             Refs.handManager?.BuyInitialHand();
-        }
         else
             Refs.handManager.BuyRoundCards();
         if (Refs.myStatusManager.health <= 0.1f)
@@ -256,7 +255,7 @@ public class LocalGameManager : MonoBehaviour
             SIMPLE_RESULT.DRAW => PLAYABLE_TYPE.DRAW,
             SIMPLE_RESULT.LOSE => PLAYABLE_TYPE.KNOCKBACK
         };
-        Refs.timelineManager.PlayAnimation(playableType);
+        Refs.timelineManager.PlayToyoAnimation(playableType);
     }
 
     private void SetStatsRoundResult(ServerNetMessage serverResult)
